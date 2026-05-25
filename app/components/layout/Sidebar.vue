@@ -24,8 +24,8 @@
           <span>Products</span>
         </NuxtLink>
       </li>
-      <!-- Category Products -->
-      <li v-if="hasPermission('products.read')" class="nav-item">
+      <!-- Category Products (hidden - merged into product search) -->
+      <!-- <li v-if="hasPermission('products.read')" class="nav-item">
         <NuxtLink
           to="/manage-category-product"
           class="nav-link"
@@ -34,7 +34,7 @@
           <i class="bi bi-tag"></i>
           <span>Category Products</span>
         </NuxtLink>
-      </li>
+      </li> -->
       <!-- Product Groups -->
       <li v-if="hasPermission('products.read')" class="nav-item">
         <NuxtLink
@@ -57,8 +57,8 @@
           <span>Product Attribute</span>
         </NuxtLink>
       </li>
-      <!-- Vouchers -->
-      <li v-if="hasPermission('vouchers.read')" class="nav-item">
+      <!-- Vouchers (hidden) -->
+      <!-- <li v-if="hasPermission('vouchers.read')" class="nav-item">
         <NuxtLink
           to="/manage-voucher"
           class="nav-link"
@@ -67,7 +67,7 @@
           <i class="bi bi-ticket"></i>
           <span>Vouchers</span>
         </NuxtLink>
-      </li>
+      </li> -->
       <!-- Orders -->
       <li v-if="hasPermission('orders.read')" class="nav-item">
         <NuxtLink
@@ -79,8 +79,8 @@
           <span>Orders</span>
         </NuxtLink>
       </li>
-      <!-- Blog Management -->
-      <li v-if="hasPermission('blogs.read')" class="nav-item">
+      <!-- Blog Management (hidden) -->
+      <!-- <li v-if="hasPermission('blogs.read')" class="nav-item">
         <NuxtLink
           to="/manage-blog"
           class="nav-link"
@@ -89,10 +89,10 @@
           <i class="bi bi-newspaper"></i>
           <span>Manage Blog</span>
         </NuxtLink>
-      </li>
+      </li> -->
 
-      <!-- Blog Categories -->
-      <li v-if="hasPermission('blog-categories.read')" class="nav-item">
+      <!-- Blog Categories (hidden) -->
+      <!-- <li v-if="hasPermission('blog-categories.read')" class="nav-item">
         <NuxtLink
           to="/manage-blog-categories"
           class="nav-link"
@@ -101,7 +101,7 @@
           <i class="bi bi-tags"></i>
           <span>Blog Categories</span>
         </NuxtLink>
-      </li>
+      </li> -->
 
       <!-- Pages Heading -->
       <li class="nav-heading">Management</li>

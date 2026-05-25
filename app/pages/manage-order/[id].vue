@@ -233,7 +233,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Order Details - Karsindo",
+  title: "Order Details - Bison Denim",
 });
 
 const route = useRoute();

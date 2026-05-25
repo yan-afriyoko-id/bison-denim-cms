@@ -90,11 +90,11 @@ interface Slide {
 
 const slides: Slide[] = [
   {
-    title: "Nyaman dan Elegan di Setiap Sudut",
+    title: "Gaya Elegan untuk Setiap Kesempatan",
     image: "/assets/img/banner/banner-1.png",
   },
   {
-    title: "Furniture Berkualitas Tinggi",
+    title: "Koleksi Fashion Berkualitas Premium",
     image: "/assets/img/banner/banner-1.png",
   },
   {

@@ -289,7 +289,7 @@ const router = useRouter()
 const blogId = computed(() => route.params.id as string)
 
 useHead({
-  title: "Edit Blog Post - Karsindo",
+  title: "Edit Blog Post - Bison Denim",
 })
 
 const { updateBlog, getAllBlogs, getCategories } = useBlogApi()

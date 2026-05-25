@@ -104,12 +104,12 @@
               @save-settings="saveSettings"
             />
 
-            <!-- RajaOngkir Tab -->
-            <RajaOngkirTab
-              v-if="activeTab === 'rajaongkir' && hasPermission('configs.read')"
+            <!-- Gojek Instant Tab -->
+            <GojekInstantTab
+              v-if="activeTab === 'gojek_instant' && hasPermission('configs.read')"
               :form-data="formData"
               :is-loading="isLoading"
-              :is-active="activeTab === 'rajaongkir'"
+              :is-active="activeTab === 'gojek_instant'"
               @save-settings="saveSettings"
             />
 
@@ -133,14 +133,14 @@
               @save-settings="saveSettings"
             />
 
-            <!-- Point Tab -->
-            <PointTab
+            <!-- Point Tab (hidden) -->
+            <!-- <PointTab
               v-if="activeTab === 'point' && hasPermission('configs.read')"
               :form-data="formData"
               :is-loading="isLoading"
               :is-active="activeTab === 'point'"
               @save-settings="saveSettings"
-            />
+            /> -->
 
             <!-- Top Banner Tab -->
             <TopBannerTab
@@ -1182,7 +1182,7 @@ import BrandTab from "~/components/settings/BrandTab.vue";
 import EmailTab from "~/components/settings/EmailTab.vue";
 import AppTab from "~/components/settings/AppTab.vue";
 import MidtransTab from "~/components/settings/MidtransTab.vue";
-import RajaOngkirTab from "~/components/settings/RajaOngkirTab.vue";
+import GojekInstantTab from "~/components/settings/GojekInstantTab.vue";
 import TopBannerTab from "~/components/settings/TopBannerTab.vue";
 import SocialTab from "~/components/settings/SocialTab.vue";
 import NotificationTab from "~/components/settings/NotificationTab.vue";
@@ -1282,10 +1282,10 @@ const allTabs = [
   { key: "email", label: "Email" },
   { key: "app", label: "App" },
   { key: "midtrans", label: "Midtrans" },
-  { key: "rajaongkir", label: "RajaOngkir" },
+  { key: "gojek_instant", label: "Gojek Instant" },
   { key: "social", label: "Social Media" },
   { key: "notification", label: "Notifications" },
-  { key: "point", label: "Point System" },
+  // { key: "point", label: "Point System" },
   { key: "topbanner", label: "Top Banner" },
   { key: "mainBanner", label: "Main Banner" },
   { key: "popupBanner", label: "Popup Banner" },
@@ -1303,7 +1303,7 @@ const tabs = computed(() => {
       tab.key === "email" ||
       tab.key === "app" ||
       tab.key === "midtrans" ||
-      tab.key === "rajaongkir" ||
+      tab.key === "gojek_instant" ||
       tab.key === "social" ||
       tab.key === "notification" ||
       tab.key === "point" ||
@@ -1370,8 +1370,8 @@ const formData = ref<any>({
   midtrans_server_key: "",
   midtrans_client_key: "",
   midtrans_is_production: false,
-  // rajaongkir
-  rajaongkir_key: "",
+  // gojek instant
+  gojek_instant_key: "",
   // social
   social_instagram: "",
   social_tiktok: "",

@@ -56,7 +56,7 @@
 const products = ref([
   {
     id: 1,
-    name: "Tulen-6 Sofa Recliner Fabric 1 Seater",
+    name: "Bison Denim Tas Messenger Kulit Premium",
     image: "/assets/img/more-products/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -67,7 +67,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Manolo Neo Kabinet Sepatu 3 Tingkat",
+    name: "Bison Denim Card Holder Kulit Asli",
     image: "/assets/img/more-products/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -78,7 +78,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Douma Kabinet Sepatu 3+1 Tingkat Dengan Lemari",
+    name: "Bison Denim Tas Laptop Kulit Genuine Leather",
     image: "/assets/img/more-products/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -89,7 +89,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Donnesta Meja Sisi",
+    name: "Bison Denim Dompet Wanita Kulit Sapi",
     image: "/assets/img/more-products/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -100,7 +100,7 @@ const products = ref([
   },
   {
     id: 5,
-    name: "Mahoney-2 Sofa Fabric 3 Seater",
+    name: "Bison Denim Tas Tote Bag Kulit Premium",
     image: "/assets/img/more-products/product-5.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

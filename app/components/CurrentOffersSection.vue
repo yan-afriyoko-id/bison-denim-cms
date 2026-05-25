@@ -9,11 +9,11 @@
       <div class="space-y-6">
         <!-- Large Banners Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Large Banner 1: Lemari Hemat Hingga 60% -->
+          <!-- Large Banner 1: Diskon Tas Hingga 60% -->
 
           <NuxtImg
             src="/assets/img/offers-deals/offers-1.png"
-            alt="Lemari Hemat Hingga 60%"
+            alt="Diskon Tas Hingga 60%"
             width="704"
             height="248"
             class="w-full h-full object-cove rounded-lg aspect-704/248"

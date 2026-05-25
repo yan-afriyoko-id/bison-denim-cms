@@ -329,7 +329,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Manage Orders - Karsindo",
+  title: "Manage Orders - Bison Denim",
 });
 
 const { hasPermission } = usePermission();

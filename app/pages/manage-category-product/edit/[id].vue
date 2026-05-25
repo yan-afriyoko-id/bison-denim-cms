@@ -171,7 +171,7 @@ const route = useRoute()
 const categoryId = parseInt(route.params.id as string)
 
 useHead({
-  title: 'Manage Category Products - Karsindo CMS',
+  title: 'Manage Category Products - Bison Denim CMS',
 })
 
 interface Category {

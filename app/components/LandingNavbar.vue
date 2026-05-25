@@ -4,7 +4,7 @@
       <!-- Brand -->
       <NuxtLink to="/" class="navbar-brand fw-bold">
         <i class="bi bi-shop me-2"></i>
-        <span>Karsindo</span>
+        <span>Bison Denim</span>
       </NuxtLink>
 
       <!-- Toggler for mobile -->

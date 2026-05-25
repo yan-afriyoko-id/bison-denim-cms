@@ -291,7 +291,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Manage Vouchers - Karsindo",
+  title: "Manage Vouchers - Bison Denim",
 });
 
 const { getVouchers, deleteVoucher, getAllVouchers } = useVoucherApi();

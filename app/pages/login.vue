@@ -16,8 +16,8 @@
                     class="logo d-flex align-items-center w-auto"
                   >
                     <img
-                      :src="logoUrl || '/assets/img/logo.png'"
-                      alt="Karsindo Logo"
+                      :src="logoUrl || '/assets/img/images.png'"
+                      alt="Bison Denim Logo"
                       @error="handleLogoError"
                     />
                   </NuxtLink>
@@ -196,7 +196,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Karsindo - Login",
+  title: "Bison Denim - Login",
 });
 
 const route = useRoute();
@@ -212,7 +212,7 @@ const togglePassword = () => {
 };
 
 const handleLogoError = () => {
-  logoUrl.value = "/assets/img/logo.png";
+  logoUrl.value = "/assets/img/images.png";
 };
 
 const loadLogo = async () => {

@@ -319,7 +319,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({ title: "Edit Voucher - Karsindo" });
+useHead({ title: "Edit Voucher - Bison Denim" });
 
 const { getAdminVoucher, updateVoucher, getCategories } = useVoucherApi();
 const toast = useToast();

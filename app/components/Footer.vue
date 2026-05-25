@@ -20,7 +20,7 @@
               </li>
               <li>
                 <a href="#" class="hover:text-white transition"
-                  >Custom furniture</a
+                  >Custom order</a
                 >
               </li>
             </ul>
@@ -32,7 +32,7 @@
             <ul class="space-y-2 sm:space-y-2.5 text-sm sm:text-base text-[#F3D4D5]">
               <li>
                 <a href="#" class="hover:text-white transition"
-                  >Tentang Karsindo</a
+                  >Tentang Bison Denim</a
                 >
               </li>
               <li>
@@ -102,9 +102,9 @@
                 </svg>
 
                 <a
-                  href="mailto:karsindo@gmail.com"
+                  href="mailto:bisondenim@gmail.com"
                   class="hover:text-white transition break-all"
-                  >karsindo@gmail.com</a
+                  >bisondenim@gmail.com</a
                 >
               </li>
             </ul>
@@ -180,7 +180,7 @@
 
       <!-- Bottom -->
       <div class="border-t border-[#FFFFFF1A] py-3 sm:py-[14.5px] text-center text-xs sm:text-sm">
-        <p>&copy; Karsindo 2025</p>
+        <p>&copy; Bison Denim 2025</p>
       </div>
     </div>
   </footer>

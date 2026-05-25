@@ -152,7 +152,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Voucher Details - Karsindo",
+  title: "Voucher Details - Bison Denim",
 });
 
 const route = useRoute();

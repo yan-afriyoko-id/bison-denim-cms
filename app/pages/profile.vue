@@ -318,7 +318,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Profile - Karsindo",
+  title: "Profile - Bison Denim",
 })
 
 const auth = useAuth()

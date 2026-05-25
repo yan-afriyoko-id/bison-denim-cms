@@ -76,7 +76,7 @@ const filters = [
 const products = ref([
   {
     id: 1,
-    name: "Calicho-7 Sofa L Sectional Fabric Kanan",
+    name: "Bison Denim Clutch Bag Kulit Premium",
     image: "/assets/img/recommended/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -87,7 +87,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Cooking Color Loyang Kue Muffin 6 Cup - Abu-abu",
+    name: "Bison Denim Key Holder Kulit Asli",
     image: "/assets/img/recommended/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -98,7 +98,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Wolby Meja Lipat",
+    name: "Bison Denim Tas Pinggang Kulit Pria",
     image: "/assets/img/recommended/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -109,7 +109,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Douma Kabinet Sepatu 3+1 Tingkat Dengan Lemari",
+    name: "Bison Denim Dompet Panjang Kulit Wanita",
     image: "/assets/img/recommended/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -120,7 +120,7 @@ const products = ref([
   },
   {
     id: 5,
-    name: "Berlin Sofa Bed Fabric",
+    name: "Bison Denim Travel Bag Kulit Premium",
     image: "/assets/img/recommended/product-5.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

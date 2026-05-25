@@ -100,9 +100,9 @@
 const activeFilter = ref(1);
 
 const filters = [
-  { id: 1, label: "Elektronik" },
-  { id: 2, label: "Perlengkapan Dapur" },
-  { id: 3, label: "Perlengkapan Kantor" },
+  { id: 1, label: "Tas & Dompet" },
+  { id: 2, label: "Aksesoris Kulit" },
+  { id: 3, label: "Koleksi Premium" },
 ];
 
 const nextLink = computed(() => {
@@ -112,7 +112,7 @@ const nextLink = computed(() => {
 const products = ref([
   {
     id: 1,
-    name: "Brise-2 Sofa L Sectional Fabric Kiri",
+    name: "Bison Denim Tas Selempang Kulit Pria",
     image: "/assets/img/official-stores/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -123,7 +123,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Tulen-6 Sofa Recliner Fabric 1 Seater",
+    name: "Bison Denim Dompet Bifold Kulit Asli",
     image: "/assets/img/official-stores/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -134,7 +134,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Donnesta Meja Sisi",
+    name: "Bison Denim Ikat Pinggang Automatic Buckle",
     image: "/assets/img/official-stores/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -145,7 +145,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Mahoney-2 Sofa Fabric 3 Seater",
+    name: "Bison Denim Tas Ransel Kulit Pria",
     image: "/assets/img/official-stores/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

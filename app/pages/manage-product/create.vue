@@ -536,11 +536,11 @@
                 <h5 class="mb-4">Product Categories</h5>
                 <p class="text-muted mb-4">
                   Select one or more categories for this product. You can also
-                  create a new category if needed.
+                  create, edit, or delete a category.
                 </p>
 
                 <div
-                  class="mb-3 d-flex justify-content-between align-items-center"
+                  class="mb-3 d-flex justify-content-between align-items-center gap-2"
                 >
                   <div class="flex-grow-1">
                     <input
@@ -550,6 +550,14 @@
                       placeholder="Search categories..."
                     />
                   </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    @click="openCreateCategoryModal"
+                    title="Create New Category"
+                  >
+                    <i class="bi bi-plus-circle me-1"></i>New
+                  </button>
                 </div>
 
                 <div v-if="loadingCategories" class="text-center py-3">
@@ -608,21 +616,41 @@
                         :key="category.id"
                         class="col-12 col-md-6"
                       >
-                        <div class="form-check">
-                          <input
-                            class="form-check-input"
-                            type="checkbox"
-                            :value="category.id"
-                            :id="`category-${category.id}`"
-                            v-model="selectedCategoryIds"
-                          />
-                          <label
-                            class="form-check-label"
-                            :for="`category-${category.id}`"
-                            style="cursor: pointer"
-                          >
-                            {{ category?.taxonomy_name || "Unknown Category" }}
-                          </label>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="form-check flex-grow-1">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              :value="category.id"
+                              :id="`category-${category.id}`"
+                              v-model="selectedCategoryIds"
+                            />
+                            <label
+                              class="form-check-label"
+                              :for="`category-${category.id}`"
+                              style="cursor: pointer"
+                            >
+                              {{ category?.taxonomy_name || "Unknown Category" }}
+                            </label>
+                          </div>
+                          <div class="d-flex gap-1">
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-warning py-0 px-1"
+                              @click.stop="openEditCategoryModalInStep(category)"
+                              title="Edit Category"
+                            >
+                              <i class="bi bi-pencil" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-danger py-0 px-1"
+                              @click.stop="openDeleteCategoryModalInStep(category)"
+                              title="Delete Category"
+                            >
+                              <i class="bi bi-trash" style="font-size: 0.7rem;"></i>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -856,7 +884,7 @@
                   Cancel
                 </NuxtLink>
                 <button
-                  v-if="currentStep < 6"
+                  v-if="currentStep < 5"
                   type="button"
                   class="btn btn-primary"
                   @click="nextStep"
@@ -925,7 +953,7 @@
                   v-model="newCategoryForm.taxonomy_name"
                   type="text"
                   class="form-control"
-                  placeholder="e.g., Furniture, Electronics"
+                  placeholder="e.g., Tas, Dompet, Ikat Pinggang"
                   required
                   maxlength="250"
                   @input="generateCategorySlug"
@@ -943,34 +971,6 @@
                 />
                 <small class="text-muted"
                   >URL-friendly version of the name (auto-generated)</small
-                >
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Description</label>
-                <textarea
-                  v-model="newCategoryForm.taxonomy_description"
-                  class="form-control"
-                  rows="3"
-                  placeholder="Category description (optional)"
-                  maxlength="500"
-                ></textarea>
-                <small class="text-muted"
-                  >Brief description of the category</small
-                >
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Category Type</label>
-                <select
-                  v-model.number="newCategoryForm.taxonomy_type"
-                  class="form-select"
-                >
-                  <option :value="2">Main Category</option>
-                  <option :value="3">Subcategory</option>
-                </select>
-                <small class="text-muted"
-                  >Select the type of category. Main Category is a top-level
-                  category, while Subcategory is a child category that belongs
-                  to a Main Category.</small
                 >
               </div>
               <div class="mb-3">
@@ -1015,6 +1015,94 @@
               @click="resetNewCategoryForm"
             >
               Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Category Modal -->
+    <div
+      class="modal fade"
+      id="editCategoryInStepModal"
+      tabindex="-1"
+      aria-labelledby="editCategoryInStepModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editCategoryInStepModalLabel">Edit Category</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Category Name <span class="text-danger">*</span></label>
+              <input
+                v-model="editCategoryFormData.taxonomy_name"
+                type="text"
+                class="form-control"
+                placeholder="Enter category name"
+                @input="generateEditCategorySlug"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Slug</label>
+              <input
+                v-model="editCategoryFormData.taxonomy_slug"
+                type="text"
+                class="form-control"
+                placeholder="auto-generated-from-name"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select v-model="editCategoryFormData.taxonomy_status" class="form-select">
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              @click="handleEditCategoryInStep"
+              :disabled="editingCategoryInStep"
+            >
+              {{ editingCategoryInStep ? 'Updating...' : 'Update Category' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Delete Category Modal -->
+    <div
+      class="modal fade"
+      id="deleteCategoryInStepModal"
+      tabindex="-1"
+      aria-labelledby="deleteCategoryInStepModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="deleteCategoryInStepModalLabel">Delete Category</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete <strong>{{ categoryToDeleteInStep?.taxonomy_name }}</strong>?</p>
+            <p class="text-muted mb-0">This action cannot be undone.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="handleDeleteCategoryInStep"
+              :disabled="deletingCategoryInStep"
+            >
+              {{ deletingCategoryInStep ? 'Deleting...' : 'Delete' }}
             </button>
           </div>
         </div>
@@ -1092,7 +1180,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Create Product - Karsindo",
+  title: "Create Product - Bison Denim",
 });
 
 const { createProduct } = useProductApi();
@@ -1107,6 +1195,8 @@ const {
   createProductVariant,
   getTaxoListsByType,
   createTaxoList,
+  updateTaxoList,
+  deleteTaxoList,
   getActiveAttributes,
   attachProductAttributes,
   createAttribute,
@@ -1130,7 +1220,7 @@ const steps = [
   { key: 3, label: "Attributes", icon: "bi bi-list-check" },
   { key: 4, label: "Variants", icon: "bi bi-box-seam" },
   { key: 5, label: "Categories", icon: "bi bi-tags" },
-  { key: 6, label: "Brands", icon: "bi bi-building" },
+  // { key: 6, label: "Brands", icon: "bi bi-building" },
 ];
 
 // Product form
@@ -1141,7 +1231,7 @@ const productForm = ref<ProductCreatePayload>({
   is_freeshiping: "INACTIVE",
   product_information: "",
   material: "",
-  finishing: "",
+  style: "",
   color: "",
   weight: null,
   type_weight: "GRAM",
@@ -2188,6 +2278,129 @@ const handleCreateCategory = async () => {
     toast.error("Failed to create category");
   } finally {
     creatingCategory.value = false;
+  }
+};
+
+// Edit/Delete Category in Step
+const editCategoryFormData = ref<any>({
+  id: null,
+  taxonomy_name: "",
+  taxonomy_slug: "",
+  original_slug: "",
+  taxonomy_description: "",
+  taxonomy_status: "ACTIVE",
+});
+const editingCategoryInStep = ref(false);
+const categoryToDeleteInStep = ref<any>(null);
+const deletingCategoryInStep = ref(false);
+
+const openCreateCategoryModal = () => {
+  resetNewCategoryForm();
+  nextTick(() => {
+    const modalEl = document.getElementById("addCategoryModal");
+    if (modalEl) {
+      const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    }
+  });
+};
+
+const generateEditCategorySlug = () => {
+  if (!editCategoryFormData.value.taxonomy_name) return;
+  editCategoryFormData.value.taxonomy_slug = editCategoryFormData.value.taxonomy_name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+};
+
+const openEditCategoryModalInStep = async (category: any) => {
+  editCategoryFormData.value = {
+    id: category.id,
+    taxonomy_name: category.taxonomy_name,
+    taxonomy_slug: category.taxonomy_slug,
+    original_slug: category.taxonomy_slug,
+    taxonomy_description: category.taxonomy_description || "",
+    taxonomy_status: category.taxonomy_status || "ACTIVE",
+  };
+  await nextTick();
+  const modalEl = document.getElementById("editCategoryInStepModal");
+  if (modalEl) {
+    const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  }
+};
+
+const handleEditCategoryInStep = async () => {
+  editingCategoryInStep.value = true;
+  try {
+    const payload: any = {
+      taxonomy_name: editCategoryFormData.value.taxonomy_name,
+      taxonomy_slug: editCategoryFormData.value.taxonomy_slug,
+      taxonomy_status: editCategoryFormData.value.taxonomy_status,
+      taxonomy_description: editCategoryFormData.value.taxonomy_description,
+    };
+    if (
+      editCategoryFormData.value.taxonomy_slug &&
+      editCategoryFormData.value.taxonomy_slug !== editCategoryFormData.value.original_slug
+    ) {
+      payload.taxonomy_slug = editCategoryFormData.value.taxonomy_slug;
+    } else {
+      payload.taxonomy_slug = editCategoryFormData.value.taxonomy_name;
+    }
+    const { data, error } = await updateTaxoList(editCategoryFormData.value.id, payload);
+    if (error) {
+      toast.error(error.message || "Failed to update category");
+      return;
+    }
+    toast.success("Category updated successfully");
+    const modalEl = document.getElementById("editCategoryInStepModal");
+    if (modalEl) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalEl);
+      modal?.hide();
+    }
+    await loadAvailableCategories();
+  } catch (err) {
+    toast.error("Error updating category");
+  } finally {
+    editingCategoryInStep.value = false;
+  }
+};
+
+const openDeleteCategoryModalInStep = async (category: any) => {
+  categoryToDeleteInStep.value = category;
+  await nextTick();
+  const modalEl = document.getElementById("deleteCategoryInStepModal");
+  if (modalEl) {
+    const modal = (window as any).bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  }
+};
+
+const handleDeleteCategoryInStep = async () => {
+  if (!categoryToDeleteInStep.value?.id) return;
+  deletingCategoryInStep.value = true;
+  try {
+    const { data, error } = await deleteTaxoList(categoryToDeleteInStep.value.id);
+    if (error) {
+      toast.error(error.message || "Failed to delete category");
+      return;
+    }
+    toast.success("Category deleted successfully");
+    const modalEl = document.getElementById("deleteCategoryInStepModal");
+    if (modalEl) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalEl);
+      modal?.hide();
+    }
+    // Remove from selected if it was selected
+    selectedCategoryIds.value = selectedCategoryIds.value.filter(
+      (id) => id !== categoryToDeleteInStep.value.id
+    );
+    categoryToDeleteInStep.value = null;
+    await loadAvailableCategories();
+  } catch (err) {
+    toast.error("Error deleting category");
+  } finally {
+    deletingCategoryInStep.value = false;
   }
 };
 

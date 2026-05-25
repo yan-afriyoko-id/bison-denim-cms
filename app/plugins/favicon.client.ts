@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
   const config = useRuntimeConfig();
   const apiBase = config.public.apiBase || "http://localhost:8000/api";
-  const defaultFavicon = "/assets/img/favicon.png";
+  const defaultFavicon = "/assets/img/images.png";
 
   const getFaviconType = (url: string): string => {
     if (!url) return "image/x-icon";
@@ -63,24 +63,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   };
 
   try {
-    const response = await $fetch(`${apiBase}/public-configs/store_favicon`, {
-      method: "GET",
-    });
-
-    if (response && response.success) {
-      const configData = response?.data?.config || response?.data;
-      if (configData) {
-        const faviconUrl = configData.value_image || configData.value;
-        if (faviconUrl) {
-          updateFavicon(faviconUrl);
-          return;
-        }
-      }
-    }
-
+    // Always use images.png as favicon
     updateFavicon(defaultFavicon);
   } catch (error) {
-    console.error("Failed to load favicon from config:", error);
+    console.error("Failed to load favicon:", error);
     updateFavicon(defaultFavicon);
   }
 });

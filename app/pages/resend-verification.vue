@@ -9,8 +9,8 @@
                 <!-- Logo -->
                 <div class="d-flex justify-content-center py-4">
                   <NuxtLink to="/" class="logo d-flex align-items-center w-auto">
-                    <img src="/assets/img/logo.png" alt="Karsindo Logo" />
-                    <span class="d-none d-lg-block">Karsindo</span>
+                    <img src="/assets/img/images.png" alt="Bison Denim Logo" />
+                    <span class="d-none d-lg-block">Bison Denim</span>
                   </NuxtLink>
                 </div>
 
@@ -96,7 +96,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Resend Verification Email - Karsindo",
+  title: "Resend Verification Email - Bison Denim",
 })
 
 // Auth composable

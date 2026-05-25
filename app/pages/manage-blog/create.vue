@@ -257,7 +257,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Create Blog Post - Karsindo",
+  title: "Create Blog Post - Bison Denim",
 })
 
 const { createBlog, getCategories } = useBlogApi()

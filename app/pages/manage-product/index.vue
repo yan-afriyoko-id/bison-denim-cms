@@ -337,7 +337,7 @@ definePageMeta({
 })
 
 useHead({
-  title: 'Manage Products - Karsindo',
+  title: 'Manage Products - Bison Denim',
 })
 
 const { getProducts, deleteProduct } = useProductApi()

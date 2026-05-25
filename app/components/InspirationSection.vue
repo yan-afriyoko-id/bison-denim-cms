@@ -168,57 +168,57 @@
 const activeFilter = ref(1);
 
 const filters = [
-  { id: 1, label: "Perfect Workspace" },
-  { id: 2, label: "Complete Your Kitchen" },
-  { id: 3, label: "Chooe The Look" },
-  { id: 4, label: "Inspirasi Terbaru" },
-  { id: 5, label: "Inspirasi Terbaru" },
+  { id: 1, label: "Style Terbaru" },
+  { id: 2, label: "Koleksi Kulit" },
+  { id: 3, label: "Casual Look" },
+  { id: 4, label: "Inspirasi Fashion" },
+  { id: 5, label: "Inspirasi Fashion" },
 ];
 
 const carouselItems = ref([
   {
     id: 1,
-    name: "Meja Tamu",
+    name: "Tas Selempang",
     image: "/assets/img/inspirations/product-1.png",
   },
   {
     id: 2,
-    name: "Meja Makan",
+    name: "Dompet Kulit",
     image: "/assets/img/inspirations/product-2.png",
   },
   {
     id: 3,
-    name: "Sofa",
+    name: "Ikat Pinggang",
     image: "/assets/img/inspirations/product-3.png",
   },
   {
     id: 4,
-    name: "Meja Tamu",
+    name: "Tas Selempang",
     image: "/assets/img/inspirations/product-1.png",
   },
   {
     id: 5,
-    name: "Meja Makan",
+    name: "Dompet Kulit",
     image: "/assets/img/inspirations/product-2.png",
   },
   {
     id: 6,
-    name: "Sofa",
+    name: "Ikat Pinggang",
     image: "/assets/img/inspirations/product-3.png",
   },
   {
     id: 7,
-    name: "Meja Tamu",
+    name: "Tas Selempang",
     image: "/assets/img/inspirations/product-1.png",
   },
   {
     id: 8,
-    name: "Meja Makan",
+    name: "Dompet Kulit",
     image: "/assets/img/inspirations/product-2.png",
   },
   {
     id: 9,
-    name: "Sofa",
+    name: "Ikat Pinggang",
     image: "/assets/img/inspirations/product-3.png",
   },
 ]);

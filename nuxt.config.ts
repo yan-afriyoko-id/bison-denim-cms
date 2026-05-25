@@ -34,16 +34,19 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'id'
       },
-      title: 'Karsindo',
+      title: 'Bison Denim',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Karsindo - Toko Furnitur Online Terpercaya' }
+        { name: 'description', content: 'Bison Denim - Toko Furnitur Online Terpercaya' },
+        { property: 'og:image', content: '/assets/img/images.png' },
+        { property: 'og:title', content: 'Bison Denim' },
+        { property: 'og:description', content: 'Bison Denim - Toko Furnitur Online Terpercaya' }
       ],
       link: [
         // Favicons
-        { rel: 'icon', type: 'image/x-icon', href: '/assets/img/favicon.png' },
-        { rel: 'apple-touch-icon', href: '/assets/img/apple-touch-icon.png' },
+        { rel: 'icon', type: 'image/x-icon', href: '/assets/img/images.png' },
+        { rel: 'apple-touch-icon', href: '/assets/img/images.png' },
         
         // Google Fonts
         { rel: 'preconnect', href: 'https://fonts.gstatic.com' },

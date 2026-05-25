@@ -18,7 +18,7 @@
         <!-- ================= STATS CARDS ================= -->
         <div class="col-12">
           <div class="row g-3">
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col-12 col-md-4">
               <NuxtLink to="/manage-product">
                 <DashboardStatsCard
                   title="Total Products"
@@ -30,7 +30,7 @@
               </NuxtLink>
             </div>
 
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col-12 col-md-4">
               <NuxtLink to="/manage-order">
                 <DashboardStatsCard
                   title="Total Orders"
@@ -42,19 +42,7 @@
               </NuxtLink>
             </div>
 
-            <div class="col-12 col-sm-6 col-lg-3">
-              <NuxtLink to="/manage-voucher">
-                <DashboardStatsCard
-                  title="Total Vouchers"
-                  subtitle="All Vouchers"
-                  :value="formatNumber(dashboardStats.totalVouchers)"
-                  icon="bi-gift"
-                  :loading="isLoading"
-                />
-              </NuxtLink>
-            </div>
-
-            <div class="col-12 col-sm-6 col-lg-3">
+            <div class="col-12 col-md-4">
               <NuxtLink to="/users">
                 <DashboardStatsCard
                   title="Total Users"

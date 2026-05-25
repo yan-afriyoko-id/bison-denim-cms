@@ -113,7 +113,7 @@ const nextLink = computed(() => {
 const products = ref([
   {
     id: 1,
-    name: "Manolo Neo Kabinet Sepatu 3 Tingkat",
+    name: "Bison Denim Tas Selempang Kulit Asli",
     image: "/assets/img/special-offers/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -124,7 +124,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Douma Kabinet Sepatu 3+1 Tingkat Dengan Lemari",
+    name: "Bison Denim Dompet Pria Kulit Sapi Premium",
     image: "/assets/img/special-offers/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -135,7 +135,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "New Windsor Sofa Bed",
+    name: "Bison Denim Ikat Pinggang Kulit Genuine Leather",
     image: "/assets/img/special-offers/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -146,7 +146,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Berlin Sofa Bed Fabric",
+    name: "Bison Denim Tas Ransel Kulit Vintage",
     image: "/assets/img/special-offers/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

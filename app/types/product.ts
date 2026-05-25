@@ -60,13 +60,14 @@ export interface Product {
   is_freeshiping?: "ACTIVE" | "INACTIVE";
   product_information?: string | null;
   material?: string | null;
-  finishing?: string | null;
+  style?: string | null;
   color?: string | null;
   meta_keywords?: string | null;
   meta_description?: string | null;
   meta_title?: string | null;
   weight?: number | null;
   type_weight?: "GRAM" | "KG" | null;
+  size?: string | null;
   size_long?: number | null;
   size_wide?: number | null;
   size_tall?: number | null;
@@ -158,13 +159,14 @@ export interface ProductCreatePayload {
   is_freeshiping?: "ACTIVE" | "INACTIVE";
   product_information?: string | null;
   material?: string | null;
-  finishing?: string | null;
+  style?: string | null;
   color?: string | null;
   meta_keywords?: string | null;
   meta_description?: string | null;
   meta_title?: string | null;
   weight?: number | null;
   type_weight?: "GRAM" | "KG" | null;
+  size?: string | null;
   size_long?: number | null;
   size_wide?: number | null;
   size_tall?: number | null;
@@ -177,7 +179,7 @@ export interface ProductCreatePayload {
   base_strike_price?: number | null;
   sort?: number | null;
   tags?: string | null;
-  product_protection_percent?: number || null;
+  product_protection_percent?: number | null;
   status?: "PUBLISH" | "INACTIVE" | "DRAFT" | null;
 }
 

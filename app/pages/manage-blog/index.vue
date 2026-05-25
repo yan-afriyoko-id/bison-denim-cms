@@ -212,7 +212,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Blog Management - Karsindo",
+  title: "Blog Management - Bison Denim",
 })
 
 const { getBlogs, getCategories } = useBlogApi()

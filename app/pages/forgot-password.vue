@@ -10,8 +10,8 @@
                 <div class="d-flex justify-content-center py-4">
                   <NuxtLink to="/" class="logo d-flex align-items-center w-auto">
                     <img 
-                      :src="logoUrl || '/assets/img/logo.png'" 
-                      alt="Karsindo Logo"
+                      :src="logoUrl || '/assets/img/images.png'" 
+                      alt="Bison Denim Logo"
                       @error="handleLogoError"
                     />
                   </NuxtLink>
@@ -107,7 +107,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Forgot Password - Karsindo",
+  title: "Forgot Password - Bison Denim",
 })
 
 const { forgotPassword } = useAuthApi()
@@ -117,7 +117,7 @@ const { fetchPublicConfig } = useConfig()
 const logoUrl = ref<string | null>(null)
 
 const handleLogoError = () => {
-  logoUrl.value = '/assets/img/logo.png'
+  logoUrl.value = '/assets/img/images.png'
 }
 
 const loadLogo = async () => {

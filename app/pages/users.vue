@@ -146,7 +146,7 @@ definePageMeta({
 })
 
 useHead({
-  title: "Users - Karsindo",
+  title: "Users - Bison Denim",
 })
 
 const { getUsers } = useUserManagementApi()

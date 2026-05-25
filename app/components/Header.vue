@@ -24,7 +24,7 @@
         <NuxtLink to="/" class="hidden sm:flex items-center gap-2 sm:gap-3 shrink-0">
           <NuxtImg 
             :src="logoUrl" 
-            alt="Karsindo Logo" 
+            alt="Bison Denim Logo" 
             width="144" 
             height="46"
             class="w-24 sm:w-32 md:w-36 h-auto"
@@ -188,7 +188,7 @@
           <NuxtLink to="/" @click="isSidebarOpen = false" class="flex items-center gap-2 sm:gap-3">
             <NuxtImg 
               :src="logoUrl" 
-              alt="Karsindo Logo" 
+              alt="Bison Denim Logo" 
               width="144" 
               height="46"
               class="w-32 md:w-36 h-auto"
@@ -246,21 +246,21 @@ const router = useRouter();
 const cartCount = ref(0);
 const isCategoryOpen = ref(false);
 const isSidebarOpen = ref(false);
-const logoUrl = ref("/assets/img/logo/logo.png");
+const logoUrl = ref("/assets/img/images.png");
 
 const handleSearch = () => {
   router.push("/products");
 };
 
 const categories = [
-  { id: 1, name: "Furniture", href: "/category/furniture" },
-  { id: 2, name: "Kasur", href: "/category/kasur" },
-  { id: 3, name: "Elektronik", href: "/category/elektronik" },
-  { id: 4, name: "Dekorasi", href: "/category/dekorasi" },
-  { id: 5, name: "Perlengkapan Dapur", href: "/category/perlengkapan-dapur" },
-  { id: 6, name: "Tempat Penyimpanan", href: "/category/tempat-penyimpanan" },
-  { id: 7, name: "Kamar Mandi", href: "/category/kamar-mandi" },
-  { id: 8, name: "Wearable", href: "/category/wearable" },
+  { id: 1, name: "Tas", href: "/category/tas" },
+  { id: 2, name: "Dompet", href: "/category/dompet" },
+  { id: 3, name: "Ikat Pinggang", href: "/category/ikat-pinggang" },
+  { id: 4, name: "Aksesoris", href: "/category/aksesoris" },
+  { id: 5, name: "Pakaian Pria", href: "/category/pakaian-pria" },
+  { id: 6, name: "Pakaian Wanita", href: "/category/pakaian-wanita" },
+  { id: 7, name: "Sepatu", href: "/category/sepatu" },
+  { id: 8, name: "Jam Tangan", href: "/category/jam-tangan" },
 ];
 
 const loadLogo = async () => {

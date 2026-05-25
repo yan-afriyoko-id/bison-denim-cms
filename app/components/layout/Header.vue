@@ -3,8 +3,8 @@
     <div class="d-flex align-items-center justify-content-between">
       <NuxtLink to="/dashboard" class="logo d-flex align-items-center h-full">
         <img 
-          :src="logoUrl || '/assets/img/logo.png'" 
-          alt="Karsindo Logo" 
+          :src="logoUrl || '/assets/img/images.png'" 
+          alt="Bison Denim Logo" 
           @error="handleLogoError"
         />
       </NuxtLink>
@@ -82,13 +82,16 @@ const { toggle: toggleSidebar } = useSidebar()
 
 // Logo management
 const handleLogoError = () => {
-  logoUrl.value = '/assets/img/logo.png'
+  logoUrl.value = '/assets/img/images.png'
 }
 
 const loadLogo = async () => {
   try {
     const res = await fetchPublicConfig("store_logo_website")
-    if (!res) return
+    if (!res) {
+      logoUrl.value = '/assets/img/images.png'
+      return
+    }
     
     // Response structure: { success, data: Config }
     const configData = res?.data

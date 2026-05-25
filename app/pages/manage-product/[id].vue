@@ -100,9 +100,9 @@
                 <div class="col-sm-4"><strong>Material:</strong></div>
                 <div class="col-sm-8">{{ product.material }}</div>
               </div>
-              <div class="row mb-3" v-if="product.finishing">
-                <div class="col-sm-4"><strong>Finishing:</strong></div>
-                <div class="col-sm-8">{{ product.finishing }}</div>
+              <div class="row mb-3" v-if="product.style">
+                <div class="col-sm-4"><strong>Style:</strong></div>
+                <div class="col-sm-8">{{ product.style }}</div>
               </div>
               <div class="row mb-3" v-if="product.color">
                 <div class="col-sm-4"><strong>Color:</strong></div>
@@ -115,10 +115,10 @@
             </div>
           </div>
 
-          <!-- Dimensions & Weight -->
+          <!-- Weight & Shipping -->
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="mb-0">Dimensions & Weight</h5>
+              <h5 class="mb-0">Weight & Shipping</h5>
             </div>
             <div class="card-body">
               <div class="row">
@@ -127,7 +127,7 @@
                   {{ product.weight }} {{ product.type_weight || 'GRAM' }}
                 </div>
                 <div class="col-md-6 mb-3" v-if="product.size_long || product.size_wide || product.size_tall">
-                  <strong>Product Dimensions:</strong>
+                  <strong>Package Size:</strong>
                   <span v-if="product.size_long">{{ product.size_long }} × </span>
                   <span v-if="product.size_wide">{{ product.size_wide }} × </span>
                   <span v-if="product.size_tall">{{ product.size_tall }}</span>
@@ -332,7 +332,7 @@ const formatDate = (date: string | undefined) => {
 
 
 useHead({
-  title: product.value ? `${product.value.name} - Product Details` : 'Product Details - Karsindo',
+  title: product.value ? `${product.value.name} - Product Details` : 'Product Details - Bison Denim',
 })
 
 onMounted(async () => {

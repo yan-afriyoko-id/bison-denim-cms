@@ -411,7 +411,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "Manage Category Products - Karsindo CMS",
+  title: "Manage Category Products - Bison Denim CMS",
 });
 
 interface Category {
