@@ -79,8 +79,8 @@
           <span>Orders</span>
         </NuxtLink>
       </li>
-      <!-- Blog Management (hidden) -->
-      <!-- <li v-if="hasPermission('blogs.read')" class="nav-item">
+      <!-- Blog Management -->
+      <li v-if="hasPermission('blogs.read')" class="nav-item">
         <NuxtLink
           to="/manage-blog"
           class="nav-link"
@@ -89,10 +89,10 @@
           <i class="bi bi-newspaper"></i>
           <span>Manage Blog</span>
         </NuxtLink>
-      </li> -->
+      </li>
 
-      <!-- Blog Categories (hidden) -->
-      <!-- <li v-if="hasPermission('blog-categories.read')" class="nav-item">
+      <!-- Blog Categories -->
+      <li v-if="hasPermission('blog-categories.read')" class="nav-item">
         <NuxtLink
           to="/manage-blog-categories"
           class="nav-link"
@@ -101,7 +101,7 @@
           <i class="bi bi-tags"></i>
           <span>Blog Categories</span>
         </NuxtLink>
-      </li> -->
+      </li>
 
       <!-- Pages Heading -->
       <li class="nav-heading">Management</li>
