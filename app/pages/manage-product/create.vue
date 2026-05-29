@@ -156,7 +156,7 @@
                     />
                   </div>
 
-                  <!-- SEO Metadata -->
+                  <!-- SEO Metadata (Auto-generated) -->
                   <div class="col-12 mt-4">
                     <div class="border-bottom pb-2 mb-3">
                       <h6 class="mb-0 text-primary">
@@ -165,22 +165,20 @@
                     </div>
                   </div>
                   <div class="col-12">
-                    <label class="form-label">Meta Title</label>
-                    <input
-                      v-model="productForm.meta_title"
-                      type="text"
-                      class="form-control"
-                      placeholder="SEO meta title"
-                    />
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Meta Description</label>
-                    <textarea
-                      v-model="productForm.meta_description"
-                      class="form-control"
-                      rows="2"
-                      placeholder="SEO meta description"
-                    ></textarea>
+                      <div class="card-body py-2">
+                        <small class="text-muted d-block mb-1">
+                          <i class="bi bi-info-circle me-1"></i>
+                          SEO metadata is generated automatically from product name.
+                        </small>
+                        <div class="mt-2">
+                          <strong class="small text-dark">Meta Title:</strong>
+                          <p class="mb-1 small">{{ productForm.meta_title || '—' }}</p>
+                        </div>
+                        <div>
+                          <strong class="small text-dark">Meta Description:</strong>
+                          <p class="mb-0 small">{{ productForm.meta_description || '—' }}</p>
+                        </div>
+                      </div>
                   </div>
                 </div>
               </div>
@@ -1383,6 +1381,9 @@ const newBrand = ref({
 const generateSlugFromName = () => {
   if (!productForm.value.name) return;
   productForm.value.slug = generateSlug(productForm.value.name);
+  // Auto-generate SEO metadata
+  productForm.value.meta_title = `Buy ${productForm.value.name}`;
+  productForm.value.meta_description = `Shop ${productForm.value.name} at the best price. High quality product with fast shipping and secure payment. Order now!`;
 };
 
 const goToStep = (step: number) => {
