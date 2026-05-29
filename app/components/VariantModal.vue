@@ -65,18 +65,6 @@
                 <i class="bi bi-shop me-1"></i>Stock
               </button>
             </li>
-            <li class="nav-item" role="presentation">
-              <button
-                class="nav-link"
-                id="image-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#image-pane"
-                type="button"
-                role="tab"
-              >
-                <i class="bi bi-image me-1"></i>Image
-              </button>
-            </li>
           </ul>
 
           <!-- Tab Content -->
@@ -213,13 +201,35 @@
                       type="text"
                       class="form-control form-control-lg"
                       placeholder="e.g., Red - Large, Blue - Small"
-                      @input="handleUpdateVariantName"
                     />
                     <small class="text-muted">
                       <i class="bi bi-info-circle me-1"></i>
                       Name will be auto-generated from selected attribute
                       values, but you can edit it manually.
                     </small>
+                  </div>
+
+                  <!-- Image Quick Indicator -->
+                  <div class="col-12 mt-3">
+                    <div class="d-flex align-items-center gap-2 p-2 rounded bg-light">
+                      <img
+                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
+                        :src="localVariantForm.image_preview || localVariantForm.image_path"
+                        alt="Variant image"
+                        class="rounded"
+                        style="width: 40px; height: 40px; object-fit: cover;"
+                      />
+                      <i v-else class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
+                      <small class="text-muted">
+                        <span v-if="localVariantForm.image_preview || localVariantForm.image_path">
+                          Image attached.
+                        </span>
+                        <span v-else>
+                          No image yet.
+                        </span>
+                        Go to <strong>Details</strong> tab to manage variant image.
+                      </small>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -228,7 +238,61 @@
             <!-- Details Tab -->
             <div class="tab-pane fade" id="details-pane" role="tabpanel">
               <div class="row g-3">
+                <!-- Variant Image Section -->
                 <div class="col-12">
+                  <div class="border-bottom pb-2 mb-3">
+                    <h6 class="mb-0 text-primary">
+                      <i class="bi bi-image me-2"></i>Variant Image
+                      <span class="text-muted small fw-normal ms-1">(Optional)</span>
+                    </h6>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="d-flex align-items-start gap-3">
+                    <!-- Image Preview -->
+                    <div
+                      class="border rounded d-flex align-items-center justify-content-center flex-shrink-0"
+                      style="width: 120px; height: 120px; background-color: #f8f9fa;"
+                    >
+                      <img
+                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
+                        :src="localVariantForm.image_preview || localVariantForm.image_path"
+                        alt="Variant preview"
+                        class="rounded"
+                        style="max-width: 120px; max-height: 120px; object-fit: cover;"
+                      />
+                      <div v-else class="text-center text-muted">
+                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                        <small class="d-block mt-1">No image</small>
+                      </div>
+                    </div>
+                    <!-- Upload Controls -->
+                    <div class="flex-grow-1">
+                      <input
+                        ref="variantImageInput"
+                        type="file"
+                        accept="image/*"
+                        class="form-control form-control-sm"
+                        @change="handleVariantImageSelect"
+                      />
+                      <small class="text-muted d-block mt-1">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Upload an image specific to this variant (e.g., different color). Max 5MB.
+                      </small>
+                      <button
+                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
+                        type="button"
+                        class="btn btn-sm btn-outline-danger mt-2"
+                        @click="handleClearVariantImage"
+                      >
+                        <i class="bi bi-x-circle me-1"></i>Remove Image
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product Details Section -->
+                <div class="col-12 mt-4">
                   <div class="border-bottom pb-2 mb-3">
                     <h6 class="mb-0 text-primary">
                       <i class="bi bi-info-circle me-2"></i>Product Details
@@ -524,63 +588,6 @@
               </div>
             </div>
 
-            <!-- Image Tab -->
-            <div class="tab-pane fade" id="image-pane" role="tabpanel">
-              <div class="row g-3">
-                <div class="col-12">
-                  <label class="form-label"
-                    >Variant Image
-                    <span class="text-muted small">(Optional)</span></label
-                  >
-                  <div class="mb-2">
-                    <input
-                      ref="variantImageInput"
-                      type="file"
-                      accept="image/*"
-                      class="form-control"
-                      @change="handleVariantImageSelect"
-                    />
-                    <small class="text-muted">
-                      <i class="bi bi-info-circle me-1"></i>
-                      Upload an image specific to this variant (e.g., different
-                      color variant)
-                    </small>
-                  </div>
-                  <div
-                    v-if="
-                      localVariantForm.image_preview ||
-                      localVariantForm.image_path
-                    "
-                    class="mt-2"
-                  >
-                    <img
-                      :src="
-                        localVariantForm.image_preview ||
-                        localVariantForm.image_path
-                      "
-                      alt="Variant preview"
-                      class="img-thumbnail"
-                      style="
-                        max-width: 200px;
-                        max-height: 200px;
-                        object-fit: cover;
-                      "
-                    />
-                    <button
-                      v-if="
-                        localVariantForm.image_preview ||
-                        localVariantForm.image_path
-                      "
-                      type="button"
-                      class="btn btn-sm btn-danger ms-2"
-                      @click="handleClearVariantImage"
-                    >
-                      <i class="bi bi-x-circle me-1"></i>Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div class="modal-footer">

@@ -78,7 +78,9 @@
                       class="form-control"
                       :class="{ 'is-invalid': productFormErrors.slug }"
                       placeholder="product-slug"
+                      readonly
                     />
+                    <small class="text-muted"></small>
                     <div v-if="productFormErrors.slug" class="invalid-feedback">
                       {{ productFormErrors.slug[0] }}
                     </div>

@@ -104,7 +104,9 @@
                         class="form-control"
                         :class="{ 'is-invalid': productFormErrors.slug }"
                         placeholder="product-slug"
+                        readonly
                       />
+                      <small class="text-muted"></small>
                       <div
                         v-if="productFormErrors.slug"
                         class="invalid-feedback"
@@ -3808,12 +3810,9 @@ const handleUpdateProduct = async () => {
   }
 };
 
-const generateSlug = () => {
+const generateSlugFromName = () => {
   if (!productForm.value.name) return;
-  productForm.value.slug = productForm.value.name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  productForm.value.slug = generateSlug(productForm.value.name);
 };
 
 const getVariantTotalStock = (variant: any) => {
