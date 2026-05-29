@@ -136,7 +136,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#manageCategoriesModal"
                 >
-                  <i class="bi bi-gear"></i>
+                  Add
                 </button>
               </div>
               <div v-if="errors.fk_category" class="invalid-feedback d-block">
