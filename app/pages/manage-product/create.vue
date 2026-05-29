@@ -552,7 +552,7 @@
                   </div>
                   <button
                     type="button"
-                    class="btn btn-sm btn-outline-success"
+                    class="btn btn-success"
                     @click="openCreateCategoryModal"
                     title="Create New Category"
                   >

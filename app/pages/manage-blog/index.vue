@@ -4,13 +4,24 @@
       <div>
         <p class="text-muted mb-0">Manage blog posts</p>
       </div>
-      <NuxtLink
-        v-if="hasPermission('blogs.create')"
-        to="/manage-blog/create"
-        class="btn btn-primary"
-      >
-        <span class="me-2">+</span>Create New Blog Post
-      </NuxtLink>
+      <div class="d-flex gap-2">
+        <button
+          v-if="hasPermission('blogs.create')"
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-toggle="modal"
+          data-bs-target="#manageCategoriesModal"
+        >
+          <i class="bi bi-tags me-2"></i>Categories
+        </button>
+        <NuxtLink
+          v-if="hasPermission('blogs.create')"
+          to="/manage-blog/create"
+          class="btn btn-primary"
+        >
+          <span class="me-2">+</span>Create New Blog Post
+        </NuxtLink>
+      </div>
     </div>
 
     <!-- Filter Section -->
@@ -200,11 +211,195 @@
       :blog="blogToDelete"
       @deleted="handleBlogDeleted"
     />
+
+    <!-- Manage Categories Modal -->
+    <div
+      id="manageCategoriesModal"
+      class="modal fade"
+      tabindex="-1"
+      aria-labelledby="manageCategoriesModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="manageCategoriesModalLabel">Manage Blog Categories</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Create New Category Form -->
+            <div class="card mb-3">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Add New Category</h6>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary"
+                  @click="showCreateCategoryForm = !showCreateCategoryForm"
+                >
+                  <i :class="showCreateCategoryForm ? 'bi bi-dash' : 'bi bi-plus'"></i>
+                  {{ showCreateCategoryForm ? 'Hide' : 'New' }}
+                </button>
+              </div>
+              <div v-if="showCreateCategoryForm" class="card-body">
+                <div class="row g-2">
+                  <div class="col-md-5">
+                    <input
+                      v-model="newCategory.name"
+                      type="text"
+                      class="form-control form-control-sm"
+                      placeholder="Category name"
+                      @input="generateCategorySlug"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <input
+                      v-model="newCategory.slug"
+                      type="text"
+                      class="form-control form-control-sm"
+                      placeholder="Slug (auto)"
+                      readonly
+                      style="background:#f8f9fa;"
+                    />
+                  </div>
+                  <div class="col-md-3">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-sm w-100"
+                      :disabled="!newCategory.name || savingCategory"
+                      @click="handleCreateCategory"
+                    >
+                      <span v-if="savingCategory" class="spinner-border spinner-border-sm me-1"></span>
+                      Add
+                    </button>
+                  </div>
+                  <div class="col-12">
+                    <textarea
+                      v-model="newCategory.description"
+                      class="form-control form-control-sm"
+                      rows="2"
+                      placeholder="Description (optional)"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Categories List -->
+            <div v-if="loadingCategories" class="text-center py-3">
+              <div class="spinner-border spinner-border-sm text-primary"></div>
+              <span class="ms-2 text-muted">Loading categories...</span>
+            </div>
+            <div v-else-if="categories.length === 0" class="text-center py-3">
+              <p class="text-muted mb-0">No categories yet. Create your first one above.</p>
+            </div>
+            <div v-else class="table-responsive">
+              <table class="table table-sm table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th style="width: 80px;">Status</th>
+                    <th style="width: 100px;" class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="cat in categories" :key="cat.id">
+                    <td>
+                      <template v-if="editingCategory?.id === cat.id">
+                        <input
+                          v-model="editingCategory.name"
+                          type="text"
+                          class="form-control form-control-sm"
+                          @input="generateEditCategorySlug"
+                        />
+                      </template>
+                      <template v-else>
+                        <strong>{{ cat.name }}</strong>
+                        <br v-if="cat.description" />
+                        <small v-if="cat.description" class="text-muted">{{ cat.description }}</small>
+                      </template>
+                    </td>
+                    <td>
+                      <template v-if="editingCategory?.id === cat.id">
+                        <input
+                          v-model="editingCategory.slug"
+                          type="text"
+                          class="form-control form-control-sm"
+                          readonly
+                          style="background:#f8f9fa;"
+                        />
+                      </template>
+                      <template v-else>
+                        <code>{{ cat.slug }}</code>
+                      </template>
+                    </td>
+                    <td>
+                      <template v-if="editingCategory?.id === cat.id">
+                        <select v-model="editingCategory.status" class="form-select form-select-sm">
+                          <option :value="true">Active</option>
+                          <option :value="false">Inactive</option>
+                        </select>
+                      </template>
+                      <template v-else>
+                        <span :class="`badge ${cat.status === true || cat.status === 1 ? 'bg-success' : 'bg-warning'}`">
+                          {{ cat.status === true || cat.status === 1 ? 'Active' : 'Inactive' }}
+                        </span>
+                      </template>
+                    </td>
+                    <td class="text-end">
+                      <template v-if="editingCategory?.id === cat.id">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-success me-1"
+                          @click="handleUpdateCategory"
+                          :disabled="savingCategory"
+                        >
+                          <i class="bi bi-check"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-secondary"
+                          @click="editingCategory = null"
+                        >
+                          <i class="bi bi-x"></i>
+                        </button>
+                      </template>
+                      <template v-else>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-outline-primary me-1"
+                          @click="startEditCategory(cat)"
+                          title="Edit"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-outline-danger"
+                          @click="handleDeleteCategory(cat)"
+                          title="Delete"
+                          :disabled="deletingCategory === cat.id"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </template>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Blog, CategoryBlog } from '~/types/blog'
+import type { Blog, CategoryBlog, CategoryBlogCreatePayload } from '~/types/blog'
 
 definePageMeta({
   middleware: 'auth',
@@ -215,7 +410,7 @@ useHead({
   title: "Blog Management - Bison Denim",
 })
 
-const { getBlogs, getCategories } = useBlogApi()
+const { getBlogs, getCategories, createCategory, updateCategory, deleteCategory } = useBlogApi()
 const { hasPermission } = usePermission()
 
 const blogs = ref<Blog[]>([])
@@ -235,6 +430,19 @@ const categories = ref<CategoryBlog[]>([])
 const loadingCategories = ref(false)
 
 const blogToDelete = ref<Blog | null>(null)
+
+// Category management state
+const showCreateCategoryForm = ref(true)
+const savingCategory = ref(false)
+const deletingCategory = ref<number | null>(null)
+const editingCategory = ref<{ id: number; name: string; slug: string; description: string; status: boolean } | null>(null)
+const newCategory = reactive<CategoryBlogCreatePayload>({
+  name: '',
+  slug: '',
+  description: '',
+  status: true,
+})
+const toast = useToast()
 
 const filters = ref({
   search: '',
@@ -291,6 +499,94 @@ const loadCategories = async () => {
   }
 
   loadingCategories.value = false
+}
+
+const generateCategorySlug = () => {
+  newCategory.slug = newCategory.name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+const generateEditCategorySlug = () => {
+  if (editingCategory.value) {
+    editingCategory.value.slug = editingCategory.value.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+  }
+}
+
+const handleCreateCategory = async () => {
+  if (!newCategory.name) return
+  savingCategory.value = true
+
+  const { data, error } = await createCategory(newCategory)
+
+  if (error) {
+    toast.error(error.message || 'Failed to create category')
+  } else if (data?.success) {
+    toast.success('Category created successfully!')
+    newCategory.name = ''
+    newCategory.slug = ''
+    newCategory.description = ''
+    newCategory.status = true
+    await loadCategories()
+  }
+
+  savingCategory.value = false
+}
+
+const startEditCategory = (cat: CategoryBlog) => {
+  editingCategory.value = {
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    description: cat.description || '',
+    status: cat.status === true || cat.status === 1,
+  }
+}
+
+const handleUpdateCategory = async () => {
+  if (!editingCategory.value) return
+  savingCategory.value = true
+
+  const { data, error } = await updateCategory(editingCategory.value.id, {
+    name: editingCategory.value.name,
+    slug: editingCategory.value.slug,
+    description: editingCategory.value.description,
+    status: editingCategory.value.status,
+  })
+
+  if (error) {
+    toast.error(error.message || 'Failed to update category')
+  } else if (data?.success) {
+    toast.success('Category updated successfully!')
+    editingCategory.value = null
+    await loadCategories()
+  }
+
+  savingCategory.value = false
+}
+
+const handleDeleteCategory = async (cat: CategoryBlog) => {
+  if (!confirm(`Are you sure you want to delete "${cat.name}"?`)) return
+  deletingCategory.value = cat.id
+
+  const { data, error } = await deleteCategory(cat.id)
+
+  if (error) {
+    toast.error(error.message || 'Failed to delete category')
+  } else if (data?.success) {
+    toast.success('Category deleted successfully!')
+    await loadCategories()
+  }
+
+  deletingCategory.value = null
 }
 
 const changePage = (page: number) => {

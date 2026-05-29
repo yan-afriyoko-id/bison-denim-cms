@@ -91,8 +91,8 @@
         </NuxtLink>
       </li>
 
-      <!-- Blog Categories -->
-      <li v-if="hasPermission('blog-categories.read')" class="nav-item">
+      <!-- Blog Categories (merged into Manage Blog create/edit) -->
+      <!-- <li v-if="hasPermission('blog-categories.read')" class="nav-item">
         <NuxtLink
           to="/manage-blog-categories"
           class="nav-link"
@@ -101,7 +101,7 @@
           <i class="bi bi-tags"></i>
           <span>Blog Categories</span>
         </NuxtLink>
-      </li>
+      </li> -->
 
       <!-- Pages Heading -->
       <li class="nav-heading">Management</li>
