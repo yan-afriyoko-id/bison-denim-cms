@@ -84,13 +84,14 @@
               @file-change="onFileChange"
             />
 
-            <!-- Midtrans Tab -->
-            <MidtransTab
-              v-if="activeTab === 'midtrans' && hasPermission('configs.read')"
+            <!-- Payment Tab -->
+            <PaymentTab
+              v-if="activeTab === 'payment' && hasPermission('configs.read')"
               :form-data="formData"
               :is-loading="isLoading"
-              :is-active="activeTab === 'midtrans'"
+              :is-active="activeTab === 'payment'"
               @save-settings="saveSettings"
+              @toggle-method="togglePaymentMethod"
             />
 
             <!-- Gojek Instant Tab -->
@@ -868,7 +869,7 @@ import StoreTab from "~/components/settings/StoreTab.vue";
 import ProductProtectionTab from "~/components/settings/ProductProtectionTab.vue";
 import EmailTab from "~/components/settings/EmailTab.vue";
 import AppTab from "~/components/settings/AppTab.vue";
-import MidtransTab from "~/components/settings/MidtransTab.vue";
+import PaymentTab from "~/components/settings/PaymentTab.vue";
 import GojekInstantTab from "~/components/settings/GojekInstantTab.vue";
 import TopBannerTab from "~/components/settings/TopBannerTab.vue";
 import SocialTab from "~/components/settings/SocialTab.vue";
@@ -951,7 +952,7 @@ const allTabs = [
   { key: "productProtection", label: "Product Protection" },
   { key: "email", label: "Email" },
   { key: "app", label: "App" },
-  { key: "midtrans", label: "Midtrans" },
+  { key: "payment", label: "Payment" },
   { key: "gojek_instant", label: "Gojek Instant" },
   { key: "social", label: "Social Media" },
   { key: "notification", label: "Notifications" },
@@ -969,7 +970,7 @@ const tabs = computed(() => {
     if (
       tab.key === "email" ||
       tab.key === "app" ||
-      tab.key === "midtrans" ||
+      tab.key === "payment" ||
       tab.key === "gojek_instant" ||
       tab.key === "social" ||
       tab.key === "notification" ||
@@ -1033,10 +1034,15 @@ const formData = ref<any>({
   store_country: "",
   store_postal_code: "",
   store_currency: "",
-  // midtrans
+  // payment
+  midtrans_is_active: true,
   midtrans_server_key: "",
   midtrans_client_key: "",
   midtrans_is_production: false,
+  xendit_is_active: false,
+  xendit_secret_key: "",
+  xendit_public_key: "",
+  xendit_is_production: false,
   // gojek instant
   gojek_instant_key: "",
   // social
@@ -1081,6 +1087,22 @@ const clearMessagesAfterTimeout = () => {
   }, 3000);
 };
 
+const paymentMethods = ["midtrans", "xendit"] as const;
+
+type PaymentMethod = (typeof paymentMethods)[number];
+
+const ensureAtLeastOnePaymentMethodActive = (
+  preferredMethod: PaymentMethod = "midtrans",
+) => {
+  const hasActiveMethod = paymentMethods.some(
+    (method) => formData.value[`${method}_is_active`],
+  );
+
+  if (!hasActiveMethod) {
+    formData.value[`${preferredMethod}_is_active`] = true;
+  }
+};
+
 const loadSettings = async () => {
   try {
     if (!token.value) return;
@@ -1119,6 +1141,8 @@ const loadSettings = async () => {
       ...formData.value,
       ...incoming,
     };
+
+    ensureAtLeastOnePaymentMethodActive();
 
     if (incoming.store_logo_website) {
       appLogoPreview.value =
@@ -1167,6 +1191,30 @@ function onFileChange(e: Event, type: "logo" | "favicon") {
   }
 }
 
+const togglePaymentMethod = (method: PaymentMethod) => {
+  const targetKey = `${method}_is_active`;
+  const nextValue = !formData.value[targetKey];
+
+  if (!nextValue) {
+    const hasAnotherActiveMethod = paymentMethods.some(
+      (paymentMethod) =>
+        paymentMethod !== method &&
+        Boolean(formData.value[`${paymentMethod}_is_active`]),
+    );
+
+    if (!hasAnotherActiveMethod) {
+      const message = "At least one payment method must remain active";
+      formData.value[targetKey] = true;
+      errorMessage.value = message;
+      toast.error(message);
+      clearMessagesAfterTimeout();
+      return;
+    }
+  }
+
+  formData.value[targetKey] = nextValue;
+};
+
 const saveSettings = async (category: string) => {
   try {
     isLoading.value = true;
@@ -1179,6 +1227,20 @@ const saveSettings = async (category: string) => {
     let categoryKeys = Object.keys(formData.value).filter(
       (k) => k.startsWith(category + "_") || k === category,
     );
+
+    if (category === "payment") {
+      const hasActiveMethod = paymentMethods.some(
+        (method) => formData.value[`${method}_is_active`],
+      );
+
+      if (!hasActiveMethod) {
+        throw new Error("At least one payment method must remain active");
+      }
+
+      categoryKeys = Object.keys(formData.value).filter(
+        (key) => key.startsWith("midtrans_") || key.startsWith("xendit_"),
+      );
+    }
 
     // for APP tab also include image keys used by API
     if (category === "app") {

@@ -3,13 +3,24 @@
  * Provides reactive state management for sidebar toggle
  */
 export const useSidebar = () => {
+  const desktopBreakpoint = 1200
+
   // Reactive state
   const isOpen = useState<boolean>('sidebar.isOpen', () => {
     if (import.meta.client) {
-      return window.innerWidth >= 1200
+      return window.innerWidth >= desktopBreakpoint
     }
     return true
   })
+
+  const syncBodyClass = () => {
+    if (!import.meta.client) return
+
+    const isDesktop = window.innerWidth >= desktopBreakpoint
+    const shouldApplyToggleClass = isDesktop ? !isOpen.value : isOpen.value
+
+    document.body.classList.toggle('toggle-sidebar', shouldApplyToggleClass)
+  }
 
   // Toggle sidebar
   const toggle = () => {
@@ -34,27 +45,11 @@ export const useSidebar = () => {
 
   // Watch for body class sync
   if (import.meta.client) {
-    watch(isOpen, (open) => {
-      if (open) {
-        document.body.classList.remove('toggle-sidebar')
-      } else {
-        document.body.classList.add('toggle-sidebar')
-      }
-    }, { immediate: true })
+    watch(isOpen, syncBodyClass, { immediate: true })
 
     // Handle window resize for responsive behavior
     const handleResize = () => {
-      if (window.innerWidth >= 1200) {
-        // Desktop: default open
-        if (!isOpen.value) {
-          isOpen.value = true
-        }
-      } else {
-        // Mobile: default closed
-        if (isOpen.value) {
-          isOpen.value = false
-        }
-      }
+      syncBodyClass()
     }
 
     window.addEventListener('resize', handleResize)
