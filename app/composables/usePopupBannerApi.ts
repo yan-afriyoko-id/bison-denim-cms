@@ -1,5 +1,7 @@
 import type { PopupBanner } from "~/types/popupBanner";
 
+type PopupBannerPayload = Partial<PopupBanner> | FormData;
+
 export const usePopupBannerApi = () => {
   const { baseURL, getHeaders } = useApiBase();
 
@@ -54,7 +56,7 @@ export const usePopupBannerApi = () => {
     );
   };
 
-  const createPopupBanner = async (payload: Partial<PopupBanner>) => {
+  const createPopupBanner = async (payload: PopupBannerPayload) => {
     return handleRequest(
       $fetch<{
         success: boolean;
@@ -69,7 +71,7 @@ export const usePopupBannerApi = () => {
 
   const updatePopupBanner = async (
     id: number,
-    payload: Partial<PopupBanner>,
+    payload: PopupBannerPayload,
   ) => {
     return handleRequest(
       $fetch<{

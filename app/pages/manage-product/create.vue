@@ -38,8 +38,223 @@
         <div class="card">
           <div class="card-body">
             <div class="tab-content">
-              <!-- Step 1: Basic Information -->
+              <!-- Step 1: Product Category -->
               <div v-if="currentStep === 1" class="tab-pane fade show active">
+                <h5 class="mb-4">Product Category</h5>
+                <p class="text-muted mb-4">
+                  Select a product type first, then choose a subcategory before
+                  continuing to create the product.
+                </p>
+
+                <div v-if="loadingCategories" class="text-center py-4">
+                  <div
+                    class="spinner-border spinner-border-sm text-primary"
+                    role="status"
+                  ></div>
+                  <p class="mt-2 text-muted small">Loading categories...</p>
+                </div>
+
+                <div v-else class="row g-4">
+                  <div class="col-12 col-lg-6">
+                    <div class="border rounded p-3 h-100">
+                      <div
+                        class="d-flex justify-content-between align-items-center gap-2 mb-3"
+                      >
+                        <div>
+                          <h6 class="mb-1">Product Type</h6>
+                          <small class="text-muted">
+                            Example: Bag, Wallet, Shoes
+                          </small>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-success"
+                          @click="openCreateCategoryModal('primary')"
+                        >
+                          <i class="bi bi-plus-circle me-1"></i>New
+                        </button>
+                      </div>
+
+                      <input
+                        v-model="categorySearchQuery"
+                        type="text"
+                        class="form-control mb-3"
+                        placeholder="Search product types..."
+                      />
+
+                      <div
+                        class="list-group category-selection-list"
+                        :class="{ 'is-empty': filteredPrimaryCategories.length === 0 }"
+                      >
+                        <button
+                          v-for="category in filteredPrimaryCategories"
+                          :key="category.id"
+                          type="button"
+                          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2"
+                          :class="{
+                            active: selectedPrimaryCategoryId === category.id,
+                          }"
+                          @click="selectPrimaryCategory(category.id)"
+                        >
+                          <div class="text-start">
+                            <div class="fw-semibold">
+                              {{ category.taxonomy_name }}
+                            </div>
+                            <small
+                              v-if="category.taxonomy_description"
+                              class="text-muted"
+                            >
+                              {{ category.taxonomy_description }}
+                            </small>
+                          </div>
+                          <div class="d-flex gap-1">
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-warning py-0 px-1"
+                              @click.stop="openEditCategoryModalInStep(category)"
+                              title="Edit Category"
+                            >
+                              <i class="bi bi-pencil" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-danger py-0 px-1"
+                              @click.stop="openDeleteCategoryModalInStep(category)"
+                              title="Delete Category"
+                            >
+                              <i class="bi bi-trash" style="font-size: 0.7rem;"></i>
+                            </button>
+                          </div>
+                        </button>
+
+                        <div
+                          v-if="filteredPrimaryCategories.length === 0"
+                          class="text-center py-4 text-muted"
+                        >
+                          No matching product types found.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-lg-6">
+                    <div class="border rounded p-3 h-100">
+                      <div
+                        class="d-flex justify-content-between align-items-center gap-2 mb-3"
+                      >
+                        <div>
+                          <h6 class="mb-1">Subcategory</h6>
+                          <small class="text-muted">
+                            Example: Sling Bag, Backpack
+                          </small>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-success"
+                          :disabled="!selectedPrimaryCategoryId"
+                          @click="openCreateCategoryModal('sub')"
+                        >
+                          <i class="bi bi-plus-circle me-1"></i>New
+                        </button>
+                      </div>
+
+                      <input
+                        v-model="subcategorySearchQuery"
+                        type="text"
+                        class="form-control mb-3"
+                        placeholder="Search subcategories..."
+                        :disabled="!selectedPrimaryCategoryId"
+                      />
+
+                      <div
+                        v-if="!selectedPrimaryCategoryId"
+                        class="alert alert-light border mb-0"
+                      >
+                        Select a product type first to show its subcategories.
+                      </div>
+
+                      <div
+                        v-else
+                        class="list-group category-selection-list"
+                        :class="{ 'is-empty': filteredSubcategories.length === 0 }"
+                      >
+                        <button
+                          v-for="category in filteredSubcategories"
+                          :key="category.id"
+                          type="button"
+                          class="list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2"
+                          :class="{
+                            active: selectedSubcategoryId === category.id,
+                          }"
+                          @click="selectSubcategory(category.id)"
+                        >
+                          <div class="text-start">
+                            <div class="fw-semibold">
+                              {{ category.taxonomy_name }}
+                            </div>
+                            <small
+                              v-if="category.taxonomy_description"
+                              class="text-muted"
+                            >
+                              {{ category.taxonomy_description }}
+                            </small>
+                          </div>
+                          <div class="d-flex gap-1">
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-warning py-0 px-1"
+                              @click.stop="openEditCategoryModalInStep(category)"
+                              title="Edit Category"
+                            >
+                              <i class="bi bi-pencil" style="font-size: 0.7rem;"></i>
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-sm btn-outline-danger py-0 px-1"
+                              @click.stop="openDeleteCategoryModalInStep(category)"
+                              title="Delete Category"
+                            >
+                              <i class="bi bi-trash" style="font-size: 0.7rem;"></i>
+                            </button>
+                          </div>
+                        </button>
+
+                        <div
+                          v-if="filteredSubcategories.length === 0"
+                          class="text-center py-4 text-muted"
+                        >
+                          No subcategories found for this product type.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="alert alert-info mb-0">
+                      <div class="fw-semibold mb-1">Selected Category</div>
+                      <div>
+                        Product type:
+                        <strong>{{
+                          selectedPrimaryCategory
+                            ? selectedPrimaryCategory.taxonomy_name
+                            : "-"
+                        }}</strong>
+                      </div>
+                      <div>
+                        Subcategory:
+                        <strong>{{
+                          selectedSubcategory
+                            ? selectedSubcategory.taxonomy_name
+                            : "-"
+                        }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2: Basic Information -->
+              <div v-if="currentStep === 2" class="tab-pane fade show active">
                 <h5 class="mb-4">Basic Information</h5>
                 <div class="row g-3">
                   <!-- Basic Information -->
@@ -196,8 +411,8 @@
                 </div>
               </div>
 
-              <!-- Step 2: Images -->
-              <div v-if="currentStep === 2" class="tab-pane fade show active">
+              <!-- Step 3: Images -->
+              <div v-if="currentStep === 3" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Images</h5>
                 
                 <ShopeeImageUpload
@@ -208,8 +423,8 @@
                 />
               </div>
 
-              <!-- Step 3: Attributes -->
-              <div v-if="currentStep === 3" class="tab-pane fade show active">
+              <!-- Step 4: Attributes -->
+              <div v-if="currentStep === 4" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Attributes</h5>
                 <p class="text-muted mb-4">
                   Select attributes (Color, Size, etc.) and their values for
@@ -329,8 +544,8 @@
                 </div>
               </div>
 
-              <!-- Step 4: Variants -->
-              <div v-if="currentStep === 4" class="tab-pane fade show active">
+              <!-- Step 5: Variants -->
+              <div v-if="currentStep === 5" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Variants</h5>
                 <p class="text-muted mb-4">
                   Create variants manually by selecting attribute values. Each
@@ -350,7 +565,7 @@
                     v-if="selectedAttributes.length === 0"
                     class="text-muted ms-2"
                   >
-                    Please select attributes in Step 3 first
+                    Please select attributes in Step 4 first
                   </small>
                 </div>
 
@@ -359,7 +574,7 @@
                   class="alert alert-info"
                 >
                   <i class="bi bi-info-circle me-2"></i>
-                  Please select attributes in Step 3 first before creating
+                  Please select attributes in Step 4 first before creating
                   variants.
                 </div>
 
@@ -466,137 +681,6 @@
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </div>
-
-              <!-- Step 5: Categories -->
-              <div v-if="currentStep === 5" class="tab-pane fade show active">
-                <h5 class="mb-4">Product Categories</h5>
-                <p class="text-muted mb-4">
-                  Select one or more categories for this product. You can also
-                  create, edit, or delete a category.
-                </p>
-
-                <div
-                  class="mb-3 d-flex justify-content-between align-items-center gap-2"
-                >
-                  <div class="flex-grow-1">
-                    <input
-                      v-model="categorySearchQuery"
-                      type="text"
-                      class="form-control"
-                      placeholder="Search categories..."
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-success"
-                    @click="openCreateCategoryModal"
-                    title="Create New Category"
-                  >
-                    <i class="bi bi-plus-circle me-1"></i>New
-                  </button>
-                </div>
-
-                <div v-if="loadingCategories" class="text-center py-3">
-                  <div
-                    class="spinner-border spinner-border-sm text-primary"
-                    role="status"
-                  ></div>
-                  <p class="mt-2 text-muted small">Loading categories...</p>
-                </div>
-
-                <div v-else>
-                  <!-- Selected Categories -->
-                  <div
-                    v-if="selectedCategoryIds && selectedCategoryIds.length > 0"
-                    class="mb-3"
-                  >
-                    <label class="form-label"
-                      ><strong>Selected Categories:</strong></label
-                    >
-                    <div class="d-flex flex-wrap gap-2">
-                      <span
-                        v-for="catId in selectedCategoryIds"
-                        :key="catId"
-                        class="badge bg-primary d-flex align-items-center gap-2"
-                        style="font-size: 0.9rem; padding: 0.5rem 0.75rem"
-                      >
-                        {{ getCategoryName(catId) }}
-                        <button
-                          type="button"
-                          class="btn-close btn-close-white"
-                          style="font-size: 0.7rem"
-                          @click="removeCategory(catId)"
-                          aria-label="Remove"
-                        ></button>
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Categories List -->
-                  <div
-                    class="border rounded p-3"
-                    style="max-height: 400px; overflow-y: auto"
-                  >
-                    <div
-                      v-if="filteredCategories.length === 0"
-                      class="text-center py-4"
-                    >
-                      <p class="text-muted">No categories found</p>
-                      <p class="text-muted small">
-                        Try a different search term or create a new category
-                      </p>
-                    </div>
-                    <div v-else class="row g-2">
-                      <div
-                        v-for="category in filteredCategories"
-                        :key="category.id"
-                        class="col-12 col-md-6"
-                      >
-                        <div class="d-flex align-items-center justify-content-between">
-                          <div class="form-check flex-grow-1">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              :value="category.id"
-                              :id="`category-${category.id}`"
-                              v-model="selectedCategoryIds"
-                            />
-                            <label
-                              class="form-check-label"
-                              :for="`category-${category.id}`"
-                              style="cursor: pointer"
-                            >
-                              {{ category?.taxonomy_name || "Unknown Category" }}
-                            </label>
-                          </div>
-                          <div class="d-flex gap-1">
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-outline-warning py-0 px-1"
-                              @click.stop="openEditCategoryModalInStep(category)"
-                              title="Edit Category"
-                            >
-                              <i class="bi bi-pencil" style="font-size: 0.7rem;"></i>
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-outline-danger py-0 px-1"
-                              @click.stop="openDeleteCategoryModalInStep(category)"
-                              title="Delete Category"
-                            >
-                              <i class="bi bi-trash" style="font-size: 0.7rem;"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <small class="text-muted mt-2 d-block">
-                    <i class="bi bi-info-circle me-1"></i>
-                    You can select multiple categories for this product
-                  </small>
                 </div>
               </div>
 
@@ -886,18 +970,54 @@
             <form @submit.prevent="handleCreateCategory">
               <div class="mb-3">
                 <label class="form-label"
-                  >Category Name <span class="text-danger">*</span></label
+                  >{{ newCategoryForm.taxonomy_type === 2 ? "Product Type" : "Subcategory" }}
+                  <span class="text-danger">*</span></label
                 >
                 <input
                   v-model="newCategoryForm.taxonomy_name"
                   type="text"
                   class="form-control"
-                  placeholder="e.g., Tas, Dompet, Ikat Pinggang"
+                  :placeholder="
+                    newCategoryForm.taxonomy_type === 2
+                      ? 'e.g., Tas, Dompet, Ikat Pinggang'
+                      : 'e.g., Tas Selempang, Tas Ransel'
+                  "
                   required
                   maxlength="250"
                   @input="generateCategorySlug"
                 />
-                <small class="text-muted">Name of the category</small>
+                <small class="text-muted">
+                  {{
+                    newCategoryForm.taxonomy_type === 2
+                      ? "Main category / product type name"
+                      : "Subcategory name for the selected product type"
+                  }}
+                </small>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Category Type</label>
+                <select
+                  v-model="newCategoryForm.taxonomy_type"
+                  class="form-select"
+                >
+                  <option :value="2">Product Type</option>
+                  <option :value="3">Subcategory</option>
+                </select>
+              </div>
+              <div v-if="newCategoryForm.taxonomy_type === 3" class="mb-3">
+                <label class="form-label"
+                  >Parent Product Type <span class="text-danger">*</span></label
+                >
+                <select v-model="newCategoryForm.parent" class="form-select">
+                  <option :value="null">Select a product type...</option>
+                  <option
+                    v-for="category in availablePrimaryCategories"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.taxonomy_name }}
+                  </option>
+                </select>
               </div>
               <div class="mb-3">
                 <label class="form-label">Slug</label>
@@ -1125,6 +1245,16 @@ useHead({
 // Register components
 import ShopeeImageUpload from "~/components/ShopeeImageUpload.vue";
 
+interface TaxonomyItem {
+  id: number;
+  parent?: number | null;
+  taxonomy_name: string;
+  taxonomy_description?: string | null;
+  taxonomy_slug?: string | null;
+  taxonomy_type: number;
+  taxonomy_status?: string | null;
+}
+
 const { createProduct } = useProductApi();
 const {
   uploadProductImage,
@@ -1157,11 +1287,11 @@ const currentStep = ref(1);
 const isLoading = ref(false);
 
 const steps = [
-  { key: 1, label: "Basic Info", icon: "bi bi-info-circle" },
-  { key: 2, label: "Images", icon: "bi bi-images" },
-  { key: 3, label: "Attributes", icon: "bi bi-list-check" },
-  { key: 4, label: "Variants", icon: "bi bi-box-seam" },
-  { key: 5, label: "Categories", icon: "bi bi-tags" },
+  { key: 1, label: "Category", icon: "bi bi-tags" },
+  { key: 2, label: "Basic Info", icon: "bi bi-info-circle" },
+  { key: 3, label: "Images", icon: "bi bi-images" },
+  { key: 4, label: "Attributes", icon: "bi bi-list-check" },
+  { key: 5, label: "Variants", icon: "bi bi-box-seam" },
   // { key: 6, label: "Brands", icon: "bi bi-building" },
 ];
 
@@ -1299,13 +1429,16 @@ const newAttributeValueForm = ref({
 });
 
 // Categories
-const availableCategories = ref<any[]>([]);
-const selectedCategoryIds = ref<number[]>([]);
+const availablePrimaryCategories = ref<TaxonomyItem[]>([]);
+const availableSubcategories = ref<TaxonomyItem[]>([]);
+const selectedPrimaryCategoryId = ref<number | null>(null);
+const selectedSubcategoryId = ref<number | null>(null);
 const loadingCategories = ref(false);
 const categorySearchQuery = ref("");
+const subcategorySearchQuery = ref("");
 const creatingCategory = ref(false);
-const categoryModalTab = ref<"select" | "create">("select");
 const newCategoryForm = ref({
+  parent: null as number | null,
   taxonomy_name: "",
   taxonomy_slug: "",
   taxonomy_description: "",
@@ -1340,12 +1473,21 @@ const goToStep = (step: number) => {
   }
 };
 
+const hasCategorySelection = computed(() => {
+  return !!(selectedPrimaryCategoryId.value && selectedSubcategoryId.value);
+});
+
 const canAccessStep = (step: number) => {
-  // Step 1 always accessible
   if (step === 1) return true;
-  // Other steps require basic info to be filled
-  if (step > 1) {
-    return !!(productForm.value.name && productForm.value.slug);
+  if (step === 2) {
+    return hasCategorySelection.value;
+  }
+  if (step > 2) {
+    return !!(
+      hasCategorySelection.value &&
+      productForm.value.name &&
+      productForm.value.slug
+    );
   }
   return false;
 };
@@ -1363,21 +1505,20 @@ const getAttributeValuesList = (attributeId: number) => {
   );
   const allValues = attribute?.attribute_values || [];
 
-  // If we're in Step 4 (Variants), only show values that were selected in Step 3
-  // Otherwise (Step 3), show all values
-  if (currentStep.value === 4) {
+  // In variants step, only show values that were selected in attributes step.
+  if (currentStep.value === 5) {
     const selectedAttr = selectedAttributes.value.find(
       (sa) => sa.attribute_id === attributeId,
     );
     if (selectedAttr && selectedAttr.values.length > 0) {
-      // Filter to only show values that were checked in Step 3
+      // Filter to only show values that were checked in attributes step
       return allValues.filter((v) => selectedAttr.values.includes(v.id));
     }
-    // If no values selected in Step 3, return empty array
+    // If no values selected yet, return empty array
     return [];
   }
 
-  // Step 3: Show all values (can be filtered by status if needed)
+  // Attributes step: show all values
   return allValues;
 };
 
@@ -1719,13 +1860,20 @@ const previousStep = () => {
 
 const canProceedToNextStep = computed(() => {
   if (currentStep.value === 1) {
+    return hasCategorySelection.value;
+  }
+  if (currentStep.value === 2) {
     return productForm.value.name && productForm.value.slug;
   }
   return true;
 });
 
 const canCreateProduct = computed(() => {
-  return productForm.value.name && productForm.value.slug;
+  return (
+    hasCategorySelection.value &&
+    productForm.value.name &&
+    productForm.value.slug
+  );
 });
 
 const getPendingImageKey = (image: {
@@ -1802,7 +1950,7 @@ const handleImageChange = ({ featured, images }: { featured: any; images: any })
 
 const handleAddVariantClick = async () => {
   if (selectedAttributes.value.length === 0) {
-    toast.error("Please select attributes in Step 3 first");
+    toast.error("Please select attributes in Step 4 first");
     return;
   }
 
@@ -1858,7 +2006,7 @@ const updateVariantName = () => {
     const selectedValueId =
       variantForm.value.selectedAttributeValues[selectedAttr.attribute_id];
     if (selectedValueId) {
-      // Validate that the selected value is actually in the allowed list (from Step 3)
+      // Validate that the selected value is actually in the allowed list from the attributes step
       if (selectedAttr.values.includes(selectedValueId)) {
         selectedValueIds.push(selectedValueId);
         const value = getAttributeValuesList(selectedAttr.attribute_id).find(
@@ -2066,68 +2214,138 @@ const loadAvailableCategories = async () => {
       getTaxoListsByType(2),
       getTaxoListsByType(3),
     ]);
-    const categories2 = type2.data?.data?.taxo_lists || [];
-    const categories3 = type3.data?.data?.taxo_lists || [];
-    availableCategories.value = [...categories2, ...categories3];
+    const categories2 = (type2.data?.data?.taxo_lists || [])
+      .filter((category: TaxonomyItem) => category.taxonomy_status === "ACTIVE")
+      .sort((a: TaxonomyItem, b: TaxonomyItem) =>
+        a.taxonomy_name.localeCompare(b.taxonomy_name),
+      );
+    const categories3 = (type3.data?.data?.taxo_lists || [])
+      .filter((category: TaxonomyItem) => category.taxonomy_status === "ACTIVE")
+      .sort((a: TaxonomyItem, b: TaxonomyItem) =>
+        a.taxonomy_name.localeCompare(b.taxonomy_name),
+      );
+
+    availablePrimaryCategories.value = categories2;
+    availableSubcategories.value = categories3;
   } catch (err) {
     console.error("Error loading available categories:", err);
-    availableCategories.value = [];
+    availablePrimaryCategories.value = [];
+    availableSubcategories.value = [];
   } finally {
     loadingCategories.value = false;
   }
 };
 
-const getCategoryName = (categoryId: number) => {
-  const category = availableCategories.value.find(
-    (cat) => cat.id === categoryId,
-  );
-  return category?.taxonomy_name || `Category ${categoryId}`;
-};
-
-const filteredCategories = computed(() => {
+const filteredPrimaryCategories = computed(() => {
   if (!categorySearchQuery.value.trim()) {
-    return availableCategories.value;
+    return availablePrimaryCategories.value;
   }
   const query = categorySearchQuery.value.toLowerCase();
-  return availableCategories.value.filter(
+  return availablePrimaryCategories.value.filter(
     (cat) =>
       cat.taxonomy_name?.toLowerCase().includes(query) ||
       cat.taxonomy_description?.toLowerCase().includes(query),
   );
 });
 
-const removeCategory = (categoryId: number) => {
-  selectedCategoryIds.value = selectedCategoryIds.value.filter(
-    (id) => id !== categoryId,
+const filteredSubcategories = computed(() => {
+  if (!selectedPrimaryCategoryId.value) {
+    return [];
+  }
+
+  const subcategories = availableSubcategories.value.filter(
+    (category) => Number(category.parent) === selectedPrimaryCategoryId.value,
   );
+  if (!subcategorySearchQuery.value.trim()) {
+    return subcategories;
+  }
+
+  const query = subcategorySearchQuery.value.toLowerCase();
+  return subcategories.filter(
+    (cat) =>
+      cat.taxonomy_name?.toLowerCase().includes(query) ||
+      cat.taxonomy_description?.toLowerCase().includes(query),
+  );
+});
+
+const selectedPrimaryCategory = computed(() => {
+  return (
+    availablePrimaryCategories.value.find(
+      (category) => category.id === selectedPrimaryCategoryId.value,
+    ) || null
+  );
+});
+
+const selectedSubcategory = computed(() => {
+  return (
+    availableSubcategories.value.find(
+      (category) => category.id === selectedSubcategoryId.value,
+    ) || null
+  );
+});
+
+const selectedCategoryIds = computed(() => {
+  return [
+    selectedPrimaryCategoryId.value,
+    selectedSubcategoryId.value,
+  ].filter((id): id is number => typeof id === "number");
+});
+
+const selectPrimaryCategory = (categoryId: number) => {
+  if (selectedPrimaryCategoryId.value === categoryId) {
+    return;
+  }
+
+  selectedPrimaryCategoryId.value = categoryId;
+  selectedSubcategoryId.value = null;
+  subcategorySearchQuery.value = "";
 };
 
-const handleAddCategoryClick = () => {
-  categoryModalTab.value = "create";
-  resetNewCategoryForm();
+const selectSubcategory = (categoryId: number) => {
+  selectedSubcategoryId.value = categoryId;
+};
 
-  // Open modal
-  nextTick(() => {
-    const modalElement = document.getElementById("addCategoryModal");
-    if (modalElement) {
-      const modal = new (window as any).bootstrap.Modal(modalElement, {
-        backdrop: true,
-        keyboard: true,
-      });
-      modal.show();
+watch(selectedPrimaryCategoryId, (categoryId) => {
+  if (!categoryId) {
+    selectedSubcategoryId.value = null;
+    return;
+  }
+
+  if (
+    selectedSubcategoryId.value &&
+    !availableSubcategories.value.some(
+      (category) =>
+        category.id === selectedSubcategoryId.value &&
+        Number(category.parent) === categoryId,
+    )
+  ) {
+    selectedSubcategoryId.value = null;
+  }
+});
+
+watch(
+  () => newCategoryForm.value.taxonomy_type,
+  (taxonomyType) => {
+    if (taxonomyType === 2) {
+      newCategoryForm.value.parent = null;
+      return;
     }
-  });
-};
+
+    if (!newCategoryForm.value.parent && selectedPrimaryCategoryId.value) {
+      newCategoryForm.value.parent = selectedPrimaryCategoryId.value;
+    }
+  },
+);
 
 const resetNewCategoryForm = () => {
   newCategoryForm.value = {
+    parent: null,
     taxonomy_name: "",
     taxonomy_slug: "",
     taxonomy_description: "",
     taxonomy_type: 2,
     taxonomy_status: "ACTIVE",
   };
-  categoryModalTab.value = "select";
 };
 
 const generateCategorySlug = () => {
@@ -2144,9 +2362,18 @@ const handleCreateCategory = async () => {
     return;
   }
 
+  if (newCategoryForm.value.taxonomy_type === 3 && !newCategoryForm.value.parent) {
+    toast.error("Parent jenis barang harus dipilih untuk sub kategori");
+    return;
+  }
+
   creatingCategory.value = true;
   try {
     const { data, error } = await createTaxoList({
+      parent:
+        newCategoryForm.value.taxonomy_type === 3
+          ? newCategoryForm.value.parent
+          : null,
       taxonomy_name: newCategoryForm.value.taxonomy_name.trim(),
       taxonomy_slug: newCategoryForm.value.taxonomy_slug.trim() || undefined,
       taxonomy_description:
@@ -2166,8 +2393,12 @@ const handleCreateCategory = async () => {
 
       // Automatically select the newly created category
       const newCategoryId = data.data.id;
-      if (!selectedCategoryIds.value.includes(newCategoryId)) {
-        selectedCategoryIds.value.push(newCategoryId);
+      if (data.data.taxonomy_type === 2) {
+        selectedPrimaryCategoryId.value = newCategoryId;
+        selectedSubcategoryId.value = null;
+      } else {
+        selectedPrimaryCategoryId.value = data.data.parent || selectedPrimaryCategoryId.value;
+        selectedSubcategoryId.value = newCategoryId;
       }
 
       // Close modal
@@ -2191,6 +2422,8 @@ const handleCreateCategory = async () => {
 // Edit/Delete Category in Step
 const editCategoryFormData = ref<any>({
   id: null,
+  parent: null,
+  taxonomy_type: 2,
   taxonomy_name: "",
   taxonomy_slug: "",
   original_slug: "",
@@ -2201,8 +2434,11 @@ const editingCategoryInStep = ref(false);
 const categoryToDeleteInStep = ref<any>(null);
 const deletingCategoryInStep = ref(false);
 
-const openCreateCategoryModal = () => {
+const openCreateCategoryModal = (type: "primary" | "sub") => {
   resetNewCategoryForm();
+  newCategoryForm.value.taxonomy_type = type === "primary" ? 2 : 3;
+  newCategoryForm.value.parent =
+    type === "sub" ? selectedPrimaryCategoryId.value : null;
   nextTick(() => {
     const modalEl = document.getElementById("addCategoryModal");
     if (modalEl) {
@@ -2223,6 +2459,8 @@ const generateEditCategorySlug = () => {
 const openEditCategoryModalInStep = async (category: any) => {
   editCategoryFormData.value = {
     id: category.id,
+    parent: category.parent ?? null,
+    taxonomy_type: category.taxonomy_type ?? 2,
     taxonomy_name: category.taxonomy_name,
     taxonomy_slug: category.taxonomy_slug,
     original_slug: category.taxonomy_slug,
@@ -2299,9 +2537,13 @@ const handleDeleteCategoryInStep = async () => {
       modal?.hide();
     }
     // Remove from selected if it was selected
-    selectedCategoryIds.value = selectedCategoryIds.value.filter(
-      (id) => id !== categoryToDeleteInStep.value.id
-    );
+    if (selectedPrimaryCategoryId.value === categoryToDeleteInStep.value.id) {
+      selectedPrimaryCategoryId.value = null;
+      selectedSubcategoryId.value = null;
+    }
+    if (selectedSubcategoryId.value === categoryToDeleteInStep.value.id) {
+      selectedSubcategoryId.value = null;
+    }
     categoryToDeleteInStep.value = null;
     await loadAvailableCategories();
   } catch (err) {

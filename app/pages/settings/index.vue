@@ -993,11 +993,12 @@ const tabs = computed(() => {
 watch(
   tabs,
   (newTabs) => {
+    const firstTab = newTabs[0];
     if (
-      newTabs.length > 0 &&
+      firstTab &&
       !newTabs.find((tab) => tab.key === activeTab.value)
     ) {
-      activeTab.value = newTabs[0].key;
+      activeTab.value = firstTab.key;
     }
   },
   { immediate: true },

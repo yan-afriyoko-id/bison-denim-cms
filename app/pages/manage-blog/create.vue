@@ -75,7 +75,7 @@
                     {{ cat.name }}
                   </option>
                 </select>
-                <button type="button" class="btn btn-primary btn-sm flex-shrink-0" title="Manage Categories"
+                <button type="button" class="btn btn-primary btn-sm shrink-0" title="Manage Categories"
                   data-bs-toggle="modal" data-bs-target="#manageCategoriesModal">
                   Add
                 </button>
@@ -338,7 +338,20 @@ const { createBlog, getCategories, createCategory, updateCategory, deleteCategor
 const toast = useToast()
 const router = useRouter()
 
-const form = reactive<BlogCreatePayload & { status: 'published' | 'draft' }>({
+type BlogForm = {
+  title: string
+  slug: string
+  short_desc: string
+  long_desc: string
+  fk_category: number | undefined
+  cover: File | undefined
+  status: 'published' | 'draft'
+  hot_news: boolean
+  meta_title: string
+  meta_description: string
+}
+
+const form = reactive<BlogForm>({
   title: '',
   slug: '',
   short_desc: '',
@@ -371,18 +384,30 @@ const newCategory = reactive<CategoryBlogCreatePayload>({
   status: true,
 })
 
+const normalizeCategories = (
+  data: CategoryBlog[] | { categories?: CategoryBlog[] } | undefined,
+): CategoryBlog[] => {
+  if (Array.isArray(data)) {
+    return data
+  }
+
+  if (Array.isArray(data?.categories)) {
+    return data.categories
+  }
+
+  return []
+}
+
 const loadCategories = async () => {
   loadingCategories.value = true
   const { data, error } = await getCategories()
 
   if (error || !data?.success) {
     console.error("Failed to load categories:", error)
-  } else if (data.data) {
-    if (Array.isArray(data.data)) {
-      categories.value = data.data
-    } else if (data.data && 'categories' in data.data && Array.isArray(data.data.categories)) {
-      categories.value = data.data.categories
-    }
+  } else {
+    categories.value = normalizeCategories(
+      data.data as CategoryBlog[] | { categories?: CategoryBlog[] } | undefined,
+    )
   }
 
   loadingCategories.value = false

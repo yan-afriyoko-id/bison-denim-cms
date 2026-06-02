@@ -214,7 +214,11 @@
                     <div class="d-flex align-items-center gap-2 p-2 rounded bg-light">
                       <img
                         v-if="localVariantForm.image_preview || localVariantForm.image_path"
-                        :src="localVariantForm.image_preview || localVariantForm.image_path"
+                        :src="
+                          localVariantForm.image_preview ??
+                          localVariantForm.image_path ??
+                          undefined
+                        "
                         alt="Variant image"
                         class="rounded"
                         style="width: 40px; height: 40px; object-fit: cover;"
@@ -256,7 +260,11 @@
                     >
                       <img
                         v-if="localVariantForm.image_preview || localVariantForm.image_path"
-                        :src="localVariantForm.image_preview || localVariantForm.image_path"
+                        :src="
+                          localVariantForm.image_preview ??
+                          localVariantForm.image_path ??
+                          undefined
+                        "
                         alt="Variant preview"
                         class="rounded"
                         style="max-width: 120px; max-height: 120px; object-fit: cover;"
@@ -969,7 +977,7 @@ const handleUpdateVariantName = () => {
 
   // Generate SKU automatically if empty or if this is a new variant
   // Or regenerate when editing to match attribute selection
-  if (!localVariantForm.value.sku || editingVariantIndex.value === null) {
+  if (!localVariantForm.value.sku || props.editingVariantIndex === null) {
     localVariantForm.value.sku = generateSKU();
   } else {
     // When editing, regenerate SKU based on current attribute selection
