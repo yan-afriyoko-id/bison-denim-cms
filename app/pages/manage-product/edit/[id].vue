@@ -216,160 +216,25 @@
                 <!-- Step 2: Images -->
                 <div v-if="currentStep === 2" class="tab-pane fade show active">
                   <h5 class="mb-4">Product Images</h5>
-                  <!-- Loading Images -->
-                  <div v-if="loadingImages" class="text-center py-3">
+                  
+                  <ShopeeImageUpload
+                    v-if="!loadingImages"
+                    v-model:featured="featuredImage"
+                    v-model:images="existingImagesWithPending"
+                    :disabled="uploadingImages"
+                    @change="handleImageChange"
+                    @set-featured="handleSetFeaturedFromUpload"
+                    @remove-image="handleRemoveImageFromUpload"
+                    @remove-featured="handleRemoveFeaturedFromUpload"
+                  />
+                  
+                  <!-- Loading State -->
+                  <div v-else class="text-center py-3">
                     <div
                       class="spinner-border spinner-border-sm text-primary"
                       role="status"
                     ></div>
                     <p class="mt-2 text-muted small">Loading images...</p>
-                  </div>
-
-                  <!-- Upload New Images -->
-                  <div v-else class="mb-4">
-                    <label class="form-label">Upload New Images</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      class="form-control"
-                      @change="handleImageSelect"
-                      :disabled="uploadingImages"
-                    />
-                    <small class="text-muted"
-                      >You can select multiple images at once</small
-                    >
-                  </div>
-
-                  <!-- Existing Images -->
-                  <div
-                    v-if="
-                      !loadingImages &&
-                      existingImages &&
-                      existingImages.length > 0
-                    "
-                    class="mb-4"
-                  >
-                    <h6 class="mb-3">Existing Images</h6>
-                    <div class="row g-3">
-                      <div
-                        v-for="image in existingImages"
-                        :key="image.id"
-                        class="col-md-3"
-                      >
-                        <div class="card position-relative">
-                          <!-- Featured Badge -->
-                          <span
-                            v-if="image.is_featured"
-                            class="badge bg-success position-absolute top-0 start-0 m-2"
-                            style="z-index: 10"
-                          >
-                            <i class="bi bi-star-fill"></i> Featured
-                          </span>
-                          <img
-                            :src="image.path"
-                            :alt="`Image ${image.order_number}`"
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover"
-                            @error="handleImageError"
-                          />
-                          <div class="card-body p-2">
-                            <div class="d-flex flex-column gap-2">
-                              <div
-                                class="d-flex justify-content-between align-items-center"
-                              >
-                                <small class="text-muted"
-                                  >Order: {{ image.order_number }}</small
-                                >
-                                <div class="d-flex gap-1">
-                                  <button
-                                    v-if="!image.is_featured"
-                                    type="button"
-                                    class="btn btn-sm btn-outline-primary"
-                                    @click="handleSetFeatured(image.id)"
-                                    :disabled="settingFeaturedId === image.id"
-                                    title="Set as Featured"
-                                  >
-                                    <i class="bi bi-star"></i>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    class="btn btn-sm btn-outline-danger"
-                                    @click="handleDeleteClick(image)"
-                                    :disabled="deletingImageId === image.id"
-                                    title="Delete"
-                                  >
-                                    <i class="bi bi-trash"></i>
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Pending Images (New) -->
-                  <div
-                    v-if="
-                      !loadingImages &&
-                      pendingImages &&
-                      pendingImages.length > 0
-                    "
-                    class="mb-4"
-                  >
-                    <h6 class="mb-3">New Images (will be uploaded on save)</h6>
-                    <div class="row g-3">
-                      <div
-                        v-for="(image, index) in pendingImages"
-                        :key="index"
-                        class="col-md-3"
-                      >
-                        <div class="card">
-                          <img
-                            :src="image.preview"
-                            :alt="`Preview ${index + 1}`"
-                            class="card-img-top"
-                            style="height: 200px; object-fit: cover"
-                          />
-                          <div class="card-body p-2">
-                            <div
-                              class="d-flex justify-content-between align-items-center"
-                            >
-                              <small class="text-muted"
-                                >Order:
-                                {{
-                                  (existingImages?.length || 0) + index + 1
-                                }}</small
-                              >
-                              <button
-                                type="button"
-                                class="btn btn-sm btn-outline-danger"
-                                @click="removePendingImage(index)"
-                              >
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- No Images -->
-                  <div
-                    v-if="
-                      !loadingImages &&
-                      (!existingImages || existingImages.length === 0) &&
-                      (!pendingImages || pendingImages.length === 0)
-                    "
-                    class="text-center py-4"
-                  >
-                    <p class="text-muted">No images yet</p>
-                    <p class="text-muted small">
-                      Upload images using the file input above
-                    </p>
                   </div>
                 </div>
 
@@ -1502,6 +1367,9 @@ definePageMeta({
   layout: "dashboard",
 });
 
+// Register components
+import ShopeeImageUpload from "~/components/ShopeeImageUpload.vue";
+
 const route = useRoute();
 const router = useRouter();
 const { getProduct, updateProduct } = useProductApi();
@@ -1604,7 +1472,14 @@ const existingImages = ref<
     is_featured: boolean;
   }>
 >([]);
-const pendingImages = ref<Array<{ file: File; preview: string }>>([]);
+const pendingImages = ref<
+  Array<{
+    file: File;
+    preview: string;
+    is_featured?: boolean;
+    name?: string;
+  }>
+>([]);
 const uploadingImages = ref(false);
 const deletingImageId = ref<number | null>(null);
 const settingFeaturedId = ref<number | null>(null);
@@ -1614,6 +1489,104 @@ const imageToDelete = ref<{
   path: string;
   order_number: number;
 } | null>(null);
+const featuredImage = ref<{
+  file?: File;
+  preview?: string;
+  path?: string;
+  name?: string;
+  is_featured?: boolean;
+  id?: number;
+} | null>(null);
+
+// Combine existing images with pending images for the ShopeeImageUpload component
+const existingImagesWithPending = computed({
+  get: () => {
+    const convertedExisting = existingImages.value.map((img) => ({
+      ...img,
+      file: undefined,
+      preview: img.path,
+      is_featured: img.is_featured,
+    }));
+
+    const pendingConverted = pendingImages.value.map((img) => ({
+      ...img,
+      is_featured: Boolean(img.is_featured),
+    }));
+
+    return [...convertedExisting, ...pendingConverted];
+  },
+  set: () => {},
+});
+
+const getPendingImageKey = (image: {
+  id?: number;
+  file?: File;
+  path?: string;
+  preview?: string;
+  name?: string;
+}) => {
+  if (image.id) {
+    return `id:${image.id}`;
+  }
+  if (image.file) {
+    return `file:${image.file.name}-${image.file.size}-${image.file.lastModified}`;
+  }
+  if (image.path) {
+    return `path:${image.path}`;
+  }
+  if (image.preview) {
+    return `preview:${image.preview}`;
+  }
+  return image.name || null;
+};
+
+const getPendingUploads = () => {
+  const imageMap = new Map<
+    string,
+    { file: File; preview: string; is_featured?: boolean; name?: string }
+  >();
+
+  if (featuredImage.value?.file) {
+    const featuredKey = getPendingImageKey(featuredImage.value);
+    if (featuredKey) {
+      imageMap.set(featuredKey, {
+        file: featuredImage.value.file,
+        preview: featuredImage.value.preview || "",
+        is_featured: true,
+        name: featuredImage.value.name,
+      });
+    }
+  }
+
+  for (const image of pendingImages.value) {
+    const imageKey = getPendingImageKey(image);
+    if (!imageKey || !image.file) continue;
+
+    if (imageMap.has(imageKey)) {
+      const existing = imageMap.get(imageKey);
+      if (existing) {
+        existing.is_featured =
+          Boolean(existing.is_featured) || Boolean(image.is_featured);
+      }
+      continue;
+    }
+
+    imageMap.set(imageKey, {
+      file: image.file,
+      preview: image.preview,
+      is_featured: Boolean(image.is_featured),
+      name: image.name,
+    });
+  }
+
+  const uploads = Array.from(imageMap.values());
+
+  if (uploads.length > 0 && !uploads.some((image) => image.is_featured)) {
+    uploads[0].is_featured = true;
+  }
+
+  return uploads;
+};
 
 // Variants
 const variants = ref<
@@ -1839,6 +1812,7 @@ const loadImages = async () => {
     if (error || !data?.success) {
       console.error("Failed to load images:", error);
       existingImages.value = [];
+      featuredImage.value = null;
     } else {
       existingImages.value = (data.data.images || []).map((img: any) => ({
         id: img.id,
@@ -1846,10 +1820,20 @@ const loadImages = async () => {
         order_number: img.order_number,
         is_featured: img.is_featured || false,
       }));
+
+      const existingFeatured = existingImages.value.find((img) => img.is_featured);
+      featuredImage.value = existingFeatured
+        ? {
+            ...existingFeatured,
+            preview: existingFeatured.path,
+            is_featured: true,
+          }
+        : null;
     }
   } catch (err) {
     console.error("Error loading images:", err);
     existingImages.value = [];
+    featuredImage.value = null;
   } finally {
     loadingImages.value = false;
   }
@@ -2395,38 +2379,6 @@ const canUpdateProduct = computed(() => {
   return productForm.value.name && productForm.value.slug;
 });
 
-const maxFileSze = 5 * 1024 * 1024;
-// Image handling
-const handleImageSelect = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
-  if (!files) return;
-
-  Array.from(files).forEach((file) => {
-    if (file.size > maxFileSze) {
-      toast.error(`File "${file.name}" terlalu besar. Maksimal 5MB.`);
-      return;
-    }
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        pendingImages.value.push({
-          file,
-          preview: e.target?.result as string,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  // Reset input
-  target.value = "";
-};
-
-const removePendingImage = (index: number) => {
-  pendingImages.value.splice(index, 1);
-};
-
 const handleSetFeatured = async (imageId: number) => {
   settingFeaturedId.value = imageId;
   try {
@@ -2446,6 +2398,70 @@ const handleSetFeatured = async (imageId: number) => {
     toast.error("Terjadi kesalahan saat mengatur featured image");
   } finally {
     settingFeaturedId.value = null;
+  }
+};
+
+const isExistingProductImage = (image: any) => Boolean(image?.id && !image?.file);
+
+const handleSetFeaturedFromUpload = async (image: any) => {
+  if (!isExistingProductImage(image)) return;
+  await handleSetFeatured(image.id);
+};
+
+const handleRemoveImageFromUpload = async (image: any) => {
+  if (isExistingProductImage(image)) {
+    await handleDeleteClick(image);
+    return;
+  }
+
+  pendingImages.value = pendingImages.value.filter(
+    (pendingImage) =>
+      !(
+        pendingImage.file.name === image?.file?.name &&
+        pendingImage.file.size === image?.file?.size &&
+        pendingImage.file.lastModified === image?.file?.lastModified
+      ),
+  );
+
+  if (
+    featuredImage.value?.file &&
+    image?.file &&
+    featuredImage.value.file.name === image.file.name &&
+    featuredImage.value.file.size === image.file.size &&
+    featuredImage.value.file.lastModified === image.file.lastModified
+  ) {
+    featuredImage.value = null;
+  }
+};
+
+const handleRemoveFeaturedFromUpload = async (image: any) => {
+  if (isExistingProductImage(image)) {
+    await handleDeleteClick(image);
+    return;
+  }
+
+  featuredImage.value = null;
+};
+
+const handleImageChange = ({ featured, images }: { featured: any; images: any }) => {
+  featuredImage.value = featured ?? null;
+
+  if (images && Array.isArray(images)) {
+    const existing = images.filter((img) => img.path && !img.file);
+    const pending = images.filter((img) => img.file);
+
+    existingImages.value = existing.map((img) => ({
+      id: img.id,
+      path: img.path,
+      order_number: img.order_number,
+      is_featured: Boolean(img.is_featured),
+    }));
+    pendingImages.value = pending.map((img) => ({
+      file: img.file,
+      preview: img.preview,
+      is_featured: Boolean(img.is_featured),
+      name: img.name,
+    }));
   }
 };
 
@@ -3677,23 +3693,39 @@ const handleUpdateProduct = async () => {
       toast.error(updateError?.message || "Gagal update product");
       return;
     }
-    if (pendingImages.value.length > 0) {
+    const pendingUploads = getPendingUploads();
+
+    if (pendingUploads.length > 0) {
       uploadingImages.value = true;
 
       try {
-        for (let i = 0; i < pendingImages.value.length; i++) {
-          const img = pendingImages.value[i];
+        const uploadErrors: string[] = [];
 
-          await uploadProductImage(
+        for (let i = 0; i < pendingUploads.length; i++) {
+          const img = pendingUploads[i];
+
+          const { data: uploadedImage, error: uploadError } =
+            await uploadProductImage(
             product.value.id,
             img.file,
             (existingImages.value?.length || 0) + i + 1,
+            Boolean(img.is_featured),
           );
+
+          if (uploadError || !uploadedImage?.success) {
+            const errorMsg =
+              uploadError?.message || `Failed to upload image ${i + 1}`;
+            console.error(`Error uploading image ${i + 1}:`, uploadError);
+            uploadErrors.push(errorMsg);
+          }
         }
 
-        pendingImages.value = [];
-
-        await loadImages();
+        if (uploadErrors.length > 0) {
+          toast.warning(`Beberapa gambar gagal diupload: ${uploadErrors.join(", ")}`);
+        } else {
+          pendingImages.value = [];
+          await loadImages();
+        }
       } catch (err) {
         console.warn("Upload image gagal", err);
         toast.warning("Beberapa gambar gagal diupload");

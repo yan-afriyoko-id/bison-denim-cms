@@ -1,6 +1,10 @@
 <template>
-  <header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
+  <header
+    id="header"
+    class="header fixed-top d-flex align-items-center"
+    :class="{ 'sidebar-collapsed': !isSidebarOpen }"
+  >
+    <div class="header-brand d-flex align-items-center justify-content-between">
       <NuxtLink to="/dashboard" class="logo d-flex align-items-center h-full">
         <img 
           :src="logoUrl || '/assets/img/images.png'" 
@@ -9,11 +13,7 @@
         />
         <span class="logo-text ms-2 fw-bold">Bison Denim</span>
       </NuxtLink>
-      <i 
-        class="bi toggle-sidebar-btn" 
-        :class="{ 'bi-list': !sidebarOpen, 'bi-x': sidebarOpen }" 
-        @click="toggleSidebar"
-      ></i>
+      <i class="bi bi-list toggle-sidebar-btn" @click="toggleSidebar"></i>
     </div>
 
     <nav class="header-nav ms-auto">
@@ -83,7 +83,7 @@ const userRoles = computed(() => {
 })
 
 // Sidebar management using composable
-const { toggle: toggleSidebar, isOpen: sidebarOpen } = useSidebar()
+const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useSidebar()
 
 // Logo management
 const handleLogoError = () => {
@@ -172,17 +172,87 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.header-brand {
+  width: 320px;
+  overflow: hidden;
+  transition:
+    width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo {
+  max-width: 280px;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition:
+    max-width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s ease,
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo img {
+  transition:
+    opacity 0.2s ease,
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .logo-text {
+  display: inline-block;
+  max-width: 180px;
+  overflow: hidden;
   font-size: 1.25rem;
   white-space: nowrap;
   color: black;
+  transition:
+    max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease,
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toggle-sidebar-btn {
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.toggle-sidebar-btn.bi-x {
-  transform: rotate(90deg);
+@media (min-width: 1200px) {
+  .sidebar-collapsed {
+    padding-left: 12px;
+  }
+
+  .sidebar-collapsed .header-brand {
+    width: 42px;
+    justify-content: flex-start !important;
+    gap: 12px;
+  }
+
+  .sidebar-collapsed .toggle-sidebar-btn {
+    order: -1;
+    padding-left: 0;
+    margin-right: 0;
+    transform: translateX(0);
+  }
+
+  .sidebar-collapsed .logo {
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-12px);
+    pointer-events: none;
+  }
+
+  .sidebar-collapsed .logo img {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  .sidebar-collapsed .logo-text {
+    opacity: 0;
+    max-width: 0;
+    width: 0;
+    margin-left: 0 !important;
+    transform: translateX(-8px);
+  }
 }
 </style>

@@ -186,88 +186,13 @@
               <!-- Step 2: Images -->
               <div v-if="currentStep === 2" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Images</h5>
-                <div class="mb-4">
-                  <label class="form-label">Upload Images</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    class="form-control"
-                    @change="handleImageSelect"
-                    :disabled="uploadingImages"
-                  />
-                  <small class="text-muted"
-                    >You can select multiple images at once</small
-                  >
-                </div>
-
-                <div
-                  v-if="!pendingImages || pendingImages.length === 0"
-                  class="text-center py-4"
-                >
-                  <p class="text-muted">No images selected yet</p>
-                  <p class="text-muted small">
-                    Images will be uploaded when you create the product
-                  </p>
-                </div>
-
-                <div
-                  v-else-if="pendingImages && pendingImages.length > 0"
-                  class="row g-3"
-                >
-                  <div
-                    v-for="(image, index) in pendingImages"
-                    :key="index"
-                    class="col-md-3"
-                  >
-                    <div class="card position-relative">
-                      <!-- Featured Badge -->
-                      <span
-                        v-if="image.is_featured"
-                        class="badge bg-success position-absolute top-0 start-0 m-2"
-                        style="z-index: 10"
-                      >
-                        <i class="bi bi-star-fill"></i> Featured
-                      </span>
-                      <img
-                        :src="image.preview"
-                        :alt="`Preview ${index + 1}`"
-                        class="card-img-top"
-                        style="height: 200px; object-fit: cover"
-                      />
-                      <div class="card-body p-2">
-                        <div class="d-flex flex-column gap-2">
-                          <div
-                            class="d-flex justify-content-between align-items-center"
-                          >
-                            <small class="text-muted"
-                              >Order: {{ index + 1 }}</small
-                            >
-                            <div class="d-flex gap-1">
-                              <button
-                                v-if="!image.is_featured"
-                                type="button"
-                                class="btn btn-sm btn-outline-primary"
-                                @click="handleSetFeaturedPending(index)"
-                                :disabled="settingFeaturedIndex === index"
-                                title="Set as Featured"
-                              >
-                                <i class="bi bi-star"></i>
-                              </button>
-                              <button
-                                type="button"
-                                class="btn btn-sm btn-outline-danger"
-                                @click="removePendingImage(index)"
-                              >
-                                <i class="bi bi-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
+                <ShopeeImageUpload
+                  v-model:featured="featuredImage"
+                  v-model:images="pendingImages"
+                  :disabled="uploadingImages"
+                  @change="handleImageChange"
+                />
               </div>
 
               <!-- Step 3: Attributes -->
@@ -1184,6 +1109,9 @@ useHead({
   title: "Create Product - Bison Denim",
 });
 
+// Register components
+import ShopeeImageUpload from "~/components/ShopeeImageUpload.vue";
+
 const { createProduct } = useProductApi();
 const {
   uploadProductImage,
@@ -1261,7 +1189,13 @@ const pendingImages = ref<
   Array<{ file: File; preview: string; is_featured?: boolean }>
 >([]);
 const uploadingImages = ref(false);
-const settingFeaturedIndex = ref<number | null>(null);
+const featuredImage = ref<{
+  file?: File;
+  preview?: string;
+  path?: string;
+  name?: string;
+  is_featured?: boolean;
+} | null>(null);
 
 // Variants
 const variants = ref<
@@ -1781,120 +1715,76 @@ const canCreateProduct = computed(() => {
   return productForm.value.name && productForm.value.slug;
 });
 
-const handleSetFeaturedPending = (index: number) => {
-  // Ensure index is valid
-  if (index < 0 || index >= pendingImages.value.length) {
-    return;
+const getPendingImageKey = (image: {
+  file?: File;
+  path?: string;
+  preview?: string;
+  name?: string;
+}) => {
+  if (image.file) {
+    return `file:${image.file.name}-${image.file.size}-${image.file.lastModified}`;
+  }
+  if (image.path) {
+    return `path:${image.path}`;
+  }
+  if (image.preview) {
+    return `preview:${image.preview}`;
+  }
+  return image.name || null;
+};
+
+const getImagesForUpload = () => {
+  const imageMap = new Map<
+    string,
+    { file: File; preview: string; is_featured?: boolean }
+  >();
+
+  if (featuredImage.value?.file) {
+    const featuredKey = getPendingImageKey(featuredImage.value);
+    if (featuredKey) {
+      imageMap.set(featuredKey, {
+        file: featuredImage.value.file,
+        preview: featuredImage.value.preview || "",
+        is_featured: true,
+      });
+    }
   }
 
-  // Set all images to not featured first, then set the selected one as featured
-  pendingImages.value.forEach((img, idx) => {
-    img.is_featured = idx === index;
-  });
+  for (const image of pendingImages.value) {
+    const imageKey = getPendingImageKey(image);
+    if (!imageKey || !image.file) continue;
 
-  settingFeaturedIndex.value = index;
-  setTimeout(() => {
-    settingFeaturedIndex.value = null;
-  }, 500);
-};
-
-
-const maxFileSze =  5 * 1024 * 1024;
-const handleImageSelect = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const files = target.files;
-  if (!files) return;
-
-  const currentLength = pendingImages.value.length;
-  const isFirstImage = currentLength === 0;
-
-  // Create a Set to track existing file names and sizes to prevent duplicates
-  const existingFiles = new Set<string>();
-  pendingImages.value.forEach((img) => {
-    const key = `${img.file.name}-${img.file.size}`;
-    existingFiles.add(key);
-  });
-
-  // Process files sequentially to avoid race conditions
-  const processFiles = async () => {
-    const newImages: Array<{
-      file: File;
-      preview: string;
-      is_featured?: boolean;
-    }> = [];
-
-    for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-      const file = files[fileIndex];
-
-      // Skip if file is undefined
-      if (!file) {
-        continue;
+    if (imageMap.has(imageKey)) {
+      const existing = imageMap.get(imageKey);
+      if (existing) {
+        existing.is_featured =
+          Boolean(existing.is_featured) || Boolean(image.is_featured);
       }
-
-      if (file.size > maxFileSze) {
-        toast.error(`File "${file.name}" terlalu besar. Maksimal 5MB.`);
-        continue;
-      }
-
-      // Check if file is an image
-      if (!file.type.startsWith("image/")) {
-        continue;
-      }
-
-      // Check for duplicates
-      const fileKey = `${file.name}-${file.size}`;
-      if (existingFiles.has(fileKey)) {
-        console.warn(`Skipping duplicate file: ${file.name}`);
-        continue;
-      }
-
-      // Read file as data URL
-      const preview = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            resolve(e.target.result as string);
-          } else {
-            reject(new Error("Failed to read file"));
-          }
-        };
-        reader.onerror = () => reject(new Error("FileReader error"));
-        reader.readAsDataURL(file);
-      });
-
-      newImages.push({
-        file,
-        preview,
-        is_featured: isFirstImage && fileIndex === 0 && newImages.length === 0, // First image is featured by default
-      });
-
-      existingFiles.add(fileKey);
+      continue;
     }
 
-    // Add all new images at once
-    if (newImages.length > 0) {
-      pendingImages.value.push(...newImages);
+    imageMap.set(imageKey, {
+      file: image.file,
+      preview: image.preview,
+      is_featured: Boolean(image.is_featured),
+    });
+  }
 
-      // Ensure only one featured image
-      if (isFirstImage && newImages.length > 0) {
-        pendingImages.value.forEach((img, idx) => {
-          img.is_featured = idx === 0;
-        });
-      }
-    }
-  };
+  const imagesToUpload = Array.from(imageMap.values());
 
-  processFiles().catch((err) => {
-    console.error("Error processing images:", err);
-    toast.error("Error processing some images");
-  });
+  if (
+    imagesToUpload.length > 0 &&
+    !imagesToUpload.some((image) => image.is_featured)
+  ) {
+    imagesToUpload[0].is_featured = true;
+  }
 
-  // Reset input to allow selecting the same file again if needed
-  target.value = "";
+  return imagesToUpload;
 };
 
-const removePendingImage = (index: number) => {
-  pendingImages.value.splice(index, 1);
+const handleImageChange = ({ featured, images }: { featured: any; images: any }) => {
+  featuredImage.value = featured ?? null;
+  pendingImages.value = Array.isArray(images) ? images : [];
 };
 
 const handleAddVariantClick = async () => {
@@ -2505,13 +2395,15 @@ const handleCreateProduct = async () => {
     const productId = data.data.product.id;
 
     // Step 2: Upload images
-    if (pendingImages.value && pendingImages.value.length > 0) {
+    const imagesToUpload = getImagesForUpload();
+
+    if (imagesToUpload.length > 0) {
       uploadingImages.value = true;
       const uploadErrors: string[] = [];
 
       try {
         // Filter out any invalid images first
-        const validImages = pendingImages.value.filter((img, idx) => {
+        const validImages = imagesToUpload.filter((img, idx) => {
           if (!img || !img.file) {
             console.warn(`Skipping invalid image at index ${idx}`);
             return false;
@@ -2528,13 +2420,21 @@ const handleCreateProduct = async () => {
           }
 
           try {
-            // Use the index in validImages array as order_number
-            await uploadProductImage(
+            const { data: uploadedImage, error: uploadError } =
+              await uploadProductImage(
               productId,
               image.file,
-              i, // order_number
+              i + 1,
               image.is_featured || false,
             );
+
+            if (uploadError || !uploadedImage?.success) {
+              const errorMsg =
+                uploadError?.message ||
+                `Failed to upload image ${i + 1}`;
+              console.error(`Error uploading image ${i + 1}:`, uploadError);
+              uploadErrors.push(errorMsg);
+            }
           } catch (err: any) {
             const errorMsg = err?.message || `Failed to upload image ${i + 1}`;
             console.error(`Error uploading image ${i + 1}:`, err);
@@ -2549,6 +2449,8 @@ const handleCreateProduct = async () => {
           );
         } else if (validImages.length > 0) {
           toast.success(`Successfully uploaded ${validImages.length} image(s)`);
+          pendingImages.value = [];
+          featuredImage.value = null;
         }
       } catch (err) {
         console.error("Error in image upload process:", err);
