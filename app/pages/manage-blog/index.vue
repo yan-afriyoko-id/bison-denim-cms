@@ -5,15 +5,6 @@
         <p class="text-muted mb-0">Manage blog posts</p>
       </div>
       <div class="d-flex gap-2">
-        <button
-          v-if="hasPermission('blogs.create')"
-          type="button"
-          class="btn btn-outline-secondary"
-          data-bs-toggle="modal"
-          data-bs-target="#manageCategoriesModal"
-        >
-          <i class="bi bi-tags me-2"></i>Categories
-        </button>
         <NuxtLink
           v-if="hasPermission('blogs.create')"
           to="/manage-blog/create"

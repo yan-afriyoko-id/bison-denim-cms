@@ -65,7 +65,7 @@
                   <h5 class="mb-4">Basic Information</h5>
                   <div class="row g-3">
                     <!-- Basic Information -->
-                    <div class="col-12">
+                    <div class="col-12 d-none">
                       <div class="border-bottom pb-2 mb-3">
                         <h6 class="mb-0 text-primary">
                           <i class="bi bi-info-circle me-2"></i>Basic
@@ -187,28 +187,41 @@
                     </div>
 
                     <!-- SEO Metadata (Auto-generated) -->
-                    <div class="col-12 mt-4">
+                    <div class="col-12 mt-3">
+                      <div class="seo-meta-panel rounded border px-3 py-2">
+                        <div
+                          class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-2"
+                        >
+                          <div class="d-flex align-items-center text-muted small fw-semibold">
+                            <i class="bi bi-search me-2"></i>SEO Metadata
+                          </div>
+                        </div>
+                        <div class="row g-2">
+                          <div class="col-md-5">
+                            <div class="seo-meta-item rounded px-2 py-2">
+                              <div class="small text-muted mb-1">Meta Title</div>
+                              <p class="mb-0 small text-dark">
+                                {{ productForm.meta_title || "—" }}
+                              </p>
+                            </div>
+                          </div>
+                          <div class="col-md-7">
+                            <div class="seo-meta-item rounded px-2 py-2">
+                              <div class="small text-muted mb-1">Meta Description</div>
+                              <p class="mb-0 small text-dark">
+                                {{ productForm.meta_description || "—" }}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 mt-4 d-none">
                       <div class="border-bottom pb-2 mb-3">
                         <h6 class="mb-0 text-primary">
                           <i class="bi bi-search me-2"></i>SEO Metadata
                         </h6>
                       </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="card-body py-2">
-                          <small class="text-muted d-block mb-1">
-                            <i class="bi bi-info-circle me-1"></i>
-                            SEO metadata is generated automatically from product name.
-                          </small>
-                          <div class="mt-2">
-                            <strong class="small text-dark">Meta Title:</strong>
-                            <p class="mb-1 small">{{ productForm.meta_title || '—' }}</p>
-                          </div>
-                          <div>
-                            <strong class="small text-dark">Meta Description:</strong>
-                            <p class="mb-0 small">{{ productForm.meta_description || '—' }}</p>
-                          </div>
-                        </div>
                     </div>
                   </div>
                 </div>
@@ -3965,5 +3978,14 @@ onMounted(async () => {
   border-bottom-color: #0d6efd;
   color: #0d6efd;
   font-weight: 500;
+}
+
+.seo-meta-panel {
+  background: #fafafa;
+  border-color: #e9ecef !important;
+}
+
+.seo-meta-item {
+  background: #ffffff;
 }
 </style>

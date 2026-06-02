@@ -272,7 +272,7 @@
                         ref="variantImageInput"
                         type="file"
                         accept="image/*"
-                        class="form-control form-control-sm"
+                        class="form-control"
                         @change="handleVariantImageSelect"
                       />
                       <small class="text-muted d-block mt-1">
@@ -407,34 +407,62 @@
             <div class="tab-pane fade" id="stock-pane" role="tabpanel">
               <div class="row g-3">
                 <div class="col-12">
-                  <div class="border-bottom pb-2 mb-3">
+                  <!-- Header -->
+                  <div class="border-bottom pb-2 mb-4">
                     <h6 class="mb-0 text-primary">
                       <i class="bi bi-shop me-2"></i>Store Stock Management
                     </h6>
+                    <p class="text-muted small mb-0 mt-1">
+                      Manage stock quantity for this variant across different stores
+                    </p>
                   </div>
-                  <p class="text-muted small mb-3">
-                    Manage stock quantity for this variant across different
-                    stores. Total stock will be calculated automatically.
-                  </p>
 
-                  <!-- Add/Edit Store Stock Form (Inline) -->
+                  <div class="row g-3 mb-4">
+                    <div class="col-md-3 col-6">
+                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
+                        <div class="card-body py-3">
+                          <small class="text-muted text-uppercase d-block mb-1">Assigned Stores</small>
+                          <div class="fs-5 fw-semibold">{{ assignedStoresCount }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
+                        <div class="card-body py-3">
+                          <small class="text-muted text-uppercase d-block mb-1">Total Stock</small>
+                          <div class="fs-5 fw-semibold">{{ totalVariantStock }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
+                        <div class="card-body py-3">
+                          <small class="text-muted text-uppercase d-block mb-1">Reserved</small>
+                          <div class="fs-5 fw-semibold">{{ totalReservedStock }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
+                        <div class="card-body py-3">
+                          <small class="text-muted text-uppercase d-block mb-1">Available</small>
+                          <div class="fs-5 fw-semibold">{{ totalAvailableStock }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div
-                    class="card mb-3"
+                    class="card mb-4"
                     :class="{
                       'border-primary': localEditingStoreStockIndex !== null,
                     }"
                   >
-                    <div class="card-body">
-                      <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                      >
+                    <div class="card-header bg-white">
+                      <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">
-                          <i class="bi bi-plus-circle me-1"></i>
-                          {{
-                            localEditingStoreStockIndex !== null
-                              ? "Edit Store Stock"
-                              : "Add Store Stock"
-                          }}
+                          <i class="bi bi-plus-circle me-2"></i>
+                          {{ localEditingStoreStockIndex !== null ? 'Edit Store Stock' : 'Add Store Stock' }}
                         </h6>
                         <button
                           v-if="localEditingStoreStockIndex !== null"
@@ -442,33 +470,40 @@
                           class="btn btn-sm btn-outline-secondary"
                           @click="handleResetStoreStockForm"
                         >
-                          <i class="bi bi-x"></i> Cancel
+                          <i class="bi bi-x-circle me-1"></i> Cancel
                         </button>
                       </div>
-                      <div class="row g-2">
-                        <div class="col-md-4">
-                          <label class="form-label small"
+                    </div>
+                    <div class="card-body">
+                      <div class="row g-3 align-items-end">
+                        <div class="col-lg-4 col-md-6">
+                          <div class="stock-form-field h-100 d-flex flex-column">
+                          <label class="form-label fw-semibold"
                             >Store <span class="text-danger">*</span></label
                           >
                           <select
                             v-model.number="localStoreStockForm.store_id"
-                            class="form-select form-select-sm"
+                            class="form-select"
                             :disabled="loadingStores"
                             @focus="handleLoadStores"
                           >
                             <option value="">Select a store</option>
                             <option
-                              v-for="store in stores"
+                              v-for="store in availableStoreOptions"
                               :key="store.id"
                               :value="store.id"
                             >
-                              {{ store.name }}
-                              {{ store.code ? `(${store.code})` : "" }}
+                              {{ store.name }}{{ store.code ? ` (${store.code})` : "" }}
                             </option>
                           </select>
+                          <small class="text-muted small d-block mt-1">
+                            can only have one stock row for this variant.
+                          </small>
+                          </div>
                         </div>
-                        <div class="col-md-3">
-                          <label class="form-label small"
+                        <div class="col-lg-2 col-md-3 col-6">
+                          <div class="stock-form-field h-100 d-flex flex-column">
+                          <label class="form-label fw-semibold"
                             >Stock Qty <span class="text-danger">*</span></label
                           >
                           <input
@@ -476,113 +511,167 @@
                             type="number"
                             min="0"
                             step="1"
-                            class="form-control form-control-sm"
+                            class="form-control"
                             placeholder="0"
                           />
+                          <small class="text-muted small d-block mt-1 stock-form-helper-placeholder">
+                            Qty input
+                          </small>
+                          </div>
                         </div>
-                        <div class="col-md-3">
-                          <label class="form-label small">Reserved Qty</label>
+                        <div class="col-lg-2 col-md-3 col-6">
+                          <div class="stock-form-field h-100 d-flex flex-column">
+                          <label class="form-label fw-semibold">Reserved Qty</label>
                           <input
                             v-model.number="localStoreStockForm.reserved_qty"
                             type="number"
                             min="0"
                             step="1"
-                            class="form-control form-control-sm"
+                            class="form-control"
                             placeholder="0"
                           />
+                          <small class="text-muted small">Qty for pending orders</small>
+                          </div>
                         </div>
-                        <div class="col-md-2 d-flex align-items-end">
+                        <div class="col-lg-2 col-md-6 col-6">
+                          <div class="stock-form-field h-100 d-flex flex-column">
+                          <label class="form-label fw-semibold">Available</label>
+                          <div class="form-control bg-light">{{ stockFormAvailableQty }}</div>
+                          <small class="text-muted small">Qty - reserved</small>
+                          </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-6">
+                          <div class="stock-form-field h-100 d-flex flex-column">
+                          <label class="form-label fw-semibold text-transparent">Action</label>
                           <button
                             type="button"
-                            class="btn btn-sm btn-primary w-100"
+                            class="btn btn-primary w-100 py-2"
                             @click="handleSaveStoreStock"
-                            :disabled="
-                              !localStoreStockForm.store_id ||
-                              localStoreStockForm.qty < 0 ||
-                              savingStoreStock
-                            "
+                            :disabled="!canSaveStoreStock"
                           >
                             <span
                               v-if="savingStoreStock"
-                              class="spinner-border spinner-border-sm me-1"
+                              class="spinner-border spinner-border-sm me-2"
                               role="status"
                             ></span>
-                            <i v-else class="bi bi-check-circle me-1"></i>
+                            <i v-else class="bi bi-save me-2"></i>
                             {{
-                              localEditingStoreStockIndex !== null
-                                ? "Update"
-                                : "Add"
+                              localEditingStoreStockIndex !== null ? 'Update' : 'Add'
                             }}
                           </button>
+                          <small class="text-muted small d-block mt-1 stock-form-helper-placeholder">
+                            Save action
+                          </small>
+                          </div>
                         </div>
+                      </div>
+
+                      <div
+                        v-if="isStoreStockDuplicate"
+                        class="alert alert-light border mb-0 mt-3 py-2"
+                        role="alert"
+                      >
+                        <i class="bi bi-info-circle me-2"></i>
+                        This store already has stock assigned. Edit the existing row instead.
+                      </div>
+                      <div
+                        v-else-if="isReservedExceedingQty"
+                        class="alert alert-light border mb-0 mt-3 py-2"
+                        role="alert"
+                      >
+                        <i class="bi bi-info-circle me-2"></i>
+                        Reserved quantity cannot be greater than stock quantity.
                       </div>
                     </div>
                   </div>
 
                   <div
-                    v-if="localVariantStoreStocks.length > 0"
-                    class="table-responsive"
+                    v-if="sortedVariantStoreStocks.length > 0"
+                    class="table-responsive stock-table-wrap"
                   >
                     <table class="table table-sm table-bordered">
-                      <thead>
+                      <thead class="table-light">
                         <tr>
-                          <th>Store</th>
-                          <th>Stock (Qty)</th>
-                          <th>Reserved</th>
-                          <th>Available</th>
-                          <th class="text-end">Actions</th>
+                          <th style="width: 32%;">Store</th>
+                          <th class="text-center" style="width: 14%;">Stock</th>
+                          <th class="text-center" style="width: 14%;">Reserved</th>
+                          <th class="text-center" style="width: 14%;">Available</th>
+                          <th class="text-center" style="width: 16%;">Status</th>
+                          <th class="text-center" style="width: 10%;">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr
-                          v-for="(storeStock, index) in localVariantStoreStocks"
+                          v-for="({ storeStock, index }) in sortedVariantStoreStocks"
                           :key="
                             storeStock.id ||
                             `store-${storeStock.store_id}-${index}`
                           "
                         >
-                          <td>{{ storeStock.store?.name || "N/A" }}</td>
-                          <td>{{ storeStock.qty }}</td>
-                          <td>{{ storeStock.reserved_qty || 0 }}</td>
                           <td>
+                            <div class="fw-semibold">{{ storeStock.store?.name || "N/A" }}</div>
+                            <small v-if="storeStock.store?.code" class="text-muted">
+                              {{ storeStock.store.code }}
+                            </small>
+                          </td>
+                          <td class="text-center fw-semibold">{{ storeStock.qty }}</td>
+                          <td class="text-center">{{ storeStock.reserved_qty || 0 }}</td>
+                          <td class="text-center fw-semibold">
                             {{
                               (storeStock.qty || 0) -
                               (storeStock.reserved_qty || 0)
                             }}
                           </td>
-                          <td class="text-end">
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-outline-primary me-1"
-                              @click="handleEditStoreStock(index)"
+                          <td class="text-center">
+                            <span
+                              class="badge"
+                              :class="getStockStatusBadgeClass(storeStock)"
                             >
-                              <i class="bi bi-pencil"></i>
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-outline-danger"
-                              @click="handleDeleteStoreStock(index)"
-                            >
-                              <i class="bi bi-trash"></i>
-                            </button>
+                              {{ getStockStatusLabel(storeStock) }}
+                            </span>
+                          </td>
+                          <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                              <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                title="Edit"
+                                @click="handleEditStoreStock(index)"
+                              >
+                                <i class="bi bi-pencil"></i>
+                              </button>
+                              <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                title="Delete"
+                                @click="handleDeleteStoreStock(index)"
+                              >
+                                <i class="bi bi-trash"></i>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       </tbody>
-                      <tfoot>
-                        <tr class="table-info">
-                          <th>Total</th>
-                          <th>{{ totalVariantStock }}</th>
-                          <th>{{ totalReservedStock }}</th>
-                          <th>{{ totalAvailableStock }}</th>
+                      <tfoot class="table-light">
+                        <tr>
+                          <th class="fw-bold text-secondary">Total</th>
+                          <th class="fw-bold">{{ totalVariantStock }}</th>
+                          <th class="fw-bold">{{ totalReservedStock }}</th>
+                          <th class="fw-bold">{{ totalAvailableStock }}</th>
+                          <th></th>
                           <th></th>
                         </tr>
                       </tfoot>
                     </table>
                   </div>
-                  <div v-else class="text-muted small">
-                    <i class="bi bi-info-circle me-1"></i>
-                    No store stocks added yet. Use the form above to assign
-                    stock to stores.
+                  <div v-else class="text-center py-4">
+                    <i class="bi bi-inbox fs-1 text-muted mb-2"></i>
+                    <p class="text-muted mb-0">
+                      No store stocks added yet
+                    </p>
+                    <small class="text-muted">
+                      Use the form above to assign stock to stores
+                    </small>
                   </div>
                 </div>
               </div>
@@ -621,7 +710,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, watch, nextTick, onMounted } from "vue";
 import { useToast } from "~/composables/useToast";
 import { useStoreApi } from "~/composables/useStoreApi";
 
@@ -740,6 +829,71 @@ const totalReservedStock = computed(() => {
 
 const totalAvailableStock = computed(() => {
   return totalVariantStock.value - totalReservedStock.value;
+});
+
+const assignedStoreIds = computed(() => {
+  return new Set(
+    localVariantStoreStocks.value
+      .filter((_, idx) => idx !== localEditingStoreStockIndex.value)
+      .map((stock) => stock.store_id),
+  );
+});
+
+const availableStoreOptions = computed(() => {
+  return [...stores.value].sort((a, b) => {
+    const aAssigned = assignedStoreIds.value.has(a.id);
+    const bAssigned = assignedStoreIds.value.has(b.id);
+
+    if (aAssigned !== bAssigned) {
+      return Number(aAssigned) - Number(bAssigned);
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+});
+
+const assignedStoresCount = computed(() => localVariantStoreStocks.value.length);
+
+const stockFormAvailableQty = computed(() => {
+  const qty = Number(localStoreStockForm.value.qty) || 0;
+  const reservedQty = Number(localStoreStockForm.value.reserved_qty) || 0;
+  return Math.max(0, qty - reservedQty);
+});
+
+const isStoreStockDuplicate = computed(() => {
+  if (!localStoreStockForm.value.store_id) return false;
+
+  return localVariantStoreStocks.value.some(
+    (stock, idx) =>
+      stock.store_id === localStoreStockForm.value.store_id &&
+      idx !== localEditingStoreStockIndex.value,
+  );
+});
+
+const isReservedExceedingQty = computed(() => {
+  return (
+    (Number(localStoreStockForm.value.reserved_qty) || 0) >
+    (Number(localStoreStockForm.value.qty) || 0)
+  );
+});
+
+const canSaveStoreStock = computed(() => {
+  return Boolean(
+    localStoreStockForm.value.store_id &&
+      localStoreStockForm.value.qty >= 0 &&
+      localStoreStockForm.value.reserved_qty >= 0 &&
+      !isStoreStockDuplicate.value &&
+      !isReservedExceedingQty.value &&
+      !savingStoreStock.value,
+  );
+});
+
+const sortedVariantStoreStocks = computed(() => {
+  return localVariantStoreStocks.value
+    .map((storeStock, index) => ({ storeStock, index }))
+    .sort((a, b) =>
+      (a.storeStock.store?.name || "").localeCompare(b.storeStock.store?.name || ""),
+    );
 });
 
 const discountPercentage = computed(() => {
@@ -914,6 +1068,7 @@ const handleEditStoreStock = async (index: number) => {
 const handleDeleteStoreStock = (index: number) => {
   localVariantStoreStocks.value.splice(index, 1);
   emit("update:variantStoreStocks", [...localVariantStoreStocks.value]);
+  toast.success("Stock removed successfully");
 };
 
 const handleSaveStoreStock = () => {
@@ -932,13 +1087,12 @@ const handleSaveStoreStock = () => {
     return;
   }
 
-  const existingIndex = localVariantStoreStocks.value.findIndex(
-    (stock, idx) =>
-      stock.store_id === localStoreStockForm.value.store_id &&
-      idx !== localEditingStoreStockIndex.value,
-  );
+  if (isReservedExceedingQty.value) {
+    toast.error("Reserved quantity cannot be greater than stock quantity");
+    return;
+  }
 
-  if (existingIndex !== -1) {
+  if (isStoreStockDuplicate.value) {
     toast.error("This store already has stock assigned");
     return;
   }
@@ -970,6 +1124,9 @@ const handleSaveStoreStock = () => {
 
   emit("update:variantStoreStocks", [...localVariantStoreStocks.value]);
   handleResetStoreStockForm();
+  toast.success(
+    localEditingStoreStockIndex.value !== null ? "Stock updated successfully" : "Stock added successfully"
+  );
 };
 
 const handleResetStoreStockForm = () => {
@@ -979,6 +1136,28 @@ const handleResetStoreStockForm = () => {
     reserved_qty: 0,
   };
   localEditingStoreStockIndex.value = null;
+};
+
+const getStoreAvailableQty = (storeStock: Props["variantStoreStocks"][number]) => {
+  return Math.max(0, (storeStock.qty || 0) - (storeStock.reserved_qty || 0));
+};
+
+const getStockStatusLabel = (storeStock: Props["variantStoreStocks"][number]) => {
+  const availableQty = getStoreAvailableQty(storeStock);
+
+  if ((storeStock.qty || 0) <= 0) return "Out of stock";
+  if (availableQty <= 0) return "Fully reserved";
+  return "Available";
+};
+
+const getStockStatusBadgeClass = (
+  storeStock: Props["variantStoreStocks"][number],
+) => {
+  const availableQty = getStoreAvailableQty(storeStock);
+
+  if ((storeStock.qty || 0) <= 0) return "bg-secondary text-white";
+  if (availableQty <= 0) return "bg-dark text-white";
+  return "bg-light text-dark border";
 };
 
 const handleVariantImageSelect = (event: Event) => {
@@ -1059,4 +1238,32 @@ const handleSave = () => {
 const handleCancel = () => {
   emit("cancel");
 };
+
+onMounted(() => {
+  handleLoadStores();
+});
 </script>
+
+<style scoped>
+.stock-summary-card {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stock-form-field .form-control,
+.stock-form-field .form-select,
+.stock-form-field .btn {
+  min-height: 42px;
+}
+
+.stock-form-helper-placeholder {
+  visibility: hidden;
+}
+
+.stock-table-wrap :deep(.table) {
+  margin-bottom: 0;
+}
+
+.stock-table-wrap :deep(tbody tr) {
+  vertical-align: middle;
+}
+</style>

@@ -86,7 +86,7 @@
             </div>
 
             <!-- Status -->
-            <div class="col-md-6">
+            <div class="col-md-6 d-none">
               <label class="form-label fw-medium">Status</label>
               <div>
                 <div class="form-check form-check-inline">
@@ -133,31 +133,37 @@
               </div>
             </div>
 
-            <!-- Meta Description -->
-            <div class="col-md-6">
-              <label for="blog_meta_description" class="form-label fw-medium">
-                Meta Description (SEO)
-              </label>
-              <!-- Auto-generated Meta Preview (Read-only) -->
-              <div class="col-12">
-                <div class="card">
-                </div>
-                <div class="card-body py-2">
-                  <small class="text-muted d-block mb-2">
-                    <i class="bi bi-info-circle me-1"></i>
-                    SEO metadata preview 
-                  </small>
-                  <div class="mt-2">
-                    <strong class="small text-dark">Meta Title:</strong>
-                    <p class="mb-1 small">{{ form.meta_title || form.title || '—' }}</p>
+            <!-- SEO Metadata Preview -->
+            <div class="col-12 mt-2">
+              <div class="seo-meta-panel rounded border px-3 py-2">
+                <div
+                  class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-2"
+                >
+                  <div class="d-flex align-items-center text-muted small fw-semibold">
+                    <i class="bi bi-search me-2"></i>SEO Metadata
                   </div>
-                  <div>
-                    <strong class="small text-dark">Meta Description:</strong>
-                    <p class="mb-0 small">{{ form.meta_description || form.short_desc || '—' }}</p>
+                </div>
+                <div class="row g-2">
+                  <div class="col-md-5">
+                    <div class="seo-meta-item rounded px-2 py-2">
+                      <div class="small text-muted mb-1">Meta Title</div>
+                      <p class="mb-0 small text-dark">
+                        {{ form.meta_title || form.title || "—" }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-7">
+                    <div class="seo-meta-item rounded px-2 py-2">
+                      <div class="small text-muted mb-1">Meta Description</div>
+                      <p class="mb-0 small text-dark">
+                        {{ form.meta_description || form.short_desc || "—" }}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <!-- Error/Success Message -->
             <div v-if="message" class="col-12">
               <div class="alert" :class="messageType === 'success' ? 'alert-success' : 'alert-danger'">
@@ -593,3 +599,14 @@ onUnmounted(() => {
   }
 })
 </script>
+
+<style scoped>
+.seo-meta-panel {
+  background: #fafafa;
+  border-color: #e9ecef !important;
+}
+
+.seo-meta-item {
+  background: #ffffff;
+}
+</style>
