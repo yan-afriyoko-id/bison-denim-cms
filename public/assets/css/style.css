@@ -607,8 +607,8 @@ h6 {
   padding: 20px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #aab7cf transparent;
-  box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+  scrollbar-color: #9ca3af transparent;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
   background-color: #fff;
 }
 
@@ -625,7 +625,7 @@ h6 {
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background-color: #aab7cf;
+  background-color: #9ca3af;
 }
 
 @media (min-width: 1200px) {
@@ -673,7 +673,7 @@ h6 {
 .sidebar-nav .nav-heading {
   font-size: 11px;
   text-transform: uppercase;
-  color: #899bbd;
+  color: #6b7280;
   font-weight: 600;
   margin: 10px 0 5px 15px;
 }
@@ -683,9 +683,9 @@ h6 {
   align-items: center;
   font-size: 15px;
   font-weight: 600;
-  color: #4154f1;
+  color: #000000;
   transition: 0.3;
-  background: #f6f9ff;
+  background: #f5f5f5;
   padding: 10px 15px;
   border-radius: 4px;
 }
@@ -693,25 +693,25 @@ h6 {
 .sidebar-nav .nav-link i {
   font-size: 16px;
   margin-right: 10px;
-  color: #4154f1;
+  color: #000000;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
+  color: #1a1a1a;
   background: #fff;
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #899bbd;
+  color: #6b7280;
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4154f1;
-  background: #f6f9ff;
+  color: #000000;
+  background: #f5f5f5;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #4154f1;
+  color: #000000;
 }
 
 .sidebar-nav .nav-link .bi-chevron-down {

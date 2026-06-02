@@ -7,8 +7,13 @@
           alt="Bison Denim Logo" 
           @error="handleLogoError"
         />
+        <span class="logo-text ms-2 fw-bold">Bison Denim</span>
       </NuxtLink>
-      <i class="bi bi-list toggle-sidebar-btn" @click="toggleSidebar"></i>
+      <i 
+        class="bi toggle-sidebar-btn" 
+        :class="{ 'bi-list': !sidebarOpen, 'bi-x': sidebarOpen }" 
+        @click="toggleSidebar"
+      ></i>
     </div>
 
     <nav class="header-nav ms-auto">
@@ -78,7 +83,7 @@ const userRoles = computed(() => {
 })
 
 // Sidebar management using composable
-const { toggle: toggleSidebar } = useSidebar()
+const { toggle: toggleSidebar, isOpen: sidebarOpen } = useSidebar()
 
 // Logo management
 const handleLogoError = () => {
@@ -167,5 +172,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Additional styling if needed */
+.logo-text {
+  font-size: 1.25rem;
+  white-space: nowrap;
+  color: black;
+}
+
+.toggle-sidebar-btn {
+  transition: transform 0.3s ease;
+}
+
+.toggle-sidebar-btn.bi-x {
+  transform: rotate(90deg);
+}
 </style>

@@ -915,6 +915,7 @@
       :variant-store-stocks="variantStoreStocks"
       :editing-variant-index="editingVariantIndex"
       :available-attributes="availableAttributes"
+      :product-slug="productForm.slug"
       @save="handleSaveVariant"
       @cancel="handleCancelVariant"
       @update:variant-form="variantForm = $event"

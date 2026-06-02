@@ -63,17 +63,6 @@
               @save-settings="saveSettings"
             />
 
-            <!-- Brand Tab -->
-            <BrandTab
-              v-if="activeTab === 'brand' && hasPermission('brands.read')"
-              :brands="brands"
-              :loading-brands="loadingBrands"
-              :is-active="activeTab === 'brand'"
-              @create-brand="handleCreateBrandClick"
-              @edit-brand="handleEditBrandClick"
-              @delete-brand="handleDeleteBrandClick"
-            />
-
             <!-- Email Tab -->
             <EmailTab
               v-if="activeTab === 'email' && hasPermission('configs.read')"
@@ -609,305 +598,6 @@
       </div>
     </div>
 
-    <!-- Create Brand Modal -->
-    <div
-      id="createBrandModal"
-      class="modal fade"
-      tabindex="-1"
-      aria-labelledby="createBrandModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createBrandModalLabel">
-              Create New Brand
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              @click="resetBrandForm"
-            ></button>
-          </div>
-          <form @submit.prevent="handleCreateBrand">
-            <div class="modal-body">
-              <div class="row g-3">
-                <div class="col-md-12">
-                  <label class="form-label"
-                    >Brand Name <span class="text-danger">*</span></label
-                  >
-                  <input
-                    v-model="brandForm.name"
-                    type="text"
-                    required
-                    class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.name }"
-                    placeholder="Brand Name"
-                  />
-                  <div v-if="brandFormErrors.name" class="invalid-feedback">
-                    {{ brandFormErrors.name[0] }}
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <label class="form-label"
-                    >Brand Slug <span class="text-danger">*</span></label
-                  >
-                  <input
-                    v-model="brandForm.slug"
-                    type="text"
-                    required
-                    class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.slug }"
-                    placeholder="Brand Slug"
-                  />
-                  <div v-if="brandFormErrors.slug" class="invalid-feedback">
-                    {{ brandFormErrors.slug[0] }}
-                  </div>
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Logo</label>
-                  <div class="mb-2" v-if="brandLogoPreview">
-                    <img
-                      :src="brandLogoPreview"
-                      alt="Brand Logo Preview"
-                      class="img-thumbnail"
-                      style="max-height: 100px"
-                    />
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    @change="onBrandLogoChange"
-                    class="form-control"
-                  />
-                  <div class="form-text">
-                    Upload brand logo image (max 5MB, formats: jpeg, jpg, png,
-                    gif, webp)
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Status</label>
-                  <select v-model="brandForm.status" class="form-select">
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Order</label>
-                  <input
-                    v-model.number="brandForm.order"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    placeholder="0"
-                  />
-                  <div class="form-text">Lower numbers appear first</div>
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Description</label>
-                  <textarea
-                    v-model="brandForm.description"
-                    class="form-control"
-                    rows="3"
-                    placeholder="Brand description"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-                @click="resetBrandForm"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="isLoading"
-              >
-                {{ isLoading ? "Creating..." : "Create Brand" }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Brand Modal -->
-    <div
-      id="editBrandModal"
-      class="modal fade"
-      tabindex="-1"
-      aria-labelledby="editBrandModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editBrandModalLabel">Edit Brand</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              @click="resetBrandForm"
-            ></button>
-          </div>
-          <form @submit.prevent="handleUpdateBrand">
-            <div class="modal-body">
-              <div class="row g-3">
-                <div class="col-md-12">
-                  <label class="form-label"
-                    >Brand Name <span class="text-danger">*</span></label
-                  >
-                  <input
-                    v-model="brandForm.name"
-                    type="text"
-                    required
-                    class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.name }"
-                  />
-                  <div v-if="brandFormErrors.name" class="invalid-feedback">
-                    {{ brandFormErrors.name[0] }}
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <label class="form-label"
-                    >Brand Slug <span class="text-danger">*</span></label
-                  >
-                  <input
-                    v-model="brandForm.slug"
-                    type="text"
-                    required
-                    class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.slug }"
-                  />
-                  <div v-if="brandFormErrors.slug" class="invalid-feedback">
-                    {{ brandFormErrors.slug[0] }}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Logo</label>
-                  <div class="mb-2" v-if="brandLogoPreview">
-                    <img
-                      :src="brandLogoPreview"
-                      alt="Brand Logo Preview"
-                      class="img-thumbnail"
-                      style="max-height: 100px"
-                    />
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    @change="onBrandLogoChange"
-                    class="form-control"
-                  />
-                  <div class="form-text">
-                    Upload brand logo image (max 5MB, formats: jpeg, jpg, png,
-                    gif, webp)
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Status</label>
-                  <select v-model="brandForm.status" class="form-select">
-                    <option value="ACTIVE">Active</option>
-                    <option value="INACTIVE">Inactive</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Order</label>
-                  <input
-                    v-model.number="brandForm.order"
-                    type="number"
-                    min="0"
-                    class="form-control"
-                  />
-                  <div class="form-text">Lower numbers appear first</div>
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Description</label>
-                  <textarea
-                    v-model="brandForm.description"
-                    class="form-control"
-                    rows="3"
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-                @click="resetBrandForm"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary"
-                :disabled="isLoading"
-              >
-                {{ isLoading ? "Updating..." : "Update Brand" }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Delete Brand Modal -->
-    <div
-      id="deleteBrandModal"
-      class="modal fade"
-      tabindex="-1"
-      aria-labelledby="deleteBrandModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteBrandModalLabel">Delete Brand</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>
-              Are you sure you want to delete
-              <strong>{{ brandToDelete?.name }}</strong
-              >? This action cannot be undone.
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              @click="handleDeleteBrand"
-              :disabled="isLoading"
-            >
-              {{ isLoading ? "Deleting..." : "Delete Brand" }}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Create Popup Banner Modal -->
     <div class="modal fade" id="createPopupBannerModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
@@ -1168,17 +858,14 @@ import { watch, nextTick, onMounted } from "vue";
 import { useConfig } from "~/composables/useConfig";
 import { useApiBase } from "~/composables/useApiBase";
 import { useStoreApi } from "~/composables/useStoreApi";
-import { useBrandApi } from "~/composables/useBrandApi";
 import { usePermission } from "~/composables/usePermission";
 import { useShippingApi } from "~/composables/useShippingApi";
 import { usePopupBannerApi } from "~/composables/usePopupBannerApi";
 import type { Store } from "~/types/store";
 import type { MainBanner } from "~/types/mainBanner";
-import type { Brand } from "~/types/brand";
 import type { PopupBanner } from "~/types/popupBanner";
 import StoreTab from "~/components/settings/StoreTab.vue";
 import ProductProtectionTab from "~/components/settings/ProductProtectionTab.vue";
-import BrandTab from "~/components/settings/BrandTab.vue";
 import EmailTab from "~/components/settings/EmailTab.vue";
 import AppTab from "~/components/settings/AppTab.vue";
 import MidtransTab from "~/components/settings/MidtransTab.vue";
@@ -1199,7 +886,6 @@ const { token } = useApiBase();
 const { fetchAllConfigs, updateConfig } = useConfig();
 const { getStores, getAllStores, createStore, updateStore, deleteStore } =
   useStoreApi();
-const { getAllBrands, createBrand, updateBrand, deleteBrand } = useBrandApi();
 const { getProvinces, getCities } = useShippingApi();
 const {
   getPopupBanners,
@@ -1244,21 +930,6 @@ const cities = ref<any[]>([]);
 const loadingProvinces = ref(false);
 const loadingCities = ref(false);
 
-// Brand management
-const brands = ref<Brand[]>([]);
-const loadingBrands = ref(false);
-const brandToEdit = ref<Brand | null>(null);
-const brandToDelete = ref<Brand | null>(null);
-const brandForm = ref({
-  name: "",
-  slug: "",
-  status: "ACTIVE" as "ACTIVE" | "INACTIVE",
-  order: 0,
-  description: "",
-});
-const brandFormErrors = ref<Record<string, string[]>>({});
-const brandLogoPreview = ref<string>("");
-const brandLogoFile = ref<File | null>(null);
 const popupBanners = ref<PopupBanner[]>([]);
 const loadingPopupBanners = ref(false);
 const popupBannerError = ref<string | null>(null);
@@ -1278,7 +949,6 @@ const popupBannerImagePreview = ref<string>("");
 const allTabs = [
   { key: "store", label: "Store" },
   { key: "productProtection", label: "Product Protection" },
-  { key: "brand", label: "Brand" },
   { key: "email", label: "Email" },
   { key: "app", label: "App" },
   { key: "midtrans", label: "Midtrans" },
@@ -1295,9 +965,6 @@ const tabs = computed(() => {
   return allTabs.filter((tab) => {
     if (tab.key === "store") {
       return hasPermission("stores.read");
-    }
-    if (tab.key === "brand") {
-      return hasPermission("brands.read");
     }
     if (
       tab.key === "email" ||
@@ -1862,200 +1529,6 @@ const handleDeleteStore = async () => {
   }
 };
 
-const loadBrands = async () => {
-  loadingBrands.value = true;
-  try {
-    const { data, error } = await getAllBrands();
-    if (error || !data?.success) {
-      console.error("Failed to load brands:", error);
-      brands.value = [];
-    } else if (data.data) {
-      if (Array.isArray(data.data.brands)) {
-        brands.value = data.data.brands;
-      }
-    }
-  } catch (err) {
-    console.error("Error loading brands:", err);
-    brands.value = [];
-  } finally {
-    loadingBrands.value = false;
-  }
-};
-
-const resetBrandForm = () => {
-  brandForm.value = {
-    name: "",
-    slug: "",
-    status: "ACTIVE" as "ACTIVE" | "INACTIVE",
-    order: 0,
-    description: "",
-  };
-  brandFormErrors.value = {};
-  brandToEdit.value = null;
-  brandLogoPreview.value = "";
-  brandLogoFile.value = null;
-};
-
-const handleCreateBrandClick = () => {
-  resetBrandForm();
-  const modalEl = document.getElementById("createBrandModal");
-  if (modalEl) {
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modal.show();
-  }
-};
-
-const handleEditBrandClick = async (brand: Brand) => {
-  brandToEdit.value = brand;
-  brandForm.value = {
-    name: brand.name || "",
-    slug: brand.slug || "",
-    status: (brand.status as "ACTIVE" | "INACTIVE") || "ACTIVE",
-    order: brand.order || 0,
-    description: brand.description || "",
-  };
-  // Set preview to existing logo if available
-  brandLogoPreview.value = brand.logo || "";
-  brandLogoFile.value = null; // Reset file input
-  await nextTick();
-  const modal = new (window as any).bootstrap.Modal(
-    document.getElementById("editBrandModal"),
-  );
-  modal.show();
-};
-
-const handleDeleteBrandClick = async (brand: Brand) => {
-  brandToDelete.value = brand;
-  await nextTick();
-  const modal = new (window as any).bootstrap.Modal(
-    document.getElementById("deleteBrandModal"),
-  );
-  modal.show();
-};
-
-const handleCreateBrand = async () => {
-  try {
-    isLoading.value = true;
-    brandFormErrors.value = {};
-
-    // Always use FormData (logo is optional)
-    const formData = new FormData();
-    formData.append("name", brandForm.value.name);
-    formData.append("slug", brandForm.value.slug);
-    const statusValue = brandForm.value.status || "ACTIVE";
-    formData.append("status", String(statusValue));
-    formData.append("order", String(brandForm.value.order));
-    if (brandForm.value.description) {
-      formData.append("description", brandForm.value.description);
-    }
-    if (brandLogoFile.value) {
-      formData.append("logo", brandLogoFile.value);
-    }
-
-    const { data, error } = await createBrand(formData);
-    if (error) {
-      if (error.errors) {
-        brandFormErrors.value = error.errors;
-      } else {
-        toast.error(error.message || "Failed to create brand");
-      }
-      return;
-    }
-    if (data?.success) {
-      toast.success("Brand created successfully");
-      const modal = (window as any).bootstrap.Modal.getInstance(
-        document.getElementById("createBrandModal"),
-      );
-      modal?.hide();
-      resetBrandForm();
-      await loadBrands();
-    }
-  } catch (err) {
-    toast.error(err instanceof Error ? err.message : "Failed to create brand");
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const handleUpdateBrand = async () => {
-  if (!brandToEdit.value) return;
-  try {
-    isLoading.value = true;
-    brandFormErrors.value = {};
-
-    // Always use FormData (logo is optional - if not provided, existing logo is kept)
-    // Send all fields like store does (store sends storeForm.value directly)
-    const formData = new FormData();
-    // Always send all fields (same pattern as store - store sends all fields in storeForm.value)
-    formData.append("name", brandForm.value.name || "");
-    formData.append("slug", brandForm.value.slug || "");
-    formData.append("status", brandForm.value.status || "ACTIVE");
-    formData.append("order", String(brandForm.value.order || 0));
-    formData.append("description", brandForm.value.description || "");
-    // Only append logo if a new file is selected
-    if (brandLogoFile.value) {
-      formData.append("logo", brandLogoFile.value);
-    }
-
-    const { data, error } = await updateBrand(brandToEdit.value.id, formData);
-    if (error) {
-      if (error.errors) {
-        brandFormErrors.value = error.errors;
-      } else {
-        toast.error(error.message || "Failed to update brand");
-      }
-      return;
-    }
-    if (data?.success) {
-      toast.success("Brand updated successfully");
-      const modal = (window as any).bootstrap.Modal.getInstance(
-        document.getElementById("editBrandModal"),
-      );
-      modal?.hide();
-      resetBrandForm();
-      await loadBrands();
-    }
-  } catch (err) {
-    toast.error(err instanceof Error ? err.message : "Failed to update brand");
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const handleDeleteBrand = async () => {
-  if (!brandToDelete.value) return;
-  try {
-    isLoading.value = true;
-    const { data, error } = await deleteBrand(brandToDelete.value.id);
-    if (error) {
-      toast.error(error.message || "Failed to delete brand");
-      return;
-    }
-    if (data?.success) {
-      toast.success("Brand deleted successfully");
-      const modal = (window as any).bootstrap.Modal.getInstance(
-        document.getElementById("deleteBrandModal"),
-      );
-      modal?.hide();
-      brandToDelete.value = null;
-      await loadBrands();
-    }
-  } catch (err) {
-    toast.error(err instanceof Error ? err.message : "Failed to delete brand");
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const onBrandLogoChange = (e: Event) => {
-  const input = e.target as HTMLInputElement;
-  if (!input || !input.files || !input.files[0]) return;
-
-  const file = input.files[0];
-  brandLogoFile.value = file;
-  brandLogoPreview.value = URL.createObjectURL(file);
-};
-
 const resetPopupBannerForm = () => {
   popupBannerToEdit.value = null;
   popupBannerForm.value = {
@@ -2277,8 +1750,8 @@ onMounted(async () => {
   if (hasPermission("stores.read")) {
     await loadStores();
   }
-  if (hasPermission("brands.read")) {
-    await loadBrands();
+  if (hasPermission("popup-banners.read")) {
+    await loadPopupBanners();
   }
 });
 </script>

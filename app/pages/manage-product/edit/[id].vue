@@ -1139,6 +1139,7 @@
       :variant-store-stocks="variantStoreStocks"
       :editing-variant-index="editingVariantIndex"
       :available-attributes="availableAttributes"
+      :product-slug="product?.slug"
       @save="handleSaveVariant"
       @cancel="handleCancelVariant"
       @update:variant-form="variantForm = $event"
@@ -2593,6 +2594,57 @@ const updateVariantName = () => {
     variantForm.value.variant_name = variantNameParts.join(" - ");
   }
   variantForm.value.attribute_value_ids = selectedValueIds;
+
+  // Generate SKU automatically if empty or if this is a new variant
+  // Or regenerate when editing to match attribute selection
+  if (!variantForm.value.sku || editingVariantIndex.value === null) {
+    variantForm.value.sku = generateSKU();
+  } else {
+    // When editing, regenerate SKU based on current attribute selection
+    // This ensures SKU matches the attribute combination
+    variantForm.value.sku = generateSKU();
+  }
+};
+
+const generateSKU = () => {
+  // Use product slug if available, otherwise use a default prefix
+  const productPrefix = product.value?.slug
+    ? product.value.slug.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase().substring(0, 6)
+    : "SKU";
+
+  // Get attribute value slugs to create unique SKU based on selected values
+  const attrValueSlugs: string[] = [];
+
+  // Sort selectedAttributes by attribute_id to ensure consistent ordering
+  const sortedAttrs = [...selectedAttributes.value].sort(
+    (a, b) => a.attribute_id - b.attribute_id
+  );
+
+  sortedAttrs.forEach((selectedAttr) => {
+    const selectedValueId =
+      variantForm.value.selectedAttributeValues[selectedAttr.attribute_id];
+    if (selectedValueId) {
+      const value = getAttributeValuesList(selectedAttr.attribute_id).find(
+        (v) => v.id === selectedValueId,
+      );
+      if (value && value.slug) {
+        attrValueSlugs.push(value.slug.substring(0, 3).toUpperCase());
+      } else if (value) {
+        // Fallback: use first 3 chars of value if no slug
+        attrValueSlugs.push(value.value.substring(0, 3).toUpperCase());
+      }
+    }
+  });
+
+  // If no attribute values, use timestamp-based suffix to ensure uniqueness
+  if (attrValueSlugs.length === 0) {
+    const timestamp = Date.now().toString(36).toUpperCase();
+    return `${productPrefix}-${timestamp}`;
+  }
+
+  // Combine product prefix with attribute value slugs (sorted)
+  const attrSuffix = attrValueSlugs.join("-");
+  return `${productPrefix}-${attrSuffix}`;
 };
 
 const handleSaveVariant = async (variantData: any) => {

@@ -668,6 +668,7 @@ interface Props {
       status?: string;
     }>;
   }>;
+  productSlug?: string;
 }
 
 const props = defineProps<Props>();
@@ -678,6 +679,7 @@ const emit = defineEmits<{
   "update:variantForm": [form: Props["variantForm"]];
   "update:variantStoreStocks": [stocks: Props["variantStoreStocks"]];
   "update-variant-name": [];
+  "update-variant-sku": [];
 }>();
 
 const toast = useToast();
@@ -811,8 +813,60 @@ const handleUpdateVariantName = () => {
   }
   localVariantForm.value.attribute_value_ids = selectedValueIds;
 
+  // Generate SKU automatically if empty or if this is a new variant
+  // Or regenerate when editing to match attribute selection
+  if (!localVariantForm.value.sku || editingVariantIndex.value === null) {
+    localVariantForm.value.sku = generateSKU();
+  } else {
+    // When editing, regenerate SKU based on current attribute selection
+    // This ensures SKU matches the attribute combination
+    localVariantForm.value.sku = generateSKU();
+  }
+
   emit("update:variantForm", { ...localVariantForm.value });
   emit("update-variant-name");
+  emit("update-variant-sku");
+};
+
+const generateSKU = () => {
+  // Use product slug if available, otherwise use a default prefix
+  const productPrefix = props.productSlug
+    ? props.productSlug.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase().substring(0, 6)
+    : "SKU";
+
+  // Get attribute value slugs to create unique SKU based on selected values
+  const attrValueSlugs: string[] = [];
+
+  // Sort selectedAttributes by attribute_id to ensure consistent ordering
+  const sortedAttrs = [...props.selectedAttributes].sort(
+    (a, b) => a.attribute_id - b.attribute_id
+  );
+
+  sortedAttrs.forEach((selectedAttr) => {
+    const selectedValueId =
+      localVariantForm.value.selectedAttributeValues[selectedAttr.attribute_id];
+    if (selectedValueId) {
+      const value = getAttributeValuesList(selectedAttr.attribute_id).find(
+        (v) => v.id === selectedValueId,
+      );
+      if (value && value.slug) {
+        attrValueSlugs.push(value.slug.substring(0, 3).toUpperCase());
+      } else if (value) {
+        // Fallback: use first 3 chars of value if no slug
+        attrValueSlugs.push(value.value.substring(0, 3).toUpperCase());
+      }
+    }
+  });
+
+  // If no attribute values, use timestamp-based suffix to ensure uniqueness
+  if (attrValueSlugs.length === 0) {
+    const timestamp = Date.now().toString(36).toUpperCase();
+    return `${productPrefix}-${timestamp}`;
+  }
+
+  // Combine product prefix with attribute value slugs (sorted)
+  const attrSuffix = attrValueSlugs.join("-");
+  return `${productPrefix}-${attrSuffix}`;
 };
 
 const handleLoadStores = async () => {

@@ -13,6 +13,17 @@
           <span>Dashboard</span>
         </NuxtLink>
       </li>
+      <!-- Brand (Merk) -->
+      <li v-if="hasPermission('brands.read')" class="nav-item">
+        <NuxtLink
+          to="/manage-brand"
+          class="nav-link"
+          :class="{ active: isActive('/manage-brand') }"
+        >
+          <i class="bi bi-tag"></i>
+          <span>Merk</span>
+        </NuxtLink>
+      </li>
       <!-- Products -->
       <li v-if="hasPermission('products.read')" class="nav-item">
         <NuxtLink
@@ -155,7 +166,6 @@
           <li
             v-if="
               hasPermission('stores.read') ||
-              hasPermission('brands.read') ||
               hasPermission('configs.read')
             "
           >
@@ -229,35 +239,36 @@ watch(
 .sidebar-nav .nav-link {
   background-color: #ffffff;
   transition: all 0.3s ease;
+  font-family: var(--font-poppins), 'Open Sans', sans-serif;
 }
 
 .sidebar-nav .nav-link.active {
-  background-color: rgba(65, 84, 241, 0.1);
-  border-left: 3px solid #4154f1;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-left: 3px solid #000000;
   padding-left: calc(0.625rem - 3px);
-  color: #4154f1;
+  color: #000000;
 }
 
 .sidebar-nav .nav-link.active i {
-  color: #4154f1;
+  color: #000000;
 }
 
 .sidebar-nav .nav-link.collapsed {
-  color: #012970;
+  color: #1a1a1a;
   background: #fff;
 }
 
 .sidebar-nav .nav-link.collapsed i {
-  color: #899bbd;
+  color: #6b7280;
 }
 
 .sidebar-nav .nav-link:hover {
-  color: #4154f1;
-  background: #f6f9ff;
+  color: #000000;
+  background: #f5f5f5;
 }
 
 .sidebar-nav .nav-link:hover i {
-  color: #4154f1;
+  color: #000000;
 }
 
 .chevron-icon {
@@ -293,11 +304,12 @@ watch(
   align-items: center;
   font-size: 14px;
   font-weight: 600;
-  color: #012970;
+  color: #1a1a1a;
   transition: all 0.3s ease;
   padding: 10px 0 10px 40px;
   text-decoration: none;
   border-radius: 0;
+  font-family: var(--font-poppins), 'Open Sans', sans-serif;
 }
 
 .nav-content a i {
@@ -312,26 +324,36 @@ watch(
 }
 
 .nav-content a:hover {
-  color: #4154f1;
-  background-color: rgba(65, 84, 241, 0.05);
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.05);
   padding-left: 45px;
 }
 
 .nav-content a:hover i {
-  background-color: #4154f1;
+  background-color: #000000;
 }
 
 .nav-content a.active {
-  color: #4154f1;
-  background-color: rgba(65, 84, 241, 0.1);
-  border-left: 3px solid #4154f1;
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-left: 3px solid #000000;
   padding-left: calc(40px - 3px);
   font-weight: 700;
 }
 
 .nav-content a.active i {
-  background-color: #4154f1;
+  background-color: #000000;
   width: 8px;
   height: 8px;
+}
+
+.sidebar-nav .nav-heading {
+  font-family: var(--font-poppins), 'Open Sans', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8b949e;
+  padding: 10px 15px;
+  font-weight: 700;
 }
 </style>

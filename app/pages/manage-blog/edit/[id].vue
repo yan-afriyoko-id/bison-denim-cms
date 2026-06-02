@@ -224,38 +224,25 @@
               <label for="blog_meta_title" class="form-label fw-medium">
                 Meta Title (SEO)
               </label>
-              <input
-                id="blog_meta_title"
-                v-model="form.meta_title"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': errors.meta_title }"
-                placeholder="Leave empty to use title"
-              />
-              <small class="text-muted">Leave empty to use blog title</small>
-              <div v-if="errors.meta_title" class="invalid-feedback d-block">
-                {{ errors.meta_title[0] }}
-              </div>
-            </div>
 
-            <!-- Meta Description -->
-            <div class="col-md-6">
-              <label for="blog_meta_description" class="form-label fw-medium">
-                Meta Description (SEO)
-              </label>
-              <input
-                id="blog_meta_description"
-                v-model="form.meta_description"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': errors.meta_description }"
-                placeholder="Leave empty to use short description"
-              />
-              <small class="text-muted">Leave empty to use short description</small>
-              <div v-if="errors.meta_description" class="invalid-feedback d-block">
-                {{ errors.meta_description[0] }}
+            <!-- Auto-generated Meta Preview (Read-only) -->
+            <div class="col-12 mt-3">
+                <div class="card-body py-2">
+                  <small class="text-muted d-block mb-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    SEO metadata preview
+                  </small>
+                  <div class="mt-2">
+                    <strong class="small text-dark">Meta Title:</strong>
+                    <p class="mb-1 small">{{ form.meta_title || form.title || '—' }}</p>
+                  </div>
+                  <div>
+                    <strong class="small text-dark">Meta Description:</strong>
+                    <p class="mb-0 small">{{ form.meta_description || form.short_desc || '—' }}</p>
+                  </div>
+                </div>
               </div>
-            </div>
+          </div>
 
             <!-- Error/Success Message -->
             <div v-if="message" class="col-12">
@@ -681,6 +668,20 @@ const generateSlugFromTitle = () => {
     return
   }
   form.slug = generateSlug(form.title)
+}
+
+const generateMetaFromTitle = () => {
+  // If meta_title is empty, auto-populate from title
+  if (!form.meta_title) {
+    form.meta_title = form.title
+  }
+}
+
+const generateMetaFromShortDesc = () => {
+  // If meta_description is empty, auto-populate from short_desc
+  if (!form.meta_description) {
+    form.meta_description = form.short_desc
+  }
 }
 
 const handleImageUpload = (event: Event) => {

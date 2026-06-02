@@ -21,16 +21,8 @@
               <label for="blog_title" class="form-label fw-medium">
                 Title <span class="text-danger">*</span>
               </label>
-              <input
-                id="blog_title"
-                v-model="form.title"
-                type="text"
-                required
-                class="form-control"
-                :class="{ 'is-invalid': errors.title }"
-                placeholder="Enter blog title"
-                @input="generateSlugFromTitle"
-              />
+              <input id="blog_title" v-model="form.title" type="text" required class="form-control"
+                :class="{ 'is-invalid': errors.title }" placeholder="Enter blog title" @input="generateSlugFromTitle" />
               <div v-if="errors.title" class="invalid-feedback d-block">
                 {{ errors.title[0] }}
               </div>
@@ -41,16 +33,9 @@
               <label for="blog_slug" class="form-label fw-medium">
                 Slug
               </label>
-              <input
-                id="blog_slug"
-                v-model="form.slug"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': errors.slug }"
-                placeholder="Auto generated slug"
-                readonly
-                style="background:#f8f9fa;"
-              />
+              <input id="blog_slug" v-model="form.slug" type="text" class="form-control"
+                :class="{ 'is-invalid': errors.slug }" placeholder="Auto generated slug" readonly
+                style="background:#f8f9fa;" />
               <div v-if="errors.slug" class="invalid-feedback d-block">
                 {{ errors.slug[0] }}
               </div>
@@ -61,15 +46,8 @@
               <label for="blog_short_desc" class="form-label fw-medium">
                 Short Description (Excerpt) <span class="text-danger">*</span>
               </label>
-              <textarea
-                id="blog_short_desc"
-                v-model="form.short_desc"
-                class="form-control"
-                rows="3"
-                required
-                :class="{ 'is-invalid': errors.short_desc }"
-                placeholder="Short summary of the blog post"
-              ></textarea>
+              <textarea id="blog_short_desc" v-model="form.short_desc" class="form-control" rows="3" required
+                :class="{ 'is-invalid': errors.short_desc }" placeholder="Short summary of the blog post"></textarea>
               <div v-if="errors.short_desc" class="invalid-feedback d-block">
                 {{ errors.short_desc[0] }}
               </div>
@@ -80,11 +58,8 @@
               <label for="blog_long_desc" class="form-label fw-medium">
                 Content <span class="text-danger">*</span>
               </label>
-              <TiptapEditor
-                v-model="form.long_desc"
-                placeholder="Write your blog content here..."
-                :error-message="errors.long_desc ? errors.long_desc[0] : ''"
-              />
+              <TiptapEditor v-model="form.long_desc" placeholder="Write your blog content here..."
+                :error-message="errors.long_desc ? errors.long_desc[0] : ''" />
             </div>
 
             <!-- Category -->
@@ -93,26 +68,15 @@
                 Category <span class="text-danger">*</span>
               </label>
               <div class="d-flex gap-2">
-                <select
-                  id="blog_category"
-                  v-model="form.fk_category"
-                  required
-                  class="form-select"
-                  :class="{ 'is-invalid': errors.fk_category }"
-                  :disabled="loadingCategories"
-                >
+                <select id="blog_category" v-model="form.fk_category" required class="form-select"
+                  :class="{ 'is-invalid': errors.fk_category }" :disabled="loadingCategories">
                   <option value="">Select category</option>
                   <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                     {{ cat.name }}
                   </option>
                 </select>
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm flex-shrink-0"
-                  title="Manage Categories"
-                  data-bs-toggle="modal"
-                  data-bs-target="#manageCategoriesModal"
-                >
+                <button type="button" class="btn btn-primary btn-sm flex-shrink-0" title="Manage Categories"
+                  data-bs-toggle="modal" data-bs-target="#manageCategoriesModal">
                   Add
                 </button>
               </div>
@@ -126,27 +90,15 @@
               <label class="form-label fw-medium">Status</label>
               <div>
                 <div class="form-check form-check-inline">
-                  <input
-                    id="blog_status_draft"
-                    v-model="form.status"
-                    class="form-check-input"
-                    type="radio"
-                    name="blog_status"
-                    value="draft"
-                  />
+                  <input id="blog_status_draft" v-model="form.status" class="form-check-input" type="radio"
+                    name="blog_status" value="draft" />
                   <label class="form-check-label" for="blog_status_draft">
                     Draft
                   </label>
                 </div>
                 <div class="form-check form-check-inline">
-                  <input
-                    id="blog_status_published"
-                    v-model="form.status"
-                    class="form-check-input"
-                    type="radio"
-                    name="blog_status"
-                    value="published"
-                  />
+                  <input id="blog_status_published" v-model="form.status" class="form-check-input" type="radio"
+                    name="blog_status" value="published" />
                   <label class="form-check-label" for="blog_status_published">
                     Published
                   </label>
@@ -159,54 +111,25 @@
               <label for="blog_cover" class="form-label fw-medium">
                 Featured Image
               </label>
-              <input
-                id="blog_cover"
-                type="file"
-                accept="image/*"
-                class="form-control"
-                :class="{ 'is-invalid': errors.cover }"
-                @change="handleImageUpload"
-              />
+              <input id="blog_cover" type="file" accept="image/*" class="form-control"
+                :class="{ 'is-invalid': errors.cover }" @change="handleImageUpload" />
               <small class="text-muted">Max 2MB, JPG/PNG</small>
               <div v-if="errors.cover" class="invalid-feedback d-block">
                 {{ errors.cover[0] }}
               </div>
               <div v-if="imagePreview" class="mt-3">
-                <img :src="imagePreview" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 4px; object-fit: cover;" />
+                <img :src="imagePreview" alt="Preview"
+                  style="max-width: 100%; max-height: 300px; border-radius: 4px; object-fit: cover;" />
               </div>
             </div>
 
             <!-- Hot News -->
             <div class="col-12">
               <div class="form-check">
-                <input
-                  id="blog_hot_news"
-                  v-model="form.hot_news"
-                  class="form-check-input"
-                  type="checkbox"
-                />
+                <input id="blog_hot_news" v-model="form.hot_news" class="form-check-input" type="checkbox" />
                 <label class="form-check-label" for="blog_hot_news">
                   Hot News
                 </label>
-              </div>
-            </div>
-
-            <!-- Meta Title -->
-            <div class="col-md-6">
-              <label for="blog_meta_title" class="form-label fw-medium">
-                Meta Title (SEO)
-              </label>
-              <input
-                id="blog_meta_title"
-                v-model="form.meta_title"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': errors.meta_title }"
-                placeholder="Leave empty to use title"
-              />
-              <small class="text-muted">Leave empty to use blog title</small>
-              <div v-if="errors.meta_title" class="invalid-feedback d-block">
-                {{ errors.meta_title[0] }}
               </div>
             </div>
 
@@ -215,20 +138,26 @@
               <label for="blog_meta_description" class="form-label fw-medium">
                 Meta Description (SEO)
               </label>
-              <input
-                id="blog_meta_description"
-                v-model="form.meta_description"
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': errors.meta_description }"
-                placeholder="Leave empty to use short description"
-              />
-              <small class="text-muted">Leave empty to use short description</small>
-              <div v-if="errors.meta_description" class="invalid-feedback d-block">
-                {{ errors.meta_description[0] }}
+              <!-- Auto-generated Meta Preview (Read-only) -->
+              <div class="col-12">
+                <div class="card">
+                </div>
+                <div class="card-body py-2">
+                  <small class="text-muted d-block mb-2">
+                    <i class="bi bi-info-circle me-1"></i>
+                    SEO metadata preview 
+                  </small>
+                  <div class="mt-2">
+                    <strong class="small text-dark">Meta Title:</strong>
+                    <p class="mb-1 small">{{ form.meta_title || form.title || '—' }}</p>
+                  </div>
+                  <div>
+                    <strong class="small text-dark">Meta Description:</strong>
+                    <p class="mb-0 small">{{ form.meta_description || form.short_desc || '—' }}</p>
+                  </div>
+                </div>
               </div>
             </div>
-
             <!-- Error/Success Message -->
             <div v-if="message" class="col-12">
               <div class="alert" :class="messageType === 'success' ? 'alert-success' : 'alert-danger'">
@@ -242,12 +171,9 @@
             <NuxtLink to="/manage-blog" class="btn btn-secondary" :disabled="loading">
               Cancel
             </NuxtLink>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="loading"
-            >
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            <button type="submit" class="btn btn-primary" :disabled="loading">
+              <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status"
+                aria-hidden="true"></span>
               <span v-if="loading">Creating...</span>
               <span v-else>Create Blog Post</span>
             </button>
@@ -257,13 +183,8 @@
     </div>
 
     <!-- Manage Categories Modal -->
-    <div
-      id="manageCategoriesModal"
-      class="modal fade"
-      tabindex="-1"
-      aria-labelledby="manageCategoriesModalLabel"
-      aria-hidden="true"
-    >
+    <div id="manageCategoriesModal" class="modal fade" tabindex="-1" aria-labelledby="manageCategoriesModalLabel"
+      aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -275,11 +196,8 @@
             <div class="card mb-3">
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Add New Category</h6>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-primary"
-                  @click="showCreateCategoryForm = !showCreateCategoryForm"
-                >
+                <button type="button" class="btn btn-sm btn-primary"
+                  @click="showCreateCategoryForm = !showCreateCategoryForm">
                   <i :class="showCreateCategoryForm ? 'bi bi-dash' : 'bi bi-plus'"></i>
                   {{ showCreateCategoryForm ? 'Hide' : 'New' }}
                 </button>
@@ -287,42 +205,23 @@
               <div v-if="showCreateCategoryForm" class="card-body">
                 <div class="row g-2">
                   <div class="col-md-5">
-                    <input
-                      v-model="newCategory.name"
-                      type="text"
-                      class="form-control form-control-sm"
-                      placeholder="Category name"
-                      @input="generateCategorySlug"
-                    />
+                    <input v-model="newCategory.name" type="text" class="form-control form-control-sm"
+                      placeholder="Category name" @input="generateCategorySlug" />
                   </div>
                   <div class="col-md-4">
-                    <input
-                      v-model="newCategory.slug"
-                      type="text"
-                      class="form-control form-control-sm"
-                      placeholder="Slug (auto)"
-                      readonly
-                      style="background:#f8f9fa;"
-                    />
+                    <input v-model="newCategory.slug" type="text" class="form-control form-control-sm"
+                      placeholder="Slug (auto)" readonly style="background:#f8f9fa;" />
                   </div>
                   <div class="col-md-3">
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-sm w-100"
-                      :disabled="!newCategory.name || savingCategory"
-                      @click="handleCreateCategory"
-                    >
+                    <button type="button" class="btn btn-primary btn-sm w-100"
+                      :disabled="!newCategory.name || savingCategory" @click="handleCreateCategory">
                       <span v-if="savingCategory" class="spinner-border spinner-border-sm me-1"></span>
                       Add
                     </button>
                   </div>
                   <div class="col-12">
-                    <textarea
-                      v-model="newCategory.description"
-                      class="form-control form-control-sm"
-                      rows="2"
-                      placeholder="Description (optional)"
-                    ></textarea>
+                    <textarea v-model="newCategory.description" class="form-control form-control-sm" rows="2"
+                      placeholder="Description (optional)"></textarea>
                   </div>
                 </div>
               </div>
@@ -350,12 +249,8 @@
                   <tr v-for="cat in categories" :key="cat.id">
                     <td>
                       <template v-if="editingCategory?.id === cat.id">
-                        <input
-                          v-model="editingCategory.name"
-                          type="text"
-                          class="form-control form-control-sm"
-                          @input="generateEditCategorySlug"
-                        />
+                        <input v-model="editingCategory.name" type="text" class="form-control form-control-sm"
+                          @input="generateEditCategorySlug" />
                       </template>
                       <template v-else>
                         <strong>{{ cat.name }}</strong>
@@ -365,13 +260,8 @@
                     </td>
                     <td>
                       <template v-if="editingCategory?.id === cat.id">
-                        <input
-                          v-model="editingCategory.slug"
-                          type="text"
-                          class="form-control form-control-sm"
-                          readonly
-                          style="background:#f8f9fa;"
-                        />
+                        <input v-model="editingCategory.slug" type="text" class="form-control form-control-sm" readonly
+                          style="background:#f8f9fa;" />
                       </template>
                       <template v-else>
                         <code>{{ cat.slug }}</code>
@@ -392,38 +282,21 @@
                     </td>
                     <td class="text-end">
                       <template v-if="editingCategory?.id === cat.id">
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-success me-1"
-                          @click="handleUpdateCategory"
-                          :disabled="savingCategory"
-                        >
+                        <button type="button" class="btn btn-sm btn-success me-1" @click="handleUpdateCategory"
+                          :disabled="savingCategory">
                           <i class="bi bi-check"></i>
                         </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-secondary"
-                          @click="editingCategory = null"
-                        >
+                        <button type="button" class="btn btn-sm btn-secondary" @click="editingCategory = null">
                           <i class="bi bi-x"></i>
                         </button>
                       </template>
                       <template v-else>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-outline-primary me-1"
-                          @click="startEditCategory(cat)"
-                          title="Edit"
-                        >
+                        <button type="button" class="btn btn-sm btn-outline-primary me-1"
+                          @click="startEditCategory(cat)" title="Edit">
                           <i class="bi bi-pencil"></i>
                         </button>
-                        <button
-                          type="button"
-                          class="btn btn-sm btn-outline-danger"
-                          @click="handleDeleteCategory(cat)"
-                          title="Delete"
-                          :disabled="deletingCategory === cat.id"
-                        >
+                        <button type="button" class="btn btn-sm btn-outline-danger" @click="handleDeleteCategory(cat)"
+                          title="Delete" :disabled="deletingCategory === cat.id">
                           <i class="bi bi-trash"></i>
                         </button>
                       </template>
@@ -515,6 +388,20 @@ const generateSlugFromTitle = () => {
     return
   }
   form.slug = generateSlug(form.title)
+}
+
+const generateMetaFromTitle = () => {
+  // If meta_title is empty, auto-populate from title
+  if (!form.meta_title) {
+    form.meta_title = form.title
+  }
+}
+
+const generateMetaFromShortDesc = () => {
+  // If meta_description is empty, auto-populate from short_desc
+  if (!form.meta_description) {
+    form.meta_description = form.short_desc
+  }
 }
 
 const generateCategorySlug = () => {
@@ -651,7 +538,7 @@ const handleSubmit = async () => {
   const contentHtml = form.long_desc || ''
   const contentText = contentHtml.replace(/<[^>]*>/g, '').trim()
   const hasImage = /<img[^>]*>/i.test(contentHtml)
-  
+
   if (!contentText && !hasImage) {
     errors.value = { long_desc: ['Content is required'] }
     message.value = 'Please fill in all required fields'
@@ -706,4 +593,3 @@ onUnmounted(() => {
   }
 })
 </script>
-
