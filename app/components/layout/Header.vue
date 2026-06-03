@@ -195,6 +195,8 @@ onMounted(() => {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
   max-width: 280px;
   overflow: hidden;
   flex-shrink: 0;
@@ -205,6 +207,9 @@ onMounted(() => {
 }
 
 .logo img {
+  display: block;
+  width: auto;
+  height: 42px;
   transition:
     opacity 0.2s ease,
     transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
@@ -222,6 +227,24 @@ onMounted(() => {
     opacity 0.2s ease,
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header :deep(.nav-profile),
+.header :deep(.nav-profile span),
+.header :deep(.dropdown-toggle),
+.header :deep(.dropdown-header h6),
+.header :deep(.dropdown-header span),
+.header :deep(.dropdown-item),
+.header :deep(.dropdown-item span),
+.header :deep(.dropdown-item i) {
+  color: #000 !important;
+}
+
+.header :deep(.nav-profile:hover),
+.header :deep(.nav-profile:focus),
+.header :deep(.dropdown-item:hover),
+.header :deep(.dropdown-item:focus) {
+  color: #000 !important;
 }
 
 .toggle-sidebar-btn {
@@ -265,9 +288,9 @@ onMounted(() => {
   }
 
   .sidebar-collapsed .header-brand {
-    width: 42px;
+    width: 92px;
     justify-content: flex-start !important;
-    gap: 12px;
+    gap: 8px;
   }
 
   .sidebar-collapsed .toggle-sidebar-btn {
@@ -277,15 +300,15 @@ onMounted(() => {
   }
 
   .sidebar-collapsed .logo {
-    max-width: 0;
-    opacity: 0;
-    transform: translateX(-12px);
-    pointer-events: none;
+    max-width: none;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
   }
 
   .sidebar-collapsed .logo img {
-    opacity: 0;
-    transform: scale(0.9);
+    opacity: 1;
+    transform: scale(1);
   }
 
   .sidebar-collapsed .logo-text {

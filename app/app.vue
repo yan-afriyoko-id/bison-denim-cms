@@ -111,4 +111,41 @@ a.action-btn-dark.btn.disabled {
   border-color: #4b4b4b !important;
   opacity: 1 !important;
 }
+
+.spinner-border,
+.spinner-grow,
+.spinner-border.text-primary,
+.spinner-grow.text-primary {
+  color: #000 !important;
+}
+
+.form-check-input:checked {
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.form-check-input:focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.form-switch .form-check-input:checked {
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-control-lg:focus,
+.form-control-sm:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+select.form-select:focus {
+  border-color: #000 !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.input-group:focus-within .input-group-text {
+  border-color: #000 !important;
+}
 </style>

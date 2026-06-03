@@ -204,7 +204,7 @@
                       </div>
 
                       <div class="text-center">
-                        <button type="submit" class="btn btn-primary" :disabled="isUpdating">
+                        <button type="submit" class="btn btn-primary action-btn-dark" :disabled="isUpdating">
                           <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2"></span>
                           {{ isUpdating ? 'Updating...' : 'Save Changes' }}
                         </button>
@@ -270,7 +270,7 @@
 
                         <div class="row">
                           <div class="col-md-8 col-lg-9 offset-md-4 offset-lg-3">
-                            <button type="submit" class="btn btn-primary btn-lg" :disabled="isChangingPassword">
+                            <button type="submit" class="btn btn-primary btn-lg action-btn-dark" :disabled="isChangingPassword">
                               <span v-if="isChangingPassword" class="spinner-border spinner-border-sm me-2"></span>
                               {{ isChangingPassword ? 'Updating...' : 'Update Password' }}
                             </button>
@@ -688,13 +688,13 @@ const handleDeleteAccount = async () => {
 
 .nav-tabs-bordered .nav-link {
   border-bottom: 3px solid transparent;
-  color: #6c757d;
+  color: #000;
   margin-bottom: -2px;
 }
 
 .nav-tabs-bordered .nav-link.active {
-  border-color: #012970;
-  color: #111111;
+  border-color: #000;
+  color: #000;
 }
 
 .profile-overview .row {
@@ -726,8 +726,8 @@ const handleDeleteAccount = async () => {
 .profile-edit .form-control:focus,
 .profile-edit .form-select:focus {
   background-color: white;
-  border-color: #012970;
-  box-shadow: 0 0 0 0.2rem rgba(1, 41, 112, 0.15);
+  border-color: #000;
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
 }
 
 .profile-edit form input[disabled],
@@ -770,8 +770,8 @@ const handleDeleteAccount = async () => {
 }
 
 .form-control-lg:focus {
-  border-color: #012970;
-  box-shadow: 0 0 0 0.2rem rgba(1, 41, 112, 0.15);
+  border-color: #000;
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
 }
 
 .btn-lg {
@@ -780,18 +780,6 @@ const handleDeleteAccount = async () => {
   font-weight: 600;
   border-radius: 6px;
   transition: all 0.3s ease;
-}
-
-.btn-primary.btn-lg {
-  background-color: #012970;
-  border-color: #012970;
-}
-
-.btn-primary.btn-lg:hover:not(:disabled) {
-  background-color: #0a1e50;
-  border-color: #0a1e50;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(1, 41, 112, 0.3);
 }
 
 .btn-danger {
@@ -807,9 +795,29 @@ const handleDeleteAccount = async () => {
 }
 
 .btn-danger:disabled,
-.btn-primary.btn-lg:disabled {
+.action-btn-dark:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.action-btn-dark {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #000;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #1f1f1f;
+  --bs-btn-hover-border-color: #1f1f1f;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #000;
+  --bs-btn-active-border-color: #000;
+}
+
+.card-title,
+.pagetitle h1,
+.breadcrumb-item.active,
+.profile-page :deep(.text-muted) {
+  color: #000 !important;
 }
 
 /* Alert Styling */

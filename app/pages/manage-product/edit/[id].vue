@@ -343,7 +343,7 @@
                     <!-- Basic Information -->
                     <div class="col-12 d-none">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-primary">
+                        <h6 class="mb-0 text-dark">
                           <i class="bi bi-info-circle me-2"></i>Basic
                           Information
                         </h6>
@@ -412,7 +412,7 @@
                     <!-- Information -->
                     <div class="col-12 mt-4">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-primary">
+                        <h6 class="mb-0 text-dark">
                           <i class="bi bi-file-text me-2"></i>Information
                         </h6>
                       </div>
@@ -430,7 +430,7 @@
                     <!-- Pricing -->
                     <div class="col-12 mt-4">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-primary">
+                        <h6 class="mb-0 text-dark">
                           <i class="bi bi-currency-dollar me-2"></i>Pricing
                         </h6>
                       </div>
@@ -494,7 +494,7 @@
                     </div>
                     <div class="col-12 mt-4 d-none">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-primary">
+                        <h6 class="mb-0 text-dark">
                           <i class="bi bi-search me-2"></i>SEO Metadata
                         </h6>
                       </div>
@@ -944,7 +944,7 @@
                   <button
                     v-else
                     type="button"
-                    class="btn btn-success action-btn-dark"
+                    class="btn btn-primary action-btn-dark"
                     @click="handleUpdateProduct"
                     :disabled="isLoading || !canUpdateProduct"
                   >
@@ -4322,6 +4322,24 @@ onMounted(async () => {
 .category-selection-list {
   max-height: 26rem;
   overflow-y: auto;
+}
+
+.category-selection-list .list-group-item {
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.category-selection-list .list-group-item.active {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.category-selection-list .list-group-item.active .text-muted,
+.category-selection-list .list-group-item.active small,
+.category-selection-list .list-group-item.active .fw-semibold,
+.category-selection-list .list-group-item.active strong {
+  color: #fff !important;
 }
 
 .category-selected-pill,

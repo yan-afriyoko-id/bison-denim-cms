@@ -16,6 +16,13 @@
 </script>
 
 <style scoped>
+.footer,
+.copyright,
+.copyright span,
+.copyright strong {
+  color: #000 !important;
+}
+
 .back-to-top {
   position: fixed;
   right: 15px;

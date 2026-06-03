@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="product-detail-page">
     <!-- Loading State -->
     <div v-if="loadingProduct" class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -30,10 +30,13 @@
           </p>
         </div>
         <div class="d-flex gap-2">
-          <NuxtLink to="/manage-product" class="btn btn-secondary">
+          <NuxtLink to="/manage-product" class="btn btn-primary action-btn-dark">
             <i class="bi bi-arrow-left me-2"></i>Back to List
           </NuxtLink>
-          <NuxtLink :to="`/manage-product/edit/${product.slug}`" class="btn btn-primary">
+          <NuxtLink
+            :to="`/manage-product/edit/${product.slug}`"
+            class="btn btn-primary action-btn-dark"
+          >
             <i class="bi bi-pencil me-2"></i>Edit Product
           </NuxtLink>
         </div>
@@ -339,4 +342,27 @@ onMounted(async () => {
   await loadProduct()
 })
 </script>
+
+<style scoped>
+.product-detail-page {
+  color: #000;
+}
+
+.product-detail-page :deep(.text-muted) {
+  color: #000 !important;
+}
+
+.action-btn-dark {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #000;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #1f1f1f;
+  --bs-btn-hover-border-color: #1f1f1f;
+  --bs-btn-focus-shadow-rgb: 33, 37, 41;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #000;
+  --bs-btn-active-border-color: #000;
+}
+</style>
 

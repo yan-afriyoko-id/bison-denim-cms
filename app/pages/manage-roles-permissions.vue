@@ -103,4 +103,22 @@ watch([originalSuccess, originalError], () => {
 })
 </script>
 
+<style scoped>
+.pagetitle h1,
+.breadcrumb-item.active,
+.breadcrumb-item :deep(a),
+.nav-tabs .nav-link {
+  color: #000 !important;
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: #000 !important;
+  border-bottom-color: #000;
+}
+</style>
 

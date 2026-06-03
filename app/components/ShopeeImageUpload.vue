@@ -366,7 +366,7 @@ defineExpose({
 .featured-image-box {
   width: 100%;
   aspect-ratio: 1 / 1;
-  border: 2px dashed #d9d9d9;
+  border: 2px dashed #000;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -380,8 +380,13 @@ defineExpose({
 }
 
 .featured-image-box:hover {
-  border-color: #1677ff;
-  background-color: #e6f7ff;
+  border-color: #000;
+  background-color: #f3f3f3;
+}
+
+.featured-image-box:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
 }
 
 .featured-image-box.has-image {
@@ -439,7 +444,7 @@ defineExpose({
 
 .featured-icon {
   font-size: 3rem;
-  color: #d9d9d9;
+  color: #000;
 }
 
 /* Product Images Grid */
@@ -458,7 +463,7 @@ defineExpose({
 .product-image-box {
   width: 160px;
   height: 160px;
-  border: 2px dashed #d9d9d9;
+  border: 2px dashed #000;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -472,13 +477,18 @@ defineExpose({
 
 .image-upload-box:hover,
 .product-image-box:hover {
-  border-color: #1677ff;
-  background-color: #e6f7ff;
+  border-color: #000;
+  background-color: #f3f3f3;
+}
+
+.image-upload-box:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
 }
 
 .image-upload-box .upload-icon {
   font-size: 2.5rem;
-  color: #d9d9d9;
+  color: #000;
 }
 
 .product-image-preview {

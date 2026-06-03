@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="create-product-page">
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
@@ -8,7 +8,7 @@
           Add a new product to your store step by step
         </p>
       </div>
-      <NuxtLink to="/manage-product" class="btn btn-secondary">
+      <NuxtLink to="/manage-product" class="btn btn-primary action-btn-dark">
         <i class="bi bi-arrow-left me-2"></i>Back to List
       </NuxtLink>
     </div>
@@ -56,10 +56,7 @@
 
                 <div v-else class="category-flow">
                   <div class="row g-4 align-items-stretch">
-                    <div
-                      class="col-12"
-                      :class="{ 'col-xl-6': selectedPrimaryCategoryId }"
-                    >
+                    <div class="col-12">
                       <div class="category-panel border rounded p-3 h-100">
                         <div
                           class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3"
@@ -106,12 +103,6 @@
                           <div class="text-start">
                             <div class="fw-semibold d-flex align-items-center gap-2">
                               {{ category.taxonomy_name }}
-                              <span
-                                v-if="selectedPrimaryCategoryId === category.id"
-                                class="category-selected-pill"
-                              >
-                                Selected
-                              </span>
                             </div>
                             <small
                               v-if="category.taxonomy_description"
@@ -356,12 +347,6 @@
                         <div class="text-start">
                           <div class="fw-semibold d-flex align-items-center gap-2">
                             {{ category.taxonomy_name }}
-                            <span
-                              v-if="selectedSubcategoryId === category.id"
-                              class="category-selected-pill"
-                            >
-                              Selected
-                            </span>
                           </div>
                           <small
                             v-if="category.taxonomy_description"
@@ -431,8 +416,8 @@
                 <div class="row g-3">
                   <!-- Basic Information -->
                   <div class="col-12 d-none">
-                    <div class="border-bottom pb-2 mb-3">
-                      <h6 class="mb-0 text-primary">
+                      <div class="border-bottom pb-2 mb-3">
+                        <h6 class="mb-0 text-dark">
                         <i class="bi bi-info-circle me-2"></i>Basic Information
                       </h6>
                     </div>
@@ -493,8 +478,8 @@
 
                   <!-- Information -->
                   <div class="col-12 mt-4">
-                    <div class="border-bottom pb-2 mb-3">
-                      <h6 class="mb-0 text-primary">
+                      <div class="border-bottom pb-2 mb-3">
+                        <h6 class="mb-0 text-dark">
                         <i class="bi bi-file-text me-2"></i>Information
                       </h6>
                     </div>
@@ -511,8 +496,8 @@
 
                   <!-- Pricing -->
                   <div class="col-12 mt-4">
-                    <div class="border-bottom pb-2 mb-3">
-                      <h6 class="mb-0 text-primary">
+                      <div class="border-bottom pb-2 mb-3">
+                        <h6 class="mb-0 text-dark">
                         <i class="bi bi-currency-dollar me-2"></i>Pricing
                       </h6>
                     </div>
@@ -574,8 +559,8 @@
                     </div>
                   </div>
                   <div class="col-12 mt-4 d-none">
-                    <div class="border-bottom pb-2 mb-3">
-                      <h6 class="mb-0 text-primary">
+                      <div class="border-bottom pb-2 mb-3">
+                        <h6 class="mb-0 text-dark">
                         <i class="bi bi-search me-2"></i>SEO Metadata
                       </h6>
                     </div>
@@ -727,7 +712,7 @@
                 <div class="mb-3">
                   <button
                     type="button"
-                    class="btn btn-success"
+                    class="btn btn-primary action-btn-dark"
                     @click="handleAddVariantClick"
                     :disabled="selectedAttributes.length === 0"
                   >
@@ -3011,19 +2996,30 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.create-product-page {
+  color: #000;
+}
+
+.create-product-page :deep(.text-muted) {
+  color: #000 !important;
+}
+
 .nav-tabs .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #000;
   cursor: pointer;
 }
 
 .nav-tabs .nav-link:disabled {
-  cursor: not-allowed;
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .nav-tabs .nav-link.active {
-  font-weight: 600;
-  border-color: #000 #000 #fff;
+  border-bottom-color: #000;
   color: #000;
+  font-weight: 500;
 }
 
 .card {
@@ -3046,6 +3042,24 @@ onMounted(async () => {
   overflow-y: auto;
 }
 
+.category-selection-list .list-group-item {
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.category-selection-list .list-group-item.active {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.category-selection-list .list-group-item.active .text-muted,
+.category-selection-list .list-group-item.active small,
+.category-selection-list .list-group-item.active .fw-semibold,
+.category-selection-list .list-group-item.active strong {
+  color: #fff !important;
+}
+
 .category-panel:hover {
   border-color: #d0d7de;
   box-shadow: 0 0.35rem 0.8rem rgba(0, 0, 0, 0.06);
@@ -3066,6 +3080,12 @@ onMounted(async () => {
   border: 1px solid rgba(0, 0, 0, 0.2);
   color: #000;
   background: rgba(0, 0, 0, 0.08);
+}
+
+.category-selection-list .list-group-item.active .category-selected-pill {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .category-count-pill {

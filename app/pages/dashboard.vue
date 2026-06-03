@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dashboard-page">
     <!-- Page Title -->
     <div class="pagetitle">
       <h1>Dashboard</h1>
@@ -225,6 +225,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.dashboard-page,
+.dashboard-page :deep(.pagetitle h1),
+.dashboard-page :deep(a),
+.dashboard-page :deep(.card),
+.dashboard-page :deep(.card-body),
+.dashboard-page :deep(.card-title),
+.dashboard-page :deep(.card-title span),
+.dashboard-page :deep(.breadcrumb-item.active),
+.dashboard-page :deep(table),
+.dashboard-page :deep(th),
+.dashboard-page :deep(td),
+.dashboard-page :deep(h6),
+.dashboard-page :deep(p),
+.dashboard-page :deep(span) {
+  color: #000;
+}
+
+.dashboard-page :deep(a) {
+  text-decoration: none;
+}
+
+.dashboard-page :deep(.badge) {
+  color: #fff !important;
+}
+
 .activity-item {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;

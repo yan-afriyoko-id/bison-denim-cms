@@ -553,7 +553,7 @@
                           <label class="form-label fw-semibold text-transparent">Action</label>
                           <button
                             type="button"
-                            class="btn btn-primary w-100 py-2"
+                            class="btn btn-primary action-btn-dark w-100 py-2"
                             @click="handleSaveStoreStock"
                             :disabled="!canSaveStoreStock"
                           >
@@ -698,7 +698,7 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary action-btn-dark"
             @click="handleSave"
             :disabled="savingVariant"
           >
@@ -1253,6 +1253,116 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.modal-header.bg-primary {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.modal-header.bg-primary .modal-title,
+.modal-header.bg-primary .modal-title i {
+  color: #fff !important;
+}
+
+.nav-tabs .nav-link {
+  color: #000;
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-tabs .nav-link.active {
+  color: #000;
+  border-bottom-color: #000;
+  font-weight: 500;
+}
+
+.card.border-primary {
+  border-color: #000 !important;
+}
+
+.card.border-primary .card-header,
+.card.border-primary .card-header h6,
+.card.border-primary .card-header i {
+  color: #000 !important;
+}
+
+.text-primary {
+  color: #000 !important;
+}
+
+.form-check.bg-light {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.btn-outline-primary {
+  color: #000 !important;
+  border-color: #000 !important;
+}
+
+.modal-content .btn-primary,
+.modal-content .btn-secondary,
+.modal-content .btn-outline-secondary,
+.modal-content .btn-outline-danger,
+.modal-content .btn-outline-primary {
+  color: #000 !important;
+  background-color: #fff !important;
+  border-color: #000 !important;
+}
+
+.modal-content .btn-primary.action-btn-dark {
+  color: #fff !important;
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.modal-content .btn-primary:hover,
+.modal-content .btn-primary:focus,
+.modal-content .btn-primary:active,
+.modal-content .btn-secondary:hover,
+.modal-content .btn-secondary:focus,
+.modal-content .btn-secondary:active,
+.modal-content .btn-outline-secondary:hover,
+.modal-content .btn-outline-secondary:focus,
+.modal-content .btn-outline-secondary:active,
+.modal-content .btn-outline-danger:hover,
+.modal-content .btn-outline-danger:focus,
+.modal-content .btn-outline-danger:active,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  color: #fff !important;
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.modal-content .btn-primary.action-btn-dark:hover,
+.modal-content .btn-primary.action-btn-dark:focus,
+.modal-content .btn-primary.action-btn-dark:active {
+  color: #fff !important;
+  background-color: #1f1f1f !important;
+  border-color: #1f1f1f !important;
+}
+
+.modal-content .btn-primary:disabled,
+.modal-content .btn-secondary:disabled,
+.modal-content .btn-outline-secondary:disabled,
+.modal-content .btn-outline-danger:disabled,
+.modal-content .btn-outline-primary:disabled {
+  color: #4b4b4b !important;
+  background-color: #fff !important;
+  border-color: #4b4b4b !important;
+}
+
+.modal-content .btn-primary.action-btn-dark:disabled {
+  color: #fff !important;
+  background-color: #4b4b4b !important;
+  border-color: #4b4b4b !important;
+}
+
+.stock-summary-card {
+  border-color: #000 !important;
+}
+
 .stock-summary-card {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-page">
     <div class="pagetitle">
       <h1>Application Settings</h1>
       <nav>
@@ -1820,14 +1820,36 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.settings-page,
+.settings-page :deep(.pagetitle h1),
+.settings-page :deep(.breadcrumb-item),
+.settings-page :deep(.breadcrumb-item.active),
+.settings-page :deep(.breadcrumb-item a),
+.settings-page :deep(.card-title),
+.settings-page :deep(.form-label),
+.settings-page :deep(.form-text),
+.settings-page :deep(.table),
+.settings-page :deep(.table th),
+.settings-page :deep(.table td),
+.settings-page :deep(.table a) {
+  color: #000 !important;
+}
+
+.settings-page :deep(.table .badge),
+.settings-page :deep(.table .badge span) {
+  color: #fff !important;
+}
+
 .nav-tabs .nav-link {
-  color: #4b5563;
+  color: #000;
+  border: none;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-tabs .nav-link.active {
-  font-weight: 600;
-  color: #111111;
-  border-color: #111111 #111111 #fff;
+  font-weight: 500;
+  color: #000;
+  border-bottom-color: #000;
 }
 
 :deep(.btn.btn-primary) {

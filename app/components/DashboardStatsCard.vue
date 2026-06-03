@@ -57,5 +57,20 @@ const cardClass = computed(() => {
 </script>
 
 <style scoped>
-/* Card styling handled by template CSS */
+.info-card,
+.info-card .card-title,
+.info-card .card-title span,
+.info-card .card-body,
+.info-card .card-body h6,
+.info-card .card-body span,
+.info-card .dropdown-header h6,
+.info-card .dropdown-item,
+.info-card .icon,
+.info-card .icon i {
+  color: #000 !important;
+}
+
+.info-card .text-muted {
+  color: #000 !important;
+}
 </style>

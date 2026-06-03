@@ -240,6 +240,12 @@ watch(
   background-color: #ffffff;
   transition: all 0.3s ease;
   font-family: var(--font-poppins), 'Open Sans', sans-serif;
+  color: #000000;
+}
+
+.sidebar-nav .nav-link i,
+.sidebar-nav .nav-link span {
+  color: inherit;
 }
 
 .sidebar-nav .nav-link.active {
