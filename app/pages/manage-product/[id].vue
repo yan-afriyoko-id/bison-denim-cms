@@ -13,7 +13,7 @@
       <div class="card-body text-center py-5">
         <h5>Product not found</h5>
         <p class="text-muted">The product you're looking for doesn't exist.</p>
-        <NuxtLink to="/manage-product" class="btn btn-primary">
+        <NuxtLink to="/manage-product" class="btn btn-primary action-btn-dark">
           Back to Products
         </NuxtLink>
       </div>

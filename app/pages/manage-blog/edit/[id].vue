@@ -131,7 +131,7 @@
                 </select>
                 <button
                   type="button"
-                  class="btn btn-primary btn-sm flex-shrink-0"
+                  class="btn btn-primary btn-sm flex-shrink-0 action-btn-dark"
                   title="Manage Categories"
                   data-bs-toggle="modal"
                   data-bs-target="#manageCategoriesModal"
@@ -265,7 +265,7 @@
             </NuxtLink>
             <button
               type="submit"
-              class="btn btn-primary"
+              class="btn btn-primary action-btn-dark"
               :disabled="loading"
             >
               <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -298,7 +298,7 @@
                 <h6 class="mb-0">Add New Category</h6>
                 <button
                   type="button"
-                  class="btn btn-sm btn-primary"
+                  class="btn btn-sm btn-primary action-btn-dark"
                   @click="showCreateCategoryForm = !showCreateCategoryForm"
                 >
                   <i :class="showCreateCategoryForm ? 'bi bi-dash' : 'bi bi-plus'"></i>
@@ -329,7 +329,7 @@
                   <div class="col-md-3">
                     <button
                       type="button"
-                      class="btn btn-primary btn-sm w-100"
+                      class="btn btn-primary btn-sm w-100 action-btn-dark"
                       :disabled="!newCategory.name || savingCategory"
                       @click="handleCreateCategory"
                     >

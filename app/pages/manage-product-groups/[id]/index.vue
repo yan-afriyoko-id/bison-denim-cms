@@ -6,7 +6,7 @@
         <p class="text-muted mb-0">Manage sub-groups under this group</p>
       </div>
       <div>
-        <button class="btn btn-primary me-2" @click="openCreateModal">
+        <button class="btn btn-primary action-btn-dark me-2" @click="openCreateModal">
           <i class="bi bi-plus-circle me-1"></i>Tambah Sub-Group
         </button>
         <NuxtLink

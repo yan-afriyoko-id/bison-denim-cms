@@ -87,7 +87,7 @@
           <div class="d-flex gap-2">
             <button
               type="submit"
-              class="btn btn-primary"
+              class="btn btn-primary action-btn-dark"
               :disabled="submitting"
             >
               <i v-if="submitting" class="bi bi-hourglass-split me-2"></i>

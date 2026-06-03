@@ -10,4 +10,105 @@
 </script>
 
 <style>
+:root {
+  --app-text-black: #111111;
+}
+
+.text-primary,
+.text-primary:hover,
+.text-primary:focus,
+.link-primary,
+.link-primary:hover,
+.link-primary:focus,
+a.text-primary,
+a.text-primary:hover,
+a.text-primary:focus,
+.page-link,
+.page-link:hover,
+.page-link:focus,
+.nav-tabs .nav-link.active,
+.nav-pills .nav-link.active,
+.accordion-button:not(.collapsed) {
+  color: var(--app-text-black) !important;
+}
+
+.btn-outline-primary {
+  color: var(--app-text-black) !important;
+  border-color: var(--app-text-black) !important;
+}
+
+.btn-outline-primary i {
+  color: inherit !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  color: #ffffff !important;
+  background-color: var(--app-text-black) !important;
+  border-color: var(--app-text-black) !important;
+  box-shadow: none !important;
+}
+
+.btn.action-btn-dark,
+.btn-primary.action-btn-dark,
+.btn-success.action-btn-dark,
+a.action-btn-dark.btn,
+button.action-btn-dark.btn {
+  color: #fff !important;
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.btn.action-btn-dark:hover,
+.btn.action-btn-dark:focus,
+.btn.action-btn-dark:active,
+.btn-primary.action-btn-dark:hover,
+.btn-primary.action-btn-dark:focus,
+.btn-primary.action-btn-dark:active,
+.btn-success.action-btn-dark:hover,
+.btn-success.action-btn-dark:focus,
+.btn-success.action-btn-dark:active,
+a.action-btn-dark.btn:hover,
+a.action-btn-dark.btn:focus,
+button.action-btn-dark.btn:hover,
+button.action-btn-dark.btn:focus {
+  color: #fff !important;
+  background-color: #1f1f1f !important;
+  border-color: #1f1f1f !important;
+  box-shadow: none !important;
+}
+
+.btn.action-btn-dark:disabled,
+.btn-primary.action-btn-dark:disabled,
+.btn-success.action-btn-dark:disabled,
+.btn.action-btn-dark.disabled,
+a.action-btn-dark.btn.disabled {
+  color: #fff !important;
+  background-color: #4b4b4b !important;
+  border-color: #4b4b4b !important;
+  opacity: 1 !important;
+}
+
+.page-link.action-btn-dark {
+  color: #fff !important;
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.page-link.action-btn-dark:hover,
+.page-link.action-btn-dark:focus,
+.page-link.action-btn-dark:active {
+  color: #fff !important;
+  background-color: #1f1f1f !important;
+  border-color: #1f1f1f !important;
+  box-shadow: none !important;
+}
+
+.page-item.disabled .page-link.action-btn-dark {
+  color: #fff !important;
+  background-color: #4b4b4b !important;
+  border-color: #4b4b4b !important;
+  opacity: 1 !important;
+}
 </style>

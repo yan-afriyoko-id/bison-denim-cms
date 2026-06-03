@@ -7,7 +7,7 @@
       <NuxtLink 
         v-if="hasPermission('products.create')"
         to="/manage-product/create" 
-        class="btn btn-primary"
+        class="btn btn-primary action-btn-dark"
       >
         <span class="me-2">+</span>Create New Product
       </NuxtLink>
@@ -156,7 +156,7 @@
               <ul class="pagination mb-0">
                 <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
                   <a
-                    class="page-link"
+                    class="page-link action-btn-dark"
                     href="#"
                     @click.prevent="changePage(pagination.current_page - 1)"
                   >
@@ -315,7 +315,7 @@
             </button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary action-btn-dark"
               @click="handleAddCategory"
               :disabled="isLoading || !selectedCategoryId"
             >

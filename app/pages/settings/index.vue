@@ -1820,10 +1820,36 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.nav-tabs .nav-link {
+  color: #4b5563;
+}
+
 .nav-tabs .nav-link.active {
   font-weight: 600;
-  border-color: #0d6efd #0d6efd #fff;
+  color: #111111;
+  border-color: #111111 #111111 #fff;
 }
+
+:deep(.btn.btn-primary) {
+  background-color: #111111 !important;
+  border-color: #111111 !important;
+  color: #ffffff !important;
+}
+
+:deep(.btn.btn-primary:hover),
+:deep(.btn.btn-primary:focus),
+:deep(.btn.btn-primary:active) {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+:deep(.btn.btn-primary:disabled) {
+  background-color: #2f2f2f !important;
+  border-color: #2f2f2f !important;
+  color: #d9d9d9 !important;
+}
+
 .img-thumbnail {
   object-fit: contain;
   border: 1px solid #e9ecef;

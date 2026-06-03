@@ -7,7 +7,7 @@
           <i class="bi bi-arrow-left me-2"></i>Back to List
         </NuxtLink>
       </div>
-      <button @click="openCreateModal" class="btn btn-primary">
+      <button @click="openCreateModal" class="btn btn-primary action-btn-dark">
         <i class="bi bi-plus-circle me-2"></i>Add Value
       </button>
     </div>
@@ -115,7 +115,7 @@
               </div>
               <button
                 type="submit"
-                class="btn btn-primary w-100"
+                class="btn btn-primary action-btn-dark w-100"
                 :disabled="saving"
               >
                 {{ saving ? "Saving..." : "Save" }}

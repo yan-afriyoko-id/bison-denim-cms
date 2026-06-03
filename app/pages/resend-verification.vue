@@ -162,7 +162,7 @@ const handleResend = async () => {
 
 .logo {
   text-decoration: none;
-  color: #012970;
+  color: #111111;
   font-weight: 700;
   font-size: 26px;
 }
@@ -217,7 +217,7 @@ const handleResend = async () => {
 }
 
 .text-primary {
-  color: #012970 !important;
+  color: #111111 !important;
 }
 
 .fw-bold {
@@ -232,7 +232,7 @@ const handleResend = async () => {
 }
 
 .credits a {
-  color: #012970;
+  color: #111111;
   text-decoration: none;
 }
 

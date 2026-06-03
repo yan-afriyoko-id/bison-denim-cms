@@ -6,7 +6,7 @@
         <h4 class="mb-0">Manage Product Attributes</h4>
         <p class="text-muted mb-0">Manage attributes for your products</p>
       </div>
-      <button @click="openCreateModal" class="btn btn-primary">
+      <button @click="openCreateModal" class="btn btn-primary action-btn-dark">
         <i class="bi bi-plus-circle me-2"></i>Add Attribute
       </button>
     </div>
@@ -164,7 +164,7 @@
               </div>
               <button
                 type="submit"
-                class="btn btn-primary w-100"
+                class="btn btn-primary action-btn-dark w-100"
                 :disabled="saving"
               >
                 {{ saving ? "Saving..." : "Save" }}

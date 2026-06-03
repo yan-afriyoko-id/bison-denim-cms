@@ -8,7 +8,7 @@
         <NuxtLink
           v-if="hasPermission('blogs.create')"
           to="/manage-blog/create"
-          class="btn btn-primary"
+          class="btn btn-primary action-btn-dark"
         >
           <span class="me-2">+</span>Create New Blog Post
         </NuxtLink>
@@ -147,7 +147,7 @@
                 <ul class="pagination mb-0">
                   <li class="page-item" :class="{ disabled: pagination.current_page === 1 }">
                     <a
-                      class="page-link"
+                      class="page-link action-btn-dark"
                       href="#"
                       @click.prevent="changePage(pagination.current_page - 1)"
                     >
@@ -162,7 +162,7 @@
                   >
                     <a
                       v-if="page !== '...'"
-                      class="page-link"
+                      class="page-link action-btn-dark"
                       href="#"
                       @click.prevent="changePage(Number(page))"
                     >
@@ -172,7 +172,7 @@
                   </li>
                   <li class="page-item" :class="{ disabled: pagination.current_page === pagination.last_page }">
                     <a
-                      class="page-link"
+                      class="page-link action-btn-dark"
                       href="#"
                       @click.prevent="changePage(pagination.current_page + 1)"
                     >
@@ -224,7 +224,7 @@
                 <h6 class="mb-0">Add New Category</h6>
                 <button
                   type="button"
-                  class="btn btn-sm btn-primary"
+                  class="btn btn-sm btn-primary action-btn-dark"
                   @click="showCreateCategoryForm = !showCreateCategoryForm"
                 >
                   <i :class="showCreateCategoryForm ? 'bi bi-dash' : 'bi bi-plus'"></i>
@@ -255,7 +255,7 @@
                   <div class="col-md-3">
                     <button
                       type="button"
-                      class="btn btn-primary btn-sm w-100"
+                      class="btn btn-primary btn-sm w-100 action-btn-dark"
                       :disabled="!newCategory.name || savingCategory"
                       @click="handleCreateCategory"
                     >

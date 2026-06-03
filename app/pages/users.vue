@@ -7,7 +7,7 @@
       <button
         v-if="hasPermission('users.create')"
         type="button"
-        class="btn btn-primary"
+        class="btn btn-primary action-btn-dark"
         data-bs-toggle="modal"
         data-bs-target="#createUserModal"
       >

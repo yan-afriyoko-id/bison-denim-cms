@@ -4,8 +4,8 @@
       <div>
         <p class="text-muted mb-0">Manage brand</p>
       </div>
-      <button type="button" class="btn btn-primary" @click="handleCreateBrandClick">
-        <span class="me-2">+</span>Create New Brand
+      <button type="button" class="btn btn-primary action-btn-dark" @click="handleCreateBrandClick">
+        <span class="me-2">+</span>Create New Merk
       </button>
     </div>
     <section class="section">
@@ -91,7 +91,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="createBrandModalLabel">
-              Create New Brand
+              Create New Merk
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
               @click="resetBrandForm"></button>
@@ -110,7 +110,7 @@
                 <div class="col-md-12">
                   <label class="form-label">Brand Slug <span class="text-danger">*</span></label>
                   <input v-model="brandForm.slug" type="text" required class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.slug }" placeholder="Brand Slug" />
+                    :class="{ 'is-invalid': brandFormErrors.slug }" placeholder="Brand Slug" readonly />
                   <div v-if="brandFormErrors.slug" class="invalid-feedback">
                     {{ brandFormErrors.slug[0] }}
                   </div>
@@ -150,8 +150,8 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetBrandForm">
                 Cancel
               </button>
-              <button type="submit" class="btn btn-primary" :disabled="isLoading">
-                {{ isLoading ? "Creating..." : "Create Brand" }}
+              <button type="submit" class="btn btn-primary action-btn-dark" :disabled="isLoading">
+                {{ isLoading ? "Creating..." : "Create merk" }}
               </button>
             </div>
           </form>
@@ -182,7 +182,7 @@
                 <div class="col-md-12">
                   <label class="form-label">Brand Slug <span class="text-danger">*</span></label>
                   <input v-model="brandForm.slug" type="text" required class="form-control"
-                    :class="{ 'is-invalid': brandFormErrors.slug }" />
+                    :class="{ 'is-invalid': brandFormErrors.slug }" readonly />
                   <div v-if="brandFormErrors.slug" class="invalid-feedback">
                     {{ brandFormErrors.slug[0] }}
                   </div>
@@ -221,8 +221,8 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetBrandForm">
                 Cancel
               </button>
-              <button type="submit" class="btn btn-primary" :disabled="isLoading">
-                {{ isLoading ? "Updating..." : "Update Brand" }}
+              <button type="submit" class="btn btn-primary action-btn-dark" :disabled="isLoading">
+                {{ isLoading ? "Updating..." : "Update Merk" }}
               </button>
             </div>
           </form>
@@ -261,6 +261,7 @@
 
 <script setup lang="ts">
 import type { Brand } from "~/types/brand";
+import { generateSlug } from "~/utils/helpers";
 
 definePageMeta({
   middleware: "auth",
@@ -277,6 +278,7 @@ const loadingBrands = ref(false);
 
 const brandToEdit = ref<Brand | null>(null);
 const brandToDelete = ref<Brand | null>(null);
+const isHydratingBrandForm = ref(false);
 const brandForm = ref({
   name: "",
   slug: "",
@@ -287,6 +289,11 @@ const brandForm = ref({
 const brandFormErrors = ref<Record<string, string[]>>({});
 const brandLogoPreview = ref<string>("");
 const brandLogoFile = ref<File | null>(null);
+
+const syncBrandSlug = (name: string) => {
+  const trimmedName = name.trim();
+  brandForm.value.slug = trimmedName ? generateSlug(trimmedName) : "";
+};
 
 const handleCreateBrandClick = () => {
   resetBrandForm();
@@ -299,6 +306,7 @@ const handleCreateBrandClick = () => {
 
 const handleEditBrandClick = async (brand: Brand) => {
   brandToEdit.value = brand;
+  isHydratingBrandForm.value = true;
   brandForm.value = {
     name: brand.name || "",
     slug: brand.slug || "",
@@ -309,6 +317,7 @@ const handleEditBrandClick = async (brand: Brand) => {
   brandLogoPreview.value = brand.logo || "";
   brandLogoFile.value = null;
   await nextTick();
+  isHydratingBrandForm.value = false;
   const modal = new (window as any).bootstrap.Modal(
     document.getElementById("editBrandModal"),
   );
@@ -347,7 +356,7 @@ const handleCreateBrand = async () => {
       if (error.errors) {
         brandFormErrors.value = error.errors;
       } else {
-        toast.error(error.message || "Failed to create brand");
+        toast.error(error.message || "Failed to create merk");
       }
       return;
     }
@@ -361,7 +370,7 @@ const handleCreateBrand = async () => {
       await loadBrands();
     }
   } catch (err) {
-    toast.error(err instanceof Error ? err.message : "Failed to create brand");
+    toast.error(err instanceof Error ? err.message : "Failed to create merk");
   } finally {
     isLoading.value = false;
   }
@@ -388,12 +397,12 @@ const handleUpdateBrand = async () => {
       if (error.errors) {
         brandFormErrors.value = error.errors;
       } else {
-        toast.error(error.message || "Failed to update brand");
+        toast.error(error.message || "Failed to update merk");
       }
       return;
     }
     if (data?.success) {
-      toast.success("Brand updated successfully");
+      toast.success("Merk updated successfully");
       const modal = (window as any).bootstrap.Modal.getInstance(
         document.getElementById("editBrandModal"),
       );
@@ -402,7 +411,7 @@ const handleUpdateBrand = async () => {
       await loadBrands();
     }
   } catch (err) {
-    toast.error(err instanceof Error ? err.message : "Failed to update brand");
+    toast.error(err instanceof Error ? err.message : "Failed to update merk");
   } finally {
     isLoading.value = false;
   }
@@ -443,6 +452,7 @@ const onBrandLogoChange = (e: Event) => {
 };
 
 const resetBrandForm = () => {
+  isHydratingBrandForm.value = false;
   brandForm.value = {
     name: "",
     slug: "",
@@ -455,6 +465,17 @@ const resetBrandForm = () => {
   brandLogoPreview.value = "";
   brandLogoFile.value = null;
 };
+
+watch(
+  () => brandForm.value.name,
+  (name, previousName) => {
+    if (isHydratingBrandForm.value || name === previousName) {
+      return;
+    }
+
+    syncBrandSlug(name || "");
+  },
+);
 
 const loadBrands = async () => {
   loadingBrands.value = true;

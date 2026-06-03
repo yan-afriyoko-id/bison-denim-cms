@@ -6,7 +6,7 @@
         <i class="bi bi-key me-2"></i>
         Permissions List
       </h5>
-      <button class="btn btn-primary btn-sm" @click="openCreateModal">
+      <button class="btn btn-primary btn-sm action-btn-dark" @click="openCreateModal">
         <i class="bi bi-plus-circle me-2"></i>
         Add New Permission
       </button>
@@ -116,7 +116,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary action-btn-dark"
               @click="submitPermission"
               :disabled="rolesPermissions.isLoading.value"
             >
@@ -310,7 +310,7 @@ const performDelete = async () => {
 
 .modal-title {
   font-weight: 600;
-  color: #012970;
+  color: #111111;
 }
 
 .form-label {

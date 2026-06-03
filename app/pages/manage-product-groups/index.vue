@@ -8,7 +8,7 @@
           Manage product groups like "Penawaran Spesial", "Best Sellers", etc.
         </p>
       </div>
-      <NuxtLink to="/manage-product-groups/create" class="btn btn-primary">
+      <NuxtLink to="/manage-product-groups/create" class="btn btn-primary action-btn-dark">
         <i class="bi bi-plus-circle me-2"></i>Create Group
       </NuxtLink>
     </div>
@@ -113,7 +113,7 @@
         <ul class="pagination">
           <li class="page-item" :class="{ disabled: currentPage === 1 }">
             <button
-              class="page-link"
+              class="page-link action-btn-dark"
               @click="fetchGroups(currentPage - 1)"
               :disabled="currentPage === 1"
             >

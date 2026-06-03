@@ -549,7 +549,7 @@ const handleDeleteAccount = async () => {
 .pagetitle h1 {
   font-size: 32px;
   font-weight: 700;
-  color: #012970;
+  color: #111111;
   margin-bottom: 10px;
 }
 
@@ -626,7 +626,7 @@ const handleDeleteAccount = async () => {
 .profile-name {
   font-size: 22px;
   font-weight: 700;
-  color: #012970;
+  color: #111111;
   margin-bottom: 8px;
   margin-top: 15px;
 }
@@ -655,7 +655,7 @@ const handleDeleteAccount = async () => {
   height: 40px;
   border-radius: 50%;
   background-color: #f3f5f7;
-  color: #012970;
+  color: #111111;
   transition: all 0.3s ease;
   font-size: 16px;
 }
@@ -694,7 +694,7 @@ const handleDeleteAccount = async () => {
 
 .nav-tabs-bordered .nav-link.active {
   border-color: #012970;
-  color: #012970;
+  color: #111111;
 }
 
 .profile-overview .row {
@@ -712,7 +712,7 @@ const handleDeleteAccount = async () => {
 
 .profile-edit .col-form-label {
   font-weight: 500;
-  color: #012970;
+  color: #111111;
   padding-top: 8px;
 }
 
@@ -751,7 +751,7 @@ const handleDeleteAccount = async () => {
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #012970;
+  color: #111111;
   margin-bottom: 20px;
 }
 
@@ -845,7 +845,7 @@ const handleDeleteAccount = async () => {
 }
 
 .breadcrumb-item a {
-  color: #012970;
+  color: #111111;
   text-decoration: none;
   transition: color 0.3s ease;
 }

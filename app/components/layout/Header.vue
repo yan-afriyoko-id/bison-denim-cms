@@ -5,6 +5,20 @@
     :class="{ 'sidebar-collapsed': !isSidebarOpen }"
   >
     <div class="header-brand d-flex align-items-center justify-content-between">
+      <button
+        type="button"
+        class="toggle-sidebar-btn"
+        :class="{ collapsed: !isSidebarOpen }"
+        :aria-label="isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
+        :title="isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
+        @click="toggleSidebar"
+      >
+        <i
+          class="bi"
+          :class="isSidebarOpen ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar-inset-reverse'"
+          aria-hidden="true"
+        ></i>
+      </button>
       <NuxtLink to="/dashboard" class="logo d-flex align-items-center h-full">
         <img 
           :src="logoUrl || '/assets/img/images.png'" 
@@ -13,7 +27,6 @@
         />
         <span class="logo-text ms-2 fw-bold">Bison Denim</span>
       </NuxtLink>
-      <i class="bi bi-list toggle-sidebar-btn" @click="toggleSidebar"></i>
     </div>
 
     <nav class="header-nav ms-auto">
@@ -174,6 +187,7 @@ onMounted(() => {
 <style scoped>
 .header-brand {
   width: 320px;
+  gap: 12px;
   overflow: hidden;
   transition:
     width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
@@ -211,10 +225,38 @@ onMounted(() => {
 }
 
 .toggle-sidebar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
   transition:
-    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.25s ease,
+    color 0.25s ease,
     margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-sidebar-btn i {
+  font-size: 1.2rem;
+  line-height: 1;
+  color: inherit;
+}
+
+.toggle-sidebar-btn:hover {
+  background-color: transparent;
+}
+
+.toggle-sidebar-btn:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 2px;
+  background-color: transparent;
 }
 
 @media (min-width: 1200px) {
@@ -229,7 +271,6 @@ onMounted(() => {
   }
 
   .sidebar-collapsed .toggle-sidebar-btn {
-    order: -1;
     padding-left: 0;
     margin-right: 0;
     transform: translateX(0);

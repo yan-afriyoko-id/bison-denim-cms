@@ -16,5 +16,24 @@
 </script>
 
 <style scoped>
-/* Styling handled by template CSS */
+.back-to-top {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  z-index: 996;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid #000;
+  transition: all 0.4s;
+}
+
+.back-to-top:hover {
+  background: #1f1f1f !important;
+  color: #fff !important;
+  border-color: #1f1f1f;
+  bottom: 20px;
+}
 </style>

@@ -75,7 +75,7 @@
                     {{ cat.name }}
                   </option>
                 </select>
-                <button type="button" class="btn btn-primary btn-sm shrink-0" title="Manage Categories"
+                <button type="button" class="btn btn-success btn-sm shrink-0" title="Manage Categories"
                   data-bs-toggle="modal" data-bs-target="#manageCategoriesModal">
                   Add
                 </button>
@@ -177,7 +177,7 @@
             <NuxtLink to="/manage-blog" class="btn btn-secondary" :disabled="loading">
               Cancel
             </NuxtLink>
-            <button type="submit" class="btn btn-primary" :disabled="loading">
+            <button type="submit" class="btn btn-primary action-btn-dark" :disabled="loading">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status"
                 aria-hidden="true"></span>
               <span v-if="loading">Creating...</span>
@@ -202,7 +202,7 @@
             <div class="card mb-3">
               <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0">Add New Category</h6>
-                <button type="button" class="btn btn-sm btn-primary"
+                <button type="button" class="btn btn-sm btn-success"
                   @click="showCreateCategoryForm = !showCreateCategoryForm">
                   <i :class="showCreateCategoryForm ? 'bi bi-dash' : 'bi bi-plus'"></i>
                   {{ showCreateCategoryForm ? 'Hide' : 'New' }}
@@ -219,7 +219,7 @@
                       placeholder="Slug (auto)" readonly style="background:#f8f9fa;" />
                   </div>
                   <div class="col-md-3">
-                    <button type="button" class="btn btn-primary btn-sm w-100"
+                    <button type="button" class="btn btn-success btn-sm w-100"
                       :disabled="!newCategory.name || savingCategory" @click="handleCreateCategory">
                       <span v-if="savingCategory" class="spinner-border spinner-border-sm me-1"></span>
                       Add

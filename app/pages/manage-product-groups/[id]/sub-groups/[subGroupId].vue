@@ -8,7 +8,7 @@
       </div>
 
       <div>
-        <button class="btn btn-primary me-2" @click="openAddModal">
+        <button class="btn btn-primary action-btn-dark me-2" @click="openAddModal">
           <i class="bi bi-plus-circle me-1"></i>Tambah Produk
         </button>
 
@@ -134,7 +134,7 @@
             </button>
 
             <button
-              class="btn btn-primary"
+              class="btn btn-primary action-btn-dark"
               :disabled="!selectedProductId"
               @click="handleAddSelected"
             >
