@@ -397,6 +397,7 @@ onBeforeUnmount(() => {
 .login-page {
   min-height: 100vh;
   background: #f6f9fc;
+  color: #111111;
 }
 
 .register {
@@ -405,13 +406,13 @@ onBeforeUnmount(() => {
 
 .logo {
   text-decoration: none;
-  color: #012970;
+  color: #111111;
   font-weight: 700;
   font-size: 26px;
 }
 
 .logo span {
-  color: #080c63;
+  color: #000000;
 }
 
 .card {
@@ -424,10 +425,19 @@ onBeforeUnmount(() => {
   padding: 30px;
 }
 
+.card-title,
+.form-label,
+.form-check-label,
+.small,
+p,
+.form-control {
+  color: #111111;
+}
+
 .input-group-text {
   background-color: transparent;
   border: 1px solid #dee2e6;
-  color: #6c757d;
+  color: #111111;
 }
 
 .form-control {
@@ -437,20 +447,20 @@ onBeforeUnmount(() => {
 }
 
 .form-control:focus {
-  border-color: #012970;
-  box-shadow: 0 0 0 0.2rem rgba(1, 41, 112, 0.25);
+  border-color: #111111;
+  box-shadow: 0 0 0 0.2rem rgba(17, 17, 17, 0.2);
 }
 
 .btn-primary {
-  background-color: #012970;
-  border-color: #012970;
+  background-color: #111111;
+  border-color: #111111;
   padding: 10px 20px;
   font-weight: 600;
 }
 
 .btn-primary:hover {
-  background-color: #080c63;
-  border-color: #080c63;
+  background-color: #000000;
+  border-color: #000000;
 }
 
 .btn-primary:disabled {
@@ -460,7 +470,7 @@ onBeforeUnmount(() => {
 }
 
 .text-primary {
-  color: #012970 !important;
+  color: #111111 !important;
 }
 
 .fw-bold {
@@ -475,7 +485,7 @@ onBeforeUnmount(() => {
 }
 
 .credits a {
-  color: #012970;
+  color: #111111;
   text-decoration: none;
 }
 
