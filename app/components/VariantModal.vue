@@ -384,47 +384,6 @@
               <div class="row g-3">
                 <div class="col-12">
                   <!-- Header -->
-                  <div class="border-bottom pb-2 mb-4">
-                    <h6 class="mb-0 text-primary">
-                      <i class="bi bi-shop me-2"></i>Store Stock
-                    </h6>
-                  </div>
-
-                  <div class="row g-3 mb-4">
-                    <div class="col-md-3 col-6">
-                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
-                        <div class="card-body py-3">
-                          <small class="text-muted text-uppercase d-block mb-1">Assigned Stores</small>
-                          <div class="fs-5 fw-semibold">{{ assignedStoresCount }}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
-                        <div class="card-body py-3">
-                          <small class="text-muted text-uppercase d-block mb-1">Total Stock</small>
-                          <div class="fs-5 fw-semibold">{{ totalVariantStock }}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
-                        <div class="card-body py-3">
-                          <small class="text-muted text-uppercase d-block mb-1">Reserved</small>
-                          <div class="fs-5 fw-semibold">{{ totalReservedStock }}</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-3 col-6">
-                      <div class="card h-100 shadow-sm border-0 bg-light stock-summary-card">
-                        <div class="card-body py-3">
-                          <small class="text-muted text-uppercase d-block mb-1">Available</small>
-                          <div class="fs-5 fw-semibold">{{ totalAvailableStock }}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div
                     class="card mb-4"
                     :class="{
@@ -435,7 +394,7 @@
                       <div class="d-flex justify-content-between align-items-center">
                         <h6 class="mb-0">
                           <i class="bi bi-plus-circle me-2"></i>
-                          {{ localEditingStoreStockIndex !== null ? 'Edit Store Stock' : 'Add Store Stock' }}
+                          {{ localEditingStoreStockIndex !== null ? 'Edit Stock' : 'Add Stock' }}
                         </h6>
                         <button
                           v-if="localEditingStoreStockIndex !== null"
@@ -449,29 +408,7 @@
                     </div>
                     <div class="card-body">
                       <div class="row g-3 align-items-end">
-                        <div class="col-lg-4 col-md-6">
-                          <div class="stock-form-field h-100 d-flex flex-column">
-                          <label class="form-label fw-semibold"
-                            >Store <span class="text-danger">*</span></label
-                          >
-                          <select
-                            v-model.number="localStoreStockForm.store_id"
-                            class="form-select"
-                            :disabled="loadingStores"
-                            @focus="handleLoadStores"
-                          >
-                            <option value="">Select a store</option>
-                            <option
-                              v-for="store in availableStoreOptions"
-                              :key="store.id"
-                              :value="store.id"
-                            >
-                              {{ store.name }}{{ store.code ? ` (${store.code})` : "" }}
-                            </option>
-                          </select>
-                          </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-6">
+                        <div class="col-lg-3 col-md-4 col-6">
                           <div class="stock-form-field h-100 d-flex flex-column">
                           <label class="form-label fw-semibold"
                             >Stock Qty <span class="text-danger">*</span></label
@@ -486,7 +423,7 @@
                           />
                           </div>
                         </div>
-                        <div class="col-lg-2 col-md-3 col-6">
+                        <div class="col-lg-3 col-md-4 col-6">
                           <div class="stock-form-field h-100 d-flex flex-column">
                           <label class="form-label fw-semibold">Reserved Qty</label>
                           <input
@@ -499,13 +436,13 @@
                           />
                           </div>
                         </div>
-                        <div class="col-lg-2 col-md-6 col-6">
+                        <div class="col-lg-3 col-md-4 col-6">
                           <div class="stock-form-field h-100 d-flex flex-column">
                           <label class="form-label fw-semibold">Available</label>
                           <div class="form-control bg-light">{{ stockFormAvailableQty }}</div>
                           </div>
                         </div>
-                        <div class="col-lg-2 col-md-6 col-6">
+                        <div class="col-lg-3 col-md-12 col-6">
                           <div class="stock-form-field h-100 d-flex flex-column">
                           <label class="form-label fw-semibold text-transparent">Action</label>
                           <button
@@ -533,7 +470,7 @@
                         class="alert alert-light border mb-0 mt-3 py-2"
                         role="alert"
                       >
-                        Store already added.
+                        Stock has already been added.
                       </div>
                       <div
                         v-else-if="isReservedExceedingQty"
@@ -552,12 +489,11 @@
                     <table class="table table-sm table-bordered">
                       <thead class="table-light">
                         <tr>
-                          <th style="width: 32%;">Store</th>
-                          <th class="text-center" style="width: 14%;">Stock</th>
-                          <th class="text-center" style="width: 14%;">Reserved</th>
-                          <th class="text-center" style="width: 14%;">Available</th>
-                          <th class="text-center" style="width: 16%;">Status</th>
-                          <th class="text-center" style="width: 10%;">Actions</th>
+                          <th class="text-center" style="width: 22%;">Stock</th>
+                          <th class="text-center" style="width: 22%;">Reserved</th>
+                          <th class="text-center" style="width: 22%;">Available</th>
+                          <th class="text-center" style="width: 22%;">Status</th>
+                          <th class="text-center" style="width: 12%;">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -568,12 +504,6 @@
                             `store-${storeStock.store_id}-${index}`
                           "
                         >
-                          <td>
-                            <div class="fw-semibold">{{ storeStock.store?.name || "N/A" }}</div>
-                            <small v-if="storeStock.store?.code" class="text-muted">
-                              {{ storeStock.store.code }}
-                            </small>
-                          </td>
                           <td class="text-center fw-semibold">{{ storeStock.qty }}</td>
                           <td class="text-center">{{ storeStock.reserved_qty || 0 }}</td>
                           <td class="text-center fw-semibold">
@@ -811,8 +741,6 @@ const availableStoreOptions = computed(() => {
   });
 });
 
-const assignedStoresCount = computed(() => localVariantStoreStocks.value.length);
-
 const stockFormAvailableQty = computed(() => {
   const qty = Number(localStoreStockForm.value.qty) || 0;
   const reservedQty = Number(localStoreStockForm.value.reserved_qty) || 0;
@@ -982,6 +910,16 @@ const generateSKU = () => {
   return `${productPrefix}-${attrSuffix}`;
 };
 
+const ensureDefaultStoreSelection = () => {
+  if (localEditingStoreStockIndex.value !== null) return;
+  if (localStoreStockForm.value.store_id) return;
+
+  const defaultStore = availableStoreOptions.value[0] || stores.value[0];
+  if (!defaultStore) return;
+
+  localStoreStockForm.value.store_id = defaultStore.id;
+};
+
 const handleLoadStores = async () => {
   if (stores.value.length > 0) return;
 
@@ -994,6 +932,7 @@ const handleLoadStores = async () => {
         name: store.name,
         code: store.code,
       }));
+      ensureDefaultStoreSelection();
     } else if (error) {
       toast.error(error.message || "Failed to load stores");
     }
@@ -1052,7 +991,7 @@ const handleSaveStoreStock = () => {
   }
 
   if (isStoreStockDuplicate.value) {
-    toast.error("This store already has stock assigned");
+    toast.error("Stock has already been added");
     return;
   }
 
@@ -1095,6 +1034,7 @@ const handleResetStoreStockForm = () => {
     reserved_qty: 0,
   };
   localEditingStoreStockIndex.value = null;
+  ensureDefaultStoreSelection();
 };
 
 const getStoreAvailableQty = (storeStock: Props["variantStoreStocks"][number]) => {

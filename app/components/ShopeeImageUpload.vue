@@ -9,18 +9,6 @@
       <div class="product-images-upload">
         <div class="images-grid">
           <div
-            class="image-upload-box"
-            @click="!disabled && triggerMultiFileInput()"
-            role="button"
-            tabindex="0"
-            @keydown.enter="!disabled && triggerMultiFileInput()"
-            @keydown.space.prevent="!disabled && triggerMultiFileInput()"
-          >
-            <i class="bi bi-plus-lg upload-icon"></i>
-            <span class="mt-2">Add Images</span>
-          </div>
-
-          <div
             v-for="(image, index) in imagesModel"
             :key="getImageKey(image) || index"
             class="product-image-box position-relative"
@@ -46,12 +34,8 @@
               v-if="index === 0"
               class="badge-featured position-absolute top-0 start-0 m-2"
             >
-              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i> Featured
             </span>
-
-            <div class="image-order-chip position-absolute bottom-0 start-0 m-2">
-              {{ index + 1 }}
-            </div>
 
             <div
               v-if="!disabled"
@@ -72,6 +56,18 @@
                 <i class="bi bi-trash"></i>
               </button>
             </div>
+          </div>
+
+          <div
+            class="image-upload-box"
+            @click="!disabled && triggerMultiFileInput()"
+            role="button"
+            tabindex="0"
+            @keydown.enter="!disabled && triggerMultiFileInput()"
+            @keydown.space.prevent="!disabled && triggerMultiFileInput()"
+          >
+            <i class="bi bi-plus-lg upload-icon"></i>
+            <span class="mt-2">Add Images</span>
           </div>
         </div>
 
@@ -421,21 +417,19 @@ defineExpose({
 
 .image-actions {
   position: absolute;
-  inset: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.6);
+  align-items: flex-end;
+  justify-content: flex-end;
   opacity: 0;
   transition: opacity 0.2s;
   padding: 8px;
   box-sizing: border-box;
-  pointer-events: none;
+  z-index: 2;
 }
 
 .image-actions .btn-action {
-  pointer-events: auto;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -465,7 +459,8 @@ defineExpose({
   transform: scale(1.1);
 }
 
-.product-image-box:hover .image-actions {
+.product-image-box:hover .image-actions,
+.product-image-box:focus-within .image-actions {
   opacity: 1;
 }
 
@@ -473,21 +468,7 @@ defineExpose({
   background: #52c41a;
   color: white;
   padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  z-index: 2;
-}
-
-.image-order-chip {
-  background: rgba(0, 0, 0, 0.72);
-  color: white;
-  min-width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 600;
   z-index: 2;

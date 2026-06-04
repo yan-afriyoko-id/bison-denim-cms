@@ -163,4 +163,9 @@ defineEmits<{
   border: 1px solid #e9ecef;
   box-shadow: none;
 }
+
+.payment-method-card .card-body {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
 </style>
