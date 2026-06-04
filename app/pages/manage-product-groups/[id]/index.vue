@@ -174,7 +174,7 @@
               Batal
             </button>
             <button
-              class="btn btn-primary"
+              class="btn btn-success"
               :disabled="updating"
               @click="handleUpdate"
             >

@@ -112,12 +112,15 @@
                               class="col-md-3 col-sm-6 col-12"
                             >
                               <div
-                                class="form-check p-2 rounded mb-0 h-100 d-flex align-items-center"
+                                class="form-check variant-attribute-option p-2 rounded mb-0 h-100 d-flex align-items-center"
                                 :class="{
-                                  'bg-light':
+                                  'is-selected':
                                     localVariantForm.selectedAttributeValues[
                                       selectedAttr.attribute_id
                                     ] === value.id,
+                                  'is-disabled':
+                                    editingVariantIndex !== null ||
+                                    value.status === 'INACTIVE',
                                 }"
                               >
                                 <input
@@ -147,8 +150,15 @@
                                   :for="`variant-attr-${selectedAttr.attribute_id}-value-${value.id}`"
                                   :class="{
                                     'text-muted':
-                                      editingVariantIndex !== null ||
-                                      value.status === 'INACTIVE',
+                                      (editingVariantIndex !== null ||
+                                        value.status === 'INACTIVE') &&
+                                      localVariantForm.selectedAttributeValues[
+                                        selectedAttr.attribute_id
+                                      ] !== value.id,
+                                    'selected-option-label':
+                                      localVariantForm.selectedAttributeValues[
+                                        selectedAttr.attribute_id
+                                      ] === value.id,
                                     'cursor-not-allowed':
                                       value.status === 'INACTIVE',
                                   }"
@@ -420,9 +430,6 @@
                     <h6 class="mb-0 text-primary">
                       <i class="bi bi-shop me-2"></i>Store Stock Management
                     </h6>
-                    <p class="text-muted small mb-0 mt-1">
-                      Manage stock quantity for this variant across different stores
-                    </p>
                   </div>
 
                   <div class="row g-3 mb-4">
@@ -504,9 +511,6 @@
                               {{ store.name }}{{ store.code ? ` (${store.code})` : "" }}
                             </option>
                           </select>
-                          <small class="text-muted small d-block mt-1">
-                            can only have one stock row for this variant.
-                          </small>
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-6">
@@ -522,9 +526,6 @@
                             class="form-control"
                             placeholder="0"
                           />
-                          <small class="text-muted small d-block mt-1 stock-form-helper-placeholder">
-                            Qty input
-                          </small>
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-6">
@@ -538,14 +539,12 @@
                             class="form-control"
                             placeholder="0"
                           />
-                          <small class="text-muted small">Qty for pending orders</small>
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-6 col-6">
                           <div class="stock-form-field h-100 d-flex flex-column">
                           <label class="form-label fw-semibold">Available</label>
                           <div class="form-control bg-light">{{ stockFormAvailableQty }}</div>
-                          <small class="text-muted small">Qty - reserved</small>
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-6 col-6">
@@ -567,9 +566,6 @@
                               localEditingStoreStockIndex !== null ? 'Update' : 'Add'
                             }}
                           </button>
-                          <small class="text-muted small d-block mt-1 stock-form-helper-placeholder">
-                            Save action
-                          </small>
                           </div>
                         </div>
                       </div>
@@ -698,7 +694,11 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary action-btn-dark"
+            :class="
+              editingVariantIndex !== null
+                ? 'btn btn-success'
+                : 'btn btn-primary action-btn-dark'
+            "
             @click="handleSave"
             :disabled="savingVariant"
           >
@@ -1289,9 +1289,24 @@ onMounted(() => {
   color: #000 !important;
 }
 
-.form-check.bg-light {
-  background-color: rgba(0, 0, 0, 0.08) !important;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+.variant-attribute-option {
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+.variant-attribute-option.is-selected {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none;
+}
+
+.variant-attribute-option.is-disabled:not(.is-selected) {
+  background-color: transparent;
+}
+
+.selected-option-label {
+  color: inherit !important;
+  font-weight: 400;
 }
 
 .btn-outline-primary {
@@ -1302,11 +1317,16 @@ onMounted(() => {
 .modal-content .btn-primary,
 .modal-content .btn-secondary,
 .modal-content .btn-outline-secondary,
-.modal-content .btn-outline-danger,
-.modal-content .btn-outline-primary {
+.modal-content .btn-outline-danger {
   color: #000 !important;
   background-color: #fff !important;
   border-color: #000 !important;
+}
+
+.modal-content .btn-outline-primary {
+  color: #b7791f !important;
+  background-color: #fff !important;
+  border-color: #d4a017 !important;
 }
 
 .modal-content .btn-primary.action-btn-dark {
@@ -1326,13 +1346,21 @@ onMounted(() => {
 .modal-content .btn-outline-secondary:active,
 .modal-content .btn-outline-danger:hover,
 .modal-content .btn-outline-danger:focus,
-.modal-content .btn-outline-danger:active,
-.btn-outline-primary:hover,
-.btn-outline-primary:focus,
-.btn-outline-primary:active {
+.modal-content .btn-outline-danger:active {
   color: #fff !important;
   background-color: #000 !important;
   border-color: #000 !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active,
+.modal-content .btn-outline-primary:hover,
+.modal-content .btn-outline-primary:focus,
+.modal-content .btn-outline-primary:active {
+  color: #fff !important;
+  background-color: #d4a017 !important;
+  border-color: #d4a017 !important;
 }
 
 .modal-content .btn-primary.action-btn-dark:hover,
@@ -1346,11 +1374,16 @@ onMounted(() => {
 .modal-content .btn-primary:disabled,
 .modal-content .btn-secondary:disabled,
 .modal-content .btn-outline-secondary:disabled,
-.modal-content .btn-outline-danger:disabled,
-.modal-content .btn-outline-primary:disabled {
+.modal-content .btn-outline-danger:disabled {
   color: #4b4b4b !important;
   background-color: #fff !important;
   border-color: #4b4b4b !important;
+}
+
+.modal-content .btn-outline-primary:disabled {
+  color: #c8a96a !important;
+  background-color: #fffdf5 !important;
+  border-color: #e6d3a1 !important;
 }
 
 .modal-content .btn-primary.action-btn-dark:disabled {

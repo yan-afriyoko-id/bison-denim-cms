@@ -164,7 +164,11 @@
               </div>
               <button
                 type="submit"
-                class="btn btn-primary action-btn-dark w-100"
+                :class="
+                  editId
+                    ? 'btn btn-success w-100'
+                    : 'btn btn-primary action-btn-dark w-100'
+                "
                 :disabled="saving"
               >
                 {{ saving ? "Saving..." : "Save" }}

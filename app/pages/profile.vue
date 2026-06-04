@@ -270,7 +270,7 @@
 
                         <div class="row">
                           <div class="col-md-8 col-lg-9 offset-md-4 offset-lg-3">
-                            <button type="submit" class="btn btn-primary btn-lg action-btn-dark" :disabled="isChangingPassword">
+                            <button type="submit" class="btn btn-success btn-lg" :disabled="isChangingPassword">
                               <span v-if="isChangingPassword" class="spinner-border spinner-border-sm me-2"></span>
                               {{ isChangingPassword ? 'Updating...' : 'Update Password' }}
                             </button>

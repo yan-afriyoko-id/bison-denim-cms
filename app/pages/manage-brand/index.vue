@@ -221,7 +221,7 @@
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="resetBrandForm">
                 Cancel
               </button>
-              <button type="submit" class="btn btn-primary action-btn-dark" :disabled="isLoading">
+              <button type="submit" class="btn btn-success" :disabled="isLoading">
                 {{ isLoading ? "Updating..." : "Update Merk" }}
               </button>
             </div>

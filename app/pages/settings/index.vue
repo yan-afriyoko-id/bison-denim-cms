@@ -541,7 +541,7 @@
               </button>
               <button
                 type="submit"
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="isLoading"
               >
                 {{ isLoading ? "Updating..." : "Update Store" }}
@@ -792,7 +792,7 @@
                 </button>
                 <button
                   type="submit"
-                  class="btn btn-primary"
+                  class="btn btn-success"
                   :disabled="isLoading"
                 >
                   Update

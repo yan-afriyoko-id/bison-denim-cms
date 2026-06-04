@@ -346,7 +346,7 @@
               Cancel
             </button>
             <button
-              class="btn btn-warning"
+              class="btn btn-success"
               @click="handleUpdateCategory"
               :disabled="isLoading"
             >

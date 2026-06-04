@@ -40,12 +40,6 @@
             <div class="tab-content">
               <!-- Step 1: Category -->
               <div v-if="currentStep === 1" class="tab-pane fade show active">
-                <h5 class="mb-4">Category</h5>
-                <p class="text-muted mb-4">
-                  Select the main category first, then choose a subcategory
-                  before continuing to create the product.
-                </p>
-
                 <div v-if="loadingCategories" class="text-center py-4">
                   <div
                     class="spinner-border spinner-border-sm text-primary"
@@ -63,12 +57,8 @@
                         >
                           <div>
                             <div class="d-flex align-items-center gap-2 mb-1">
-                              <h6 class="mb-0">Category</h6>
-                              <span class="category-flow-step">Step 1</span>
+                              <h5 class="mb-0">Category</h5>
                             </div>
-                            <small class="text-muted">
-                              Example: Bag, Wallet, Shoes
-                            </small>
                           </div>
                           <button
                             type="button"
@@ -153,16 +143,9 @@
                           >
                             <div>
                               <div class="d-flex align-items-center gap-2 mb-1">
-                                <h6 class="mb-0">Subcategory</h6>
-                                <span class="category-flow-step">Step 2</span>
+                                <h class="mb-0">Subcategory</h>
                               </div>
-                              <div class="d-flex flex-wrap align-items-center gap-2">
-                                <small class="text-muted">
-                                  Showing subcategories for
-                                  <strong>{{
-                                    selectedPrimaryCategory?.taxonomy_name
-                                  }}</strong>
-                                </small>
+                              <div class="d-flex flex-wrap align-items-center gap-2"> 
                                 <span class="category-count-pill">
                                   {{ filteredSubcategories.length }} available
                                 </span>
@@ -265,25 +248,13 @@
                         }}</strong>
                       </div>
                     </div>
-                    <small
-                      v-if="selectedPrimaryCategory && !selectedSubcategory"
-                      class="d-block mt-2 text-muted"
-                    >
-                      Category sudah dipilih. Lanjut pilih subcategory agar
-                      produk bisa lanjut ke step berikutnya.
-                    </small>
+                
                   </div>
                 </div>
               </div>
 
               <!-- Step 2: SubCategory -->
               <div v-if="currentStep === 2" class="tab-pane fade show active">
-                <h5 class="mb-4">SubCategory</h5>
-                <p class="text-muted mb-4">
-                  Choose a subcategory based on the selected category before
-                  continuing.
-                </p>
-
                 <div v-if="loadingCategories" class="text-center py-4">
                   <div
                     class="spinner-border spinner-border-sm text-primary"
@@ -299,19 +270,7 @@
                     >
                       <div>
                         <div class="d-flex align-items-center gap-2 mb-1">
-                          <h6 class="mb-0">Subcategory</h6>
-                          <span class="category-flow-step">Step 2</span>
-                        </div>
-                        <div class="d-flex flex-wrap align-items-center gap-2">
-                          <small class="text-muted">
-                            Showing subcategories for
-                            <strong>{{
-                              selectedPrimaryCategory?.taxonomy_name || "-"
-                            }}</strong>
-                          </small>
-                          <span class="category-count-pill">
-                            {{ filteredSubcategories.length }} available
-                          </span>
+                          <h5 class="mb-0">Subcategory</h5>
                         </div>
                       </div>
                       <button
@@ -1282,7 +1241,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button
               type="button"
-              class="btn btn-warning"
+              class="btn btn-success"
               @click="handleEditCategoryInStep"
               :disabled="editingCategoryInStep"
             >
@@ -3136,19 +3095,32 @@ onMounted(async () => {
   background: #ffffff;
 }
 
-.btn-outline-primary,
 .btn-outline-secondary,
 .outline-dark-btn {
   --bs-btn-color: #000;
   --bs-btn-border-color: #000;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #000;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: rgba(0, 0, 0, 0.08);
   --bs-btn-hover-border-color: #000;
   --bs-btn-focus-shadow-rgb: 33, 37, 41;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #000;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: rgba(0, 0, 0, 0.12);
   --bs-btn-active-border-color: #000;
   --bs-btn-disabled-color: #4b4b4b;
   --bs-btn-disabled-border-color: #4b4b4b;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: #b7791f;
+  --bs-btn-border-color: #d4a017;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #d4a017;
+  --bs-btn-hover-border-color: #d4a017;
+  --bs-btn-focus-shadow-rgb: 212, 160, 23;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #c69214;
+  --bs-btn-active-border-color: #c69214;
+  --bs-btn-disabled-color: #c8a96a;
+  --bs-btn-disabled-border-color: #e6d3a1;
 }
 </style>

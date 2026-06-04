@@ -116,7 +116,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button
               type="button"
-              class="btn btn-primary action-btn-dark"
+              :class="editingPermission ? 'btn btn-success' : 'btn btn-primary action-btn-dark'"
               @click="submitPermission"
               :disabled="rolesPermissions.isLoading.value"
             >

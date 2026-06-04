@@ -33,8 +33,8 @@ a.text-primary:focus,
 }
 
 .btn-outline-primary {
-  color: var(--app-text-black) !important;
-  border-color: var(--app-text-black) !important;
+  color: #b7791f !important;
+  border-color: #d4a017 !important;
 }
 
 .btn-outline-primary i {
@@ -45,8 +45,8 @@ a.text-primary:focus,
 .btn-outline-primary:focus,
 .btn-outline-primary:active {
   color: #ffffff !important;
-  background-color: var(--app-text-black) !important;
-  border-color: var(--app-text-black) !important;
+  background-color: #d4a017 !important;
+  border-color: #d4a017 !important;
   box-shadow: none !important;
 }
 

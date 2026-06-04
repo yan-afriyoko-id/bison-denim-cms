@@ -122,15 +122,6 @@
                       <i class="bi bi-pencil"></i>
                     </NuxtLink>
                     <button
-                      v-if="hasPermission('products.update')"
-                      type="button"
-                      class="btn btn-sm btn-outline-success"
-                      @click="handleAddCategoryClick(product)"
-                      title="Add Category"
-                    >
-                      <i class="bi bi-tag"></i>
-                    </button>
-                    <button
                       v-if="hasPermission('products.delete')"
                       type="button"
                       class="btn btn-sm btn-outline-danger"

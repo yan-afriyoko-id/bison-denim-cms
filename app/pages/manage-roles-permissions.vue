@@ -105,10 +105,14 @@ watch([originalSuccess, originalError], () => {
 
 <style scoped>
 .pagetitle h1,
-.breadcrumb-item.active,
-.breadcrumb-item :deep(a),
 .nav-tabs .nav-link {
   color: #000 !important;
+}
+
+.breadcrumb-item,
+.breadcrumb-item.active,
+.breadcrumb-item :deep(a) {
+  color: #5f6b7a !important;
 }
 
 .nav-tabs .nav-link {

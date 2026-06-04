@@ -311,7 +311,7 @@
               </button>
               <button
                 type="submit"
-                class="btn btn-primary"
+                class="btn btn-success"
                 :disabled="isSubmitting"
               >
                 {{ isSubmitting ? "Updating..." : "Update Banner" }}

@@ -3,9 +3,6 @@
     <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
       <div>
         <h5 class="card-title mb-1">Payment Configuration</h5>
-        <p class="text-muted small mb-0">
-          Keep at least one payment method active at all times.
-        </p>
       </div>
     </div>
 
@@ -24,9 +21,6 @@
               >
                 <div>
                   <h6 class="mb-1">Midtrans</h6>
-                  <p class="text-muted small mb-0">
-                    Configure Midtrans credentials and environment.
-                  </p>
                 </div>
 
                 <div class="form-check form-switch m-0">
@@ -88,9 +82,6 @@
               >
                 <div>
                   <h6 class="mb-1">Xendit</h6>
-                  <p class="text-muted small mb-0">
-                    Configure Xendit credentials and environment.
-                  </p>
                 </div>
 
                 <div class="form-check form-switch m-0">

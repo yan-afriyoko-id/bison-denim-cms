@@ -30,7 +30,7 @@
           </p>
         </div>
         <div class="d-flex gap-2">
-          <NuxtLink to="/manage-product" class="btn btn-primary action-btn-dark">
+          <NuxtLink to="/manage-product" class="btn back-nav-btn">
             <i class="bi bi-arrow-left me-2"></i>Back to List
           </NuxtLink>
           <NuxtLink
@@ -363,6 +363,19 @@ onMounted(async () => {
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #000;
   --bs-btn-active-border-color: #000;
+}
+
+.back-nav-btn {
+  --bs-btn-color: #1f2937;
+  --bs-btn-bg: #eef2f7;
+  --bs-btn-border-color: #d6dee8;
+  --bs-btn-hover-color: #111827;
+  --bs-btn-hover-bg: #e2e8f0;
+  --bs-btn-hover-border-color: #cbd5e1;
+  --bs-btn-focus-shadow-rgb: 148, 163, 184;
+  --bs-btn-active-color: #111827;
+  --bs-btn-active-bg: #dbe4ee;
+  --bs-btn-active-border-color: #cbd5e1;
 }
 </style>
 

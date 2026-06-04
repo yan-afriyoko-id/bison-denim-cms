@@ -265,7 +265,7 @@
             </NuxtLink>
             <button
               type="submit"
-              class="btn btn-primary action-btn-dark"
+              class="btn btn-success"
               :disabled="loading"
             >
               <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

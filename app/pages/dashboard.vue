@@ -227,12 +227,10 @@ onMounted(() => {
 <style scoped>
 .dashboard-page,
 .dashboard-page :deep(.pagetitle h1),
-.dashboard-page :deep(a),
 .dashboard-page :deep(.card),
 .dashboard-page :deep(.card-body),
 .dashboard-page :deep(.card-title),
 .dashboard-page :deep(.card-title span),
-.dashboard-page :deep(.breadcrumb-item.active),
 .dashboard-page :deep(table),
 .dashboard-page :deep(th),
 .dashboard-page :deep(td),
@@ -244,6 +242,12 @@ onMounted(() => {
 
 .dashboard-page :deep(a) {
   text-decoration: none;
+}
+
+.dashboard-page :deep(.breadcrumb-item),
+.dashboard-page :deep(.breadcrumb-item.active),
+.dashboard-page :deep(.breadcrumb-item a) {
+  color: #5f6b7a !important;
 }
 
 .dashboard-page :deep(.badge) {
