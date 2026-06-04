@@ -298,12 +298,6 @@
                   <p v-if="loadingCities" class="text-muted small mt-1 mb-0">
                     Memuat kota...
                   </p>
-                  <p
-                    v-else-if="!storeForm.selectedProvinceId"
-                    class="text-muted small mt-1 mb-0"
-                  >
-                    Pilih provinsi terlebih dahulu
-                  </p>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Country</label>
@@ -489,12 +483,6 @@
                   <input v-model="storeForm.city_id" type="hidden" />
                   <p v-if="loadingCities" class="text-muted small mt-1 mb-0">
                     Memuat kota...
-                  </p>
-                  <p
-                    v-else-if="!storeForm.selectedProvinceId"
-                    class="text-muted small mt-1 mb-0"
-                  >
-                    Pilih provinsi terlebih dahulu
                   </p>
                 </div>
                 <div class="col-md-6">

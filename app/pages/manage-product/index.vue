@@ -38,7 +38,6 @@
                 <th>Free Shipping</th>
                 <th>Categories</th>
                 <th>Variants</th>
-                <th>Created</th>
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
@@ -97,11 +96,6 @@
                   <span class="badge bg-primary">
                     {{ product.variants?.length || 0 }} variants
                   </span>
-                </td>
-                <td>
-                  <small class="text-muted">
-                    {{ formatDate(product.timestamps?.created_at || product.created_at) }}
-                  </small>
                 </td>
                 <td class="text-end">
                   <div class="d-flex justify-content-end gap-2">

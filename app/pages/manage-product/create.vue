@@ -4,9 +4,6 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h4 class="mb-0">Create New Product</h4>
-        <p class="text-muted mb-0">
-          Add a new product to your store step by step
-        </p>
       </div>
       <NuxtLink to="/manage-product" class="btn btn-primary action-btn-dark">
         <i class="bi bi-arrow-left me-2"></i>Back to List
@@ -542,11 +539,6 @@
               <!-- Step 5: Attributes -->
               <div v-if="currentStep === 5" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Attributes</h5>
-                <p class="text-muted mb-4">
-                  Select attributes (Color, Size, etc.) and their values for
-                  this product. Variants will be generated automatically from
-                  these combinations.
-                </p>
 
                 <div class="mb-4">
                   <button
@@ -571,10 +563,7 @@
                   v-else-if="selectedAttributes.length === 0"
                   class="text-center py-4"
                 >
-                  <p class="text-muted">No attributes selected yet</p>
-                  <p class="text-muted small">
-                    Add attributes to create product variants
-                  </p>
+                  <p class="text-muted mb-0">No attributes yet</p>
                 </div>
 
                 <div v-else class="row g-3">
@@ -652,7 +641,7 @@
                           "
                           class="text-muted small mt-2"
                         >
-                          No values available. Add value in manage attributes
+                          No values available
                         </div>
                       </div>
                     </div>
@@ -663,10 +652,6 @@
               <!-- Step 6: Variants -->
               <div v-if="currentStep === 6" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Variants</h5>
-                <p class="text-muted mb-4">
-                  Create variants manually by selecting attribute values. Each
-                  variant represents a specific combination of attributes.
-                </p>
 
                 <div class="mb-3">
                   <button
@@ -677,31 +662,20 @@
                   >
                     <i class="bi bi-plus-circle me-2"></i>Add Variant
                   </button>
-                  <small
-                    v-if="selectedAttributes.length === 0"
-                    class="text-muted ms-2"
-                  >
-                    Please select attributes in Step 5 first
-                  </small>
                 </div>
 
                 <div
                   v-if="selectedAttributes.length === 0"
-                  class="alert alert-info"
+                  class="text-muted small mb-3"
                 >
-                  <i class="bi bi-info-circle me-2"></i>
-                    Please select attributes in Step 5 first before creating
-                    variants.
+                  Select attributes first.
                 </div>
 
                 <div
                   v-else-if="!variants || variants.length === 0"
                   class="text-center py-4"
                 >
-                  <p class="text-muted">No variants added yet</p>
-                  <p class="text-muted small">
-                    Click "Add Variant" to create your first variant
-                  </p>
+                  <p class="text-muted mb-0">No variants yet</p>
                 </div>
 
                 <div
@@ -727,7 +701,7 @@
                         <td>
                           <img
                             v-if="variant.image_path || variant.image_preview"
-                            :src="variant.image_path || variant.image_preview"
+                            :src="variant.image_path || variant.image_preview || undefined"
                             :alt="variant.variant_name || 'Variant'"
                             class="img-thumbnail"
                             style="
@@ -803,10 +777,6 @@
               <!-- Step 7: Brands -->
               <div v-if="currentStep === 7" class="tab-pane fade show active">
                 <h5 class="mb-4">Product Brands</h5>
-                <p class="text-muted mb-4">
-                  Select one or more brands for this product. You can also
-                  create a new brand if needed.
-                </p>
 
                 <div
                   class="mb-3 d-flex justify-content-between align-items-center"
@@ -866,10 +836,7 @@
                       v-if="filteredBrands.length === 0"
                       class="text-center py-4"
                     >
-                      <p class="text-muted">No brands found</p>
-                      <p class="text-muted small">
-                        Try a different search term or create a new brand
-                      </p>
+                      <p class="text-muted mb-0">No brands found</p>
                     </div>
                     <div v-else class="row g-2">
                       <div
@@ -896,10 +863,6 @@
                       </div>
                     </div>
                   </div>
-                  <small class="text-muted mt-2 d-block">
-                    <i class="bi bi-info-circle me-1"></i>
-                    You can select multiple brands for this product
-                  </small>
                 </div>
               </div>
             </div>
@@ -1518,8 +1481,11 @@ const availableAttributes = ref<
     slug: string;
     attribute_values?: Array<{
       id: number;
+      attribute_id: number;
       value: string;
       slug: string;
+      sort: number;
+      status: string;
     }>;
   }>
 >([]);
@@ -1892,7 +1858,11 @@ const generateVariantCombinations = () => {
       combinations.push([...current]);
       return;
     }
-    for (const value of arrays[index]) {
+    const currentArray = arrays[index];
+    if (!currentArray) {
+      return;
+    }
+    for (const value of currentArray) {
       current.push(value);
       generateCombinations(arrays, current, index + 1);
       current.pop();
@@ -2059,7 +2029,10 @@ const getImagesForUpload = () => {
     imagesToUpload.length > 0 &&
     !imagesToUpload.some((image) => image.is_featured)
   ) {
-    imagesToUpload[0].is_featured = true;
+    const firstImage = imagesToUpload[0];
+    if (firstImage) {
+      firstImage.is_featured = true;
+    }
   }
 
   return imagesToUpload;
@@ -2088,6 +2061,8 @@ const handleAddVariantClick = async () => {
     image_file: null,
     image_preview: null,
     image_path: null,
+    weight: null,
+    type_weight: "GRAM" as "GRAM" | "KG",
   };
   variantStoreStocks.value = [];
 
@@ -2699,6 +2674,24 @@ const filteredBrands = computed(() => {
   return availableBrands.value.filter((b) => b.name?.toLowerCase().includes(q));
 });
 
+const getProductSaveErrorMessage = (message?: string) => {
+  if (!message) return "Failed to create product";
+
+  if (
+    message.includes("base_discount_percent") ||
+    message.includes("Numeric value out of range") ||
+    message.includes("SQLSTATE[22003]")
+  ) {
+    return "Harga diskon produk tidak valid. Pastikan harga coret lebih besar dari harga jual agar diskon berada di rentang 0-100%.";
+  }
+
+  if (message.includes("SQLSTATE[")) {
+    return "Terjadi kesalahan saat menyimpan produk. Silakan cek kembali data harga dan diskon.";
+  }
+
+  return message;
+};
+
 const removeBrand = (brandId: number) => {
   selectedBrandIds.value = selectedBrandIds.value.filter(
     (id) => id !== brandId,
@@ -2707,7 +2700,7 @@ const removeBrand = (brandId: number) => {
 
 const openCreateBrandModal = () => {
   newBrand.value = { name: "", description: "" };
-  const modal = new bootstrap.Modal(
+  const modal = new (window as any).bootstrap.Modal(
     document.getElementById("createBrandModal")!,
   );
   modal.show();
@@ -2737,7 +2730,7 @@ const submitCreateBrand = async () => {
 
     // close modal
     const modalEl = document.getElementById("createBrandModal");
-    const modal = bootstrap.Modal.getInstance(modalEl!);
+    const modal = (window as any).bootstrap.Modal.getInstance(modalEl!);
     modal?.hide();
   } catch (err) {
     console.error("Create brand failed", err);
@@ -2759,13 +2752,13 @@ const handleCreateProduct = async () => {
         productFormErrors.value = error.errors;
         currentStep.value = 1; // Go back to first step if validation fails
       } else {
-        alert(error.message || "Failed to create product");
+        toast.error(getProductSaveErrorMessage(error.message));
       }
       return;
     }
 
     if (!data?.success || !data.data.product) {
-      alert("Failed to create product");
+      toast.error("Failed to create product");
       return;
     }
 
@@ -2891,9 +2884,9 @@ const handleCreateProduct = async () => {
           if (
             variant.store_stocks &&
             variant.store_stocks.length > 0 &&
-            variantResponse.data?.data?.id
+            variantResponse.data?.data?.variant?.id
           ) {
-            const variantId = variantResponse.data.data.id;
+            const variantId = variantResponse.data.data.variant.id;
             for (const storeStock of variant.store_stocks) {
               try {
                 await createOrUpdateVariantStoreStock(variantId, {
@@ -2939,7 +2932,9 @@ const handleCreateProduct = async () => {
     const productSlug = data.data.product.slug;
     router.push(`/manage-product/${productSlug}`);
   } catch (err) {
-    alert(err instanceof Error ? err.message : "Failed to create product");
+    const errorMessage =
+      err instanceof Error ? err.message : "Failed to create product";
+    toast.error(getProductSaveErrorMessage(errorMessage));
   } finally {
     isLoading.value = false;
   }

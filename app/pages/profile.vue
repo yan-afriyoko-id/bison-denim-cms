@@ -225,48 +225,45 @@
                       <form @submit.prevent="handleChangePassword">
                         <div class="row mb-4">
                           <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input
-                              v-model="passwordForm.currentPassword"
-                              type="password"
-                              class="form-control form-control-lg"
-                              id="currentPassword"
-                              placeholder="Enter your current password"
-                              required
-                            />
-                            <small class="form-text text-muted">Enter your current password for verification</small>
-                          </div>
+                        <div class="col-md-8 col-lg-9">
+                          <input
+                            v-model="passwordForm.currentPassword"
+                            type="password"
+                            class="form-control form-control-lg"
+                            id="currentPassword"
+                            placeholder="Enter your current password"
+                            required
+                          />
                         </div>
+                      </div>
 
                         <div class="row mb-4">
                           <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input
-                              v-model="passwordForm.newPassword"
-                              type="password"
-                              class="form-control form-control-lg"
-                              id="newPassword"
-                              placeholder="Enter new password"
-                              required
-                            />
-                            <small class="form-text text-muted">Password must be at least 8 characters</small>
-                          </div>
+                        <div class="col-md-8 col-lg-9">
+                          <input
+                            v-model="passwordForm.newPassword"
+                            type="password"
+                            class="form-control form-control-lg"
+                            id="newPassword"
+                            placeholder="Enter new password"
+                            required
+                          />
                         </div>
+                      </div>
 
                         <div class="row mb-4">
                           <label for="confirmPassword" class="col-md-4 col-lg-3 col-form-label">Confirm Password</label>
-                          <div class="col-md-8 col-lg-9">
-                            <input
-                              v-model="passwordForm.confirmPassword"
-                              type="password"
-                              class="form-control form-control-lg"
-                              id="confirmPassword"
-                              placeholder="Confirm new password"
-                              required
-                            />
-                            <small class="form-text text-muted">Re-enter your new password</small>
-                          </div>
+                        <div class="col-md-8 col-lg-9">
+                          <input
+                            v-model="passwordForm.confirmPassword"
+                            type="password"
+                            class="form-control form-control-lg"
+                            id="confirmPassword"
+                            placeholder="Confirm new password"
+                            required
+                          />
                         </div>
+                      </div>
 
                         <div class="row">
                           <div class="col-md-8 col-lg-9 offset-md-4 offset-lg-3">
@@ -286,10 +283,6 @@
                       <h6 class="section-title text-danger mb-4">
                         <i class="bi bi-exclamation-triangle me-2"></i>Danger Zone
                       </h6>
-                      <div class="alert alert-warning" role="alert">
-                        <i class="bi bi-exclamation-circle me-2"></i>
-                        <strong>Warning!</strong> This action cannot be undone. Please be careful.
-                      </div>
                       <div>
                         <button class="btn btn-danger btn-lg" @click="handleDeleteAccount" :disabled="isDeletingAccount">
                           <span v-if="isDeletingAccount" class="spinner-border spinner-border-sm me-2"></span>

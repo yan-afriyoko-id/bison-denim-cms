@@ -22,6 +22,24 @@ export const useRolesPermissions = () => {
   const error = ref<string | null>(null)
   const success = ref<string | null>(null)
 
+  const normalizeRoles = (data: Role[] | { roles: Role[]; pagination?: unknown } | undefined): Role[] => {
+    if (Array.isArray(data)) {
+      return data
+    }
+
+    return data?.roles ?? []
+  }
+
+  const normalizePermissions = (
+    data: Permission[] | { permissions: Permission[] } | undefined
+  ): Permission[] => {
+    if (Array.isArray(data)) {
+      return data
+    }
+
+    return data?.permissions ?? []
+  }
+
   // Clear messages
   const clearMessages = () => {
     error.value = null
@@ -47,7 +65,7 @@ export const useRolesPermissions = () => {
         return null
       }
 
-      roles.value = response.data || []
+      roles.value = normalizeRoles(response.data)
       return response
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error fetching roles'
@@ -196,7 +214,7 @@ export const useRolesPermissions = () => {
         return null
       }
 
-      permissions.value = response.data || []
+      permissions.value = normalizePermissions(response.data)
       return response
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error fetching permissions'

@@ -79,11 +79,9 @@
                 <div class="col-12">
                   <div
                     v-if="selectedAttributes.length === 0"
-                    class="alert alert-warning"
+                    class="text-muted small"
                   >
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    No attributes selected. Please go to Step 3 and select
-                    attributes first.
+                    No attributes available.
                   </div>
 
                   <div v-else class="row g-3">
@@ -97,9 +95,6 @@
                           <label class="form-label fw-bold mb-0">
                             <i class="bi bi-tag me-2"></i>
                             {{ getAttributeName(selectedAttr.attribute_id) }}
-                            <span class="text-muted small fw-normal"
-                              >(Optional)</span
-                            >
                           </label>
                         </div>
                         <div class="card-body">
@@ -182,15 +177,7 @@
                             "
                             class="text-muted small mt-2"
                           >
-                            <i class="bi bi-info-circle me-1"></i>
-                            <span v-if="selectedAttr.values.length === 0">
-                              No values selected. Please go to Step 3 and select
-                              values for this attribute first.
-                            </span>
-                            <span v-else>
-                              No values available. Please add values to this
-                              attribute first.
-                            </span>
+                            No values available.
                           </div>
                         </div>
                       </div>
@@ -202,21 +189,13 @@
                     <label class="form-label fw-bold">
                       <i class="bi bi-pencil-square me-1"></i>
                       Variant Name
-                      <span class="text-muted small fw-normal"
-                        >(Auto-generated, can be edited)</span
-                      >
                     </label>
                     <input
                       v-model="localVariantForm.variant_name"
                       type="text"
                       class="form-control form-control-lg"
-                      placeholder="e.g., Red - Large, Blue - Small"
+                      placeholder="Variant name"
                     />
-                    <small class="text-muted">
-                      <i class="bi bi-info-circle me-1"></i>
-                      Name will be auto-generated from selected attribute
-                      values, but you can edit it manually.
-                    </small>
                   </div>
 
                   <!-- Image Quick Indicator -->
@@ -234,15 +213,7 @@
                         style="width: 40px; height: 40px; object-fit: cover;"
                       />
                       <i v-else class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
-                      <small class="text-muted">
-                        <span v-if="localVariantForm.image_preview || localVariantForm.image_path">
-                          Image attached.
-                        </span>
-                        <span v-else>
-                          No image yet.
-                        </span>
-                        Go to <strong>Details</strong> tab to manage variant image.
-                      </small>
+                      <small class="text-muted">Image</small>
                     </div>
                   </div>
                 </div>
@@ -257,7 +228,6 @@
                   <div class="border-bottom pb-2 mb-3">
                     <h6 class="mb-0 text-primary">
                       <i class="bi bi-image me-2"></i>Variant Image
-                      <span class="text-muted small fw-normal ms-1">(Optional)</span>
                     </h6>
                   </div>
                 </div>
@@ -281,7 +251,6 @@
                       />
                       <div v-else class="text-center text-muted">
                         <i class="bi bi-image" style="font-size: 2rem;"></i>
-                        <small class="d-block mt-1">No image</small>
                       </div>
                     </div>
                     <!-- Upload Controls -->
@@ -293,10 +262,6 @@
                         class="form-control"
                         @change="handleVariantImageSelect"
                       />
-                      <small class="text-muted d-block mt-1">
-                        <i class="bi bi-info-circle me-1"></i>
-                        Upload an image specific to this variant (e.g., different color). Max 5MB.
-                      </small>
                       <button
                         v-if="localVariantForm.image_preview || localVariantForm.image_path"
                         type="button"
@@ -313,7 +278,7 @@
                 <div class="col-12 mt-4">
                   <div class="border-bottom pb-2 mb-3">
                     <h6 class="mb-0 text-primary">
-                      <i class="bi bi-info-circle me-2"></i>Product Details
+                      <i class="bi bi-info-circle me-2"></i>Details
                     </h6>
                   </div>
                 </div>
@@ -328,9 +293,6 @@
                     class="form-control"
                     placeholder="SKU-001"
                   />
-                  <small class="text-muted"
-                    >Stock Keeping Unit identifier</small
-                  >
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">
@@ -352,8 +314,7 @@
                 <div class="col-md-6">
                   <label class="form-label">
                     <i class="bi bi-tag me-1"></i>
-                    Original Price (Strike Price)
-                    <span class="text-muted small">(Optional)</span>
+                    Original Price
                     <span
                       v-if="discountPercentage !== null"
                       class="badge bg-danger ms-2"
@@ -371,9 +332,6 @@
                       placeholder="0.00"
                     />
                   </div>
-                  <small class="text-muted"
-                    >Original price that will be shown with strikethrough</small
-                  >
                   <small
                     v-if="discountPercentage !== null"
                     class="text-success d-block mt-1"
@@ -428,7 +386,7 @@
                   <!-- Header -->
                   <div class="border-bottom pb-2 mb-4">
                     <h6 class="mb-0 text-primary">
-                      <i class="bi bi-shop me-2"></i>Store Stock Management
+                      <i class="bi bi-shop me-2"></i>Store Stock
                     </h6>
                   </div>
 
@@ -575,16 +533,14 @@
                         class="alert alert-light border mb-0 mt-3 py-2"
                         role="alert"
                       >
-                        <i class="bi bi-info-circle me-2"></i>
-                        This store already has stock assigned. Edit the existing row instead.
+                        Store already added.
                       </div>
                       <div
                         v-else-if="isReservedExceedingQty"
                         class="alert alert-light border mb-0 mt-3 py-2"
                         role="alert"
                       >
-                        <i class="bi bi-info-circle me-2"></i>
-                        Reserved quantity cannot be greater than stock quantity.
+                        Reserved cannot exceed stock.
                       </div>
                     </div>
                   </div>
@@ -670,12 +626,7 @@
                   </div>
                   <div v-else class="text-center py-4">
                     <i class="bi bi-inbox fs-1 text-muted mb-2"></i>
-                    <p class="text-muted mb-0">
-                      No store stocks added yet
-                    </p>
-                    <small class="text-muted">
-                      Use the form above to assign stock to stores
-                    </small>
+                    <p class="text-muted mb-0">No stock yet</p>
                   </div>
                 </div>
               </div>

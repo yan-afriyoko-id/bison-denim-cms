@@ -122,7 +122,7 @@
                 "
                 :disabled="saving"
               >
-                {{ saving ? "Saving..." : "Save" }}
+                {{ saving ? "Saving..." : editValueId ? "Update" : "Save" }}
               </button>
             </form>
           </div>

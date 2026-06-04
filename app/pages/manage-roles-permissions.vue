@@ -2,13 +2,7 @@
   <div>
     <!-- Page Title -->
     <div class="pagetitle">
-      <h1>Roles & Permissions</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><NuxtLink to="/dashboard">Home</NuxtLink></li>
-          <li class="breadcrumb-item active">Roles & Permissions</li>
-        </ol>
-      </nav>
+      <p>Roles & Permissions</p>
     </div>
 
     <!-- Main Section -->
@@ -28,7 +22,7 @@
                   @click="activeTab = 'roles'"
                 >
                   <i class="bi bi-shield-lock me-2"></i>
-                  Roles Management
+                  Roles
                 </button>
               </li>
               <li class="nav-item" role="presentation">
@@ -41,7 +35,7 @@
                   @click="activeTab = 'permissions'"
                 >
                   <i class="bi bi-key me-2"></i>
-                  Permissions Management
+                  Permissions
                 </button>
               </li>
             </ul>

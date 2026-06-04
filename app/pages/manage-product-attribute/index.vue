@@ -3,8 +3,7 @@
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h4 class="mb-0">Manage Product Attributes</h4>
-        <p class="text-muted mb-0">Manage attributes for your products</p>
+        <p class="mb-0">Manage Product Attributes</p>
       </div>
       <button @click="openCreateModal" class="btn btn-primary action-btn-dark">
         <i class="bi bi-plus-circle me-2"></i>Add Attribute
@@ -171,7 +170,7 @@
                 "
                 :disabled="saving"
               >
-                {{ saving ? "Saving..." : "Save" }}
+                {{ saving ? "Saving..." : editId ? "Update" : "Save" }}
               </button>
             </form>
           </div>
@@ -213,7 +212,7 @@
               type="button"
               class="btn btn-danger"
               @click="confirmDelete"
-              :disabled="deleting"
+              :disabled="deleting !== null"
             >
               <span v-if="deleting">
                 <i class="bi bi-hourglass-split me-1"></i>Deleting...
@@ -228,7 +227,23 @@
 </template>
 
 <script setup lang="ts">
-import type { Attribute } from "~/types";
+interface AttributeValue {
+  id: number;
+  attribute_id: number;
+  value: string;
+  slug: string;
+  sort: number;
+  status: string;
+}
+
+interface Attribute {
+  id: number;
+  name: string;
+  slug: string;
+  sort: number;
+  status: string;
+  attribute_values?: AttributeValue[];
+}
 
 definePageMeta({
   middleware: "auth",
@@ -253,6 +268,7 @@ const form = ref({
 });
 
 const editId = ref<number | null>(null);
+const bootstrapModal = () => (window as any).bootstrap?.Modal;
 
 const fetchAttributes = async () => {
   loading.value = true;
@@ -268,13 +284,17 @@ const fetchAttributes = async () => {
 const openCreateModal = () => {
   editId.value = null;
   form.value = { name: "", sort: 0, status: "ACTIVE" };
-  new bootstrap.Modal(document.getElementById("attributeModal")!).show();
+  const modal = bootstrapModal();
+  if (!modal) return;
+  new modal(document.getElementById("attributeModal")!).show();
 };
 
 const openEditModal = (attr: Attribute) => {
   editId.value = attr.id;
   form.value = { name: attr.name, sort: attr.sort, status: attr.status };
-  new bootstrap.Modal(document.getElementById("attributeModal")!).show();
+  const modal = bootstrapModal();
+  if (!modal) return;
+  new modal(document.getElementById("attributeModal")!).show();
 };
 
 const saveAttribute = async () => {
@@ -294,7 +314,7 @@ const saveAttribute = async () => {
     errorMessage.value = res.error.message;
   } else if (res.data?.success) {
     await fetchAttributes();
-    bootstrap.Modal.getInstance(
+    bootstrapModal()?.getInstance(
       document.getElementById("attributeModal")!,
     )?.hide();
   }
@@ -305,7 +325,9 @@ const saveAttribute = async () => {
 const handleDelete = (id: number) => {
   deleteId.value = id;
   errorMessage.value = null;
-  new bootstrap.Modal(document.getElementById("deleteConfirmModal")!).show();
+  const modal = bootstrapModal();
+  if (!modal) return;
+  new modal(document.getElementById("deleteConfirmModal")!).show();
 };
 
 const confirmDelete = async () => {
@@ -324,7 +346,7 @@ const confirmDelete = async () => {
 
   deleting.value = null;
   deleteId.value = null;
-  bootstrap.Modal.getInstance(
+  bootstrapModal()?.getInstance(
     document.getElementById("deleteConfirmModal")!,
   )?.hide();
 };

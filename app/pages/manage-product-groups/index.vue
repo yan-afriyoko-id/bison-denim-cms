@@ -3,10 +3,7 @@
     <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h4 class="mb-0">Product Groups</h4>
-        <p class="text-muted mb-0">
-          Manage product groups like "Penawaran Spesial", "Best Sellers", etc.
-        </p>
+        <p class="mb-0">Manage Product Groups</p>
       </div>
       <NuxtLink to="/manage-product-groups/create" class="btn btn-primary action-btn-dark">
         <i class="bi bi-plus-circle me-2"></i>Create Group
@@ -60,7 +57,7 @@
                   :to="`/manage-product-groups/${group.id}`"
                   class="badge bg-info text-decoration-none"
                 >
-                  {{ group.sub_groups?.length || group.subGroups?.length || 0 }}
+                  {{ group.sub_groups?.length || 0 }}
                   sub-groups
                   <i class="bi bi-arrow-right-short ms-1"></i>
                 </NuxtLink>
@@ -153,7 +150,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-import type { ProductGroup } from "~/types";
+import type { ProductGroup } from "~/types/product-group";
 
 const { getProductGroups, deleteProductGroup } = useProductGroupApi();
 

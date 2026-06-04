@@ -22,7 +22,7 @@
     <!-- Empty State -->
     <div v-else-if="rolesPermissions.roles.value.length === 0" class="alert alert-info text-center py-5">
       <i class="bi bi-inbox display-4"></i>
-      <p class="mt-3 mb-0">No roles found. Create one to get started.</p>
+      <p class="mt-3 mb-0">No roles found.</p>
     </div>
 
     <!-- Roles Table -->
@@ -130,7 +130,6 @@
                     />
                     <label class="form-check-label" :for="`perm-${perm.id}`">
                       <strong>{{ perm.name }}</strong>
-                      <small class="text-muted d-block">{{ perm.description }}</small>
                     </label>
                   </div>
                 </div>
@@ -197,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Role } from '~/composables/useRolesPermissions'
+import type { Permission, Role } from '~/types/role'
 
 interface Props {
   rolesPermissions: any
@@ -233,8 +232,8 @@ const openCreateModal = () => {
 const openEditModal = (role: Role) => {
   editingRole.value = role
   formData.name = role.name
-  formData.description = role.description
-  formData.permissions = role.permissions?.map(p => p.id) || []
+  formData.description = role.description ?? ''
+  formData.permissions = role.permissions?.map((p: Permission) => p.id) ?? []
 
   const bootstrapModal = (window as any).bootstrap.Modal
   const modal = new bootstrapModal(roleModalRef.value!)

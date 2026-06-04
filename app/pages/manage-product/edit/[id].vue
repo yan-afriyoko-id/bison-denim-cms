@@ -25,7 +25,6 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h4 class="mb-0">Edit Product</h4>
-          <p class="text-muted mb-0">{{ product.name }}</p>
         </div>
         <NuxtLink
           :to="`/manage-product/${product.slug}`"
@@ -502,11 +501,6 @@
                 <!-- Step 5: Attributes -->
                 <div v-if="currentStep === 5" class="tab-pane fade show active">
                   <h5 class="mb-4">Product Attributes</h5>
-                  <p class="text-muted mb-4">
-                    Select attributes (Color, Size, etc.) and their values for
-                    this product. Variants will be generated automatically from
-                    these combinations.
-                  </p>
 
                   <div class="mb-4">
                     <button
@@ -531,10 +525,7 @@
                     v-else-if="selectedAttributes.length === 0"
                     class="text-center py-4"
                   >
-                    <p class="text-muted">No attributes selected yet</p>
-                    <p class="text-muted small">
-                      Add attributes to create product variants
-                    </p>
+                    <p class="text-muted mb-0">No attributes yet</p>
                   </div>
 
                   <div v-else class="row g-3">
@@ -612,8 +603,7 @@
                             "
                             class="text-muted small mt-2"
                           >
-                            No values available. Click "Add Value" to add values
-                            to this attribute.
+                            No values available
                           </div>
                         </div>
                       </div>
@@ -624,10 +614,6 @@
                 <!-- Step 6: Variants -->
                 <div v-if="currentStep === 6" class="tab-pane fade show active">
                   <h5 class="mb-4">Product Variants</h5>
-                  <p class="text-muted mb-4">
-                    Create variants manually by selecting attribute values. Each
-                    variant represents a specific combination of attributes.
-                  </p>
 
                   <div class="mb-3">
                     <button
@@ -638,21 +624,13 @@
                     >
                       <i class="bi bi-plus-circle me-2"></i>Add Variant
                     </button>
-                    <small
-                      v-if="selectedAttributes.length === 0"
-                      class="text-muted ms-2"
-                    >
-                      Please select attributes in Step 5 first
-                    </small>
                   </div>
 
                   <div
                     v-if="selectedAttributes.length === 0"
-                    class="alert alert-info"
+                    class="text-muted small mb-3"
                   >
-                    <i class="bi bi-info-circle me-2"></i>
-                    Please select attributes in Step 5 first before creating
-                    variants.
+                    Select attributes first.
                   </div>
 
                   <div v-else-if="loadingVariants" class="text-center py-3">
@@ -667,10 +645,7 @@
                     v-else-if="!variants || variants.length === 0"
                     class="text-center py-4"
                   >
-                    <p class="text-muted">No variants added yet</p>
-                    <p class="text-muted small">
-                      Click "Add Variant" to create your first variant
-                    </p>
+                    <p class="text-muted mb-0">No variants yet</p>
                   </div>
 
                   <div
@@ -784,10 +759,6 @@
                 <!-- Step 7: Brands -->
                 <div v-if="currentStep === 7" class="tab-pane fade show active">
                   <h5 class="mb-4">Product Brands</h5>
-                  <p class="text-muted mb-4">
-                    Select one or more brands for this product. You can also
-                    create a new brand if needed.
-                  </p>
 
                   <div
                     class="mb-3 d-flex justify-content-between align-items-center"
@@ -847,10 +818,7 @@
                         v-if="filteredBrands.length === 0"
                         class="text-center py-4"
                       >
-                        <p class="text-muted">No brands found</p>
-                        <p class="text-muted small">
-                          Try a different search term or create a new brand
-                        </p>
+                        <p class="text-muted mb-0">No brands found</p>
                       </div>
                       <div v-else class="row g-2">
                         <div
@@ -877,10 +845,6 @@
                         </div>
                       </div>
                     </div>
-                    <small class="text-muted mt-2 d-block">
-                      <i class="bi bi-info-circle me-1"></i>
-                      You can select multiple brands for this product
-                    </small>
                   </div>
                 </div>
               </div>
@@ -1519,9 +1483,7 @@
 <script setup lang="ts">
 import type { Product, ProductCreatePayload } from "~/types/product";
 import {
-  formatNumber,
   generateSlug,
-  getVariantTotalStock,
 } from "~/utils/helpers";
 
 interface TaxonomyItem {
@@ -1753,7 +1715,10 @@ const getPendingUploads = () => {
   const uploads = Array.from(imageMap.values());
 
   if (uploads.length > 0 && !uploads.some((image) => image.is_featured)) {
-    uploads[0].is_featured = true;
+    const firstUpload = uploads[0];
+    if (firstUpload) {
+      firstUpload.is_featured = true;
+    }
   }
 
   return uploads;
@@ -1863,10 +1828,13 @@ const availableAttributes = ref<
     id: number;
     name: string;
     slug: string;
+    sort: number;
     attribute_values?: Array<{
       id: number;
+      attribute_id: number;
       value: string;
       slug: string;
+      sort: number;
       status?: string;
     }>;
   }>
@@ -1927,7 +1895,13 @@ const loadProduct = async () => {
   loadingProduct.value = true;
   productRelationSynced.value = false;
   try {
-    const productSlug = route.params.id;
+    const productSlug = Array.isArray(route.params.id)
+      ? route.params.id[0]
+      : route.params.id;
+    if (!productSlug) {
+      product.value = null;
+      return;
+    }
     const { data, error } = await getProduct(productSlug);
 
     if (error || !data?.success) {
@@ -2139,13 +2113,13 @@ const loadBrands = async () => {
   loadingBrands.value = true;
   try {
     const res = await getBrands();
-    const mappedBrands = res.data.data.brands.map((b) => ({
+    const brandList = res.data?.data?.brands ?? [];
+    const mappedBrands = brandList.map((b: any) => ({
       ...b,
       id: Number(b.id),
     }));
 
     brands.value = mappedBrands;
-    filteredBrands.value = mappedBrands;
   } finally {
     loadingBrands.value = false;
   }
@@ -2289,7 +2263,7 @@ const selectAttribute = (attributeId: number) => {
     values: defaultValues,
   });
 
-  const modal = bootstrap.Modal.getInstance(
+  const modal = (window as any).bootstrap?.Modal.getInstance(
     document.getElementById("addAttributeModal"),
   );
   modal?.hide();
@@ -2750,11 +2724,11 @@ const updateVariantName = () => {
   const selectedValueIds: number[] = [];
 
   // Get values from variant being edited (if any) to include in validation
-  const editingVariantValueIds =
-    editingVariantIndex.value !== null &&
-    variants.value[editingVariantIndex.value]
-      ? variants.value[editingVariantIndex.value].attribute_value_ids || []
-      : [];
+  const currentEditingVariant =
+    editingVariantIndex.value !== null
+      ? variants.value[editingVariantIndex.value]
+      : undefined;
+  const editingVariantValueIds = currentEditingVariant?.attribute_value_ids || [];
 
   selectedAttributes.value.forEach((selectedAttr) => {
     const selectedValueId =
@@ -3010,7 +2984,7 @@ const saveVariant = async () => {
         return;
       }
 
-      const newVariantId = data?.data?.id;
+      const newVariantId = data?.data?.variant?.id;
       if (newVariantId) {
         // Save store stocks
         if (variantStoreStocks.value.length > 0) {
@@ -3328,7 +3302,9 @@ const deleteStoreStock = async (index: number) => {
     storeStock.id
   ) {
     try {
-      const variantId = variants.value[editingVariantIndex.value].id!;
+      const currentVariant = variants.value[editingVariantIndex.value];
+      if (!currentVariant?.id) return;
+      const variantId = currentVariant.id;
       const { error } = await deleteVariantStoreStock(
         variantId,
         storeStock.store_id,
@@ -3361,8 +3337,11 @@ const deleteStoreStock = async (index: number) => {
             editingVariantIndex.value !== null &&
             variants.value[editingVariantIndex.value]
           ) {
+            const currentVariant = variants.value[editingVariantIndex.value];
+            if (!currentVariant) return;
             variants.value[editingVariantIndex.value] = {
-              ...variants.value[editingVariantIndex.value],
+              ...currentVariant,
+              attribute_value_ids: currentVariant.attribute_value_ids ?? [],
               store_stocks: freshStocks,
             };
           }
@@ -3378,8 +3357,11 @@ const deleteStoreStock = async (index: number) => {
             variants.value[editingVariantIndex.value]
           ) {
             const updatedStocks = [...variantStoreStocks.value];
+            const currentVariant = variants.value[editingVariantIndex.value];
+            if (!currentVariant) return;
             variants.value[editingVariantIndex.value] = {
-              ...variants.value[editingVariantIndex.value],
+              ...currentVariant,
+              attribute_value_ids: currentVariant.attribute_value_ids ?? [],
               store_stocks: updatedStocks,
             };
           }
@@ -3446,7 +3428,9 @@ const saveStoreStock = async () => {
   ) {
     savingStoreStock.value = true;
     try {
-      const variantId = variants.value[editingVariantIndex.value].id!;
+      const currentVariant = variants.value[editingVariantIndex.value];
+      if (!currentVariant?.id) return;
+      const variantId = currentVariant.id;
       const { data, error } = await createOrUpdateVariantStoreStock(variantId, {
         store_id: storeStockForm.value.store_id!,
         qty: storeStockForm.value.qty,
@@ -3483,8 +3467,11 @@ const saveStoreStock = async () => {
             editingVariantIndex.value !== null &&
             variants.value[editingVariantIndex.value]
           ) {
+            const currentVariant = variants.value[editingVariantIndex.value];
+            if (!currentVariant) return;
             variants.value[editingVariantIndex.value] = {
-              ...variants.value[editingVariantIndex.value],
+              ...currentVariant,
+              attribute_value_ids: currentVariant.attribute_value_ids ?? [],
               store_stocks: freshStocks,
             };
           }
@@ -3940,6 +3927,24 @@ const filteredBrands = computed(() => {
   return brands.value.filter((b: any) => b.name?.toLowerCase().includes(q));
 });
 
+const getProductSaveErrorMessage = (message?: string) => {
+  if (!message) return "Terjadi kesalahan saat update product";
+
+  if (
+    message.includes("base_discount_percent") ||
+    message.includes("Numeric value out of range") ||
+    message.includes("SQLSTATE[22003]")
+  ) {
+    return "Harga diskon produk tidak valid. Pastikan harga coret lebih besar dari harga jual agar diskon berada di rentang 0-100%.";
+  }
+
+  if (message.includes("SQLSTATE[")) {
+    return "Terjadi kesalahan saat menyimpan produk. Silakan cek kembali data harga dan diskon.";
+  }
+
+  return message;
+};
+
 const removeBrand = (brandId: number) => {
   selectedBrandIds.value = selectedBrandIds.value.filter(
     (id) => id !== brandId,
@@ -3995,7 +4000,7 @@ const handleUpdateProduct = async () => {
 
     if (updateError || !updateData?.success) {
       productFormErrors.value = updateError?.errors || {};
-      toast.error(updateError?.message || "Gagal update product");
+      toast.error(getProductSaveErrorMessage(updateError?.message));
       return;
     }
     const pendingUploads = getPendingUploads();
@@ -4008,6 +4013,9 @@ const handleUpdateProduct = async () => {
 
         for (let i = 0; i < pendingUploads.length; i++) {
           const img = pendingUploads[i];
+          if (!img) {
+            continue;
+          }
 
           const { data: uploadedImage, error: uploadError } =
             await uploadProductImage(
@@ -4054,9 +4062,10 @@ const handleUpdateProduct = async () => {
       );
 
       if (toDetach.length > 0) {
+        const productId = product.value.id;
         await Promise.all(
           toDetach.map((id) =>
-            detachProductAttributes(product.value.id, Number(id)),
+            detachProductAttributes(productId, Number(id)),
           ),
         );
       }
@@ -4106,7 +4115,7 @@ const handleUpdateProduct = async () => {
       const { data: currentBrands } = await getProductBrands(product.value.id);
 
       const currentBrandIds = new Set(
-        (currentBrands?.data?.brand_products || []).map((b) =>
+        (currentBrands?.data?.brands || []).map((b: any) =>
           Number(b.fk_brand_id),
         ),
       );
@@ -4116,7 +4125,7 @@ const handleUpdateProduct = async () => {
       );
 
       const toRemoveBrands = Array.from(currentBrandIds).filter(
-        (id) => !selectedBrandIds.value.includes(id),
+        (id): id is number => typeof id === "number" && !selectedBrandIds.value.includes(id),
       );
 
       if (toAddBrands.length > 0) {
@@ -4135,38 +4144,42 @@ const handleUpdateProduct = async () => {
         product.value.id,
       );
 
-      const dbVariants = dbVariantsData?.data || [];
+      const dbVariants = dbVariantsData?.data?.variants || [];
 
       const localVariantIds = new Set(
-        variants.value.map((v) => v.id).filter(Boolean),
+        variants.value
+          .map((v) => v.id)
+          .filter((id): id is number => typeof id === "number"),
       );
 
-      const toDelete = dbVariants.filter((v) => !localVariantIds.has(v.id));
+      const toDelete = dbVariants.filter((v: any) => !localVariantIds.has(v.id));
 
       for (const v of toDelete) {
         await deleteProductVariant(v.id);
       }
 
       for (const variant of variants.value) {
-        const payload = {
+        const updatePayload = {
           variant_name: variant.variant_name,
+          attribute_value_ids: variant.attribute_value_ids || [],
           sku: variant.sku,
           price: variant.price,
           strike_price: variant.strike_price,
-          discount_percent: variant.discount_percent,
-          final_price: variant.final_price,
-          stock: variant.stock,
           status: variant.status,
-          is_available: variant.is_available,
+          weight: variant.weight || null,
+          type_weight: variant.type_weight || "GRAM",
         };
 
         let variantId = variant.id;
 
         if (variantId) {
-          await updateProductVariant(variantId, payload);
+          await updateProductVariant(variantId, updatePayload);
         } else {
-          const { data: newV } = await createProductVariant(payload);
-          variantId = newV?.data?.id;
+          const { data: newV } = await createProductVariant({
+            fk_product_id: product.value.id,
+            ...updatePayload,
+          });
+          variantId = newV?.data?.variant?.id;
           variant.id = variantId;
         }
 
@@ -4190,7 +4203,11 @@ const handleUpdateProduct = async () => {
     router.push(`/manage-product/${productForm.value.slug}`);
   } catch (err) {
     console.error("Update product gagal", err);
-    toast.error("Terjadi kesalahan saat update product");
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : "Terjadi kesalahan saat update product";
+    toast.error(getProductSaveErrorMessage(errorMessage));
   } finally {
     isLoading.value = false;
     console.groupEnd();

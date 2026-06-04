@@ -16,9 +16,9 @@
       <!-- Brand (Merk) -->
       <li v-if="hasPermission('brands.read')" class="nav-item">
         <NuxtLink
-          to="/manage-brand"
+          to="/manage-merk"
           class="nav-link"
-          :class="{ active: isActive('/manage-brand') }"
+          :class="{ active: isActive('/manage-merk') }"
         >
           <i class="bi bi-tag"></i>
           <span>Merk</span>

@@ -22,7 +22,7 @@
     <!-- Empty State -->
     <div v-else-if="rolesPermissions.permissions.value.length === 0" class="alert alert-info text-center py-5">
       <i class="bi bi-inbox display-4"></i>
-      <p class="mt-3 mb-0">No permissions found. Create one to get started.</p>
+      <p class="mt-3 mb-0">No permissions found.</p>
     </div>
 
     <!-- Permissions Table -->
@@ -96,7 +96,6 @@
                   placeholder="e.g., products.create, users.delete"
                   required
                 />
-                <small class="text-muted">Use format: module.action (e.g., products.create)</small>
               </div>
 
               <!-- Description -->
@@ -171,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Permission } from '~/composables/useRolesPermissions'
+import type { Permission } from '~/types/role'
 
 interface Props {
   rolesPermissions: any
@@ -211,7 +210,7 @@ const openCreateModal = () => {
 const openEditModal = (permission: Permission) => {
   editingPermission.value = permission
   formData.name = permission.name
-  formData.description = permission.description
+  formData.description = permission.description ?? ''
 
   const bootstrapModal = (window as any).bootstrap.Modal
   const modal = new bootstrapModal(permissionModalRef.value!)
