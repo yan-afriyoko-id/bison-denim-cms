@@ -10,11 +10,12 @@
       <div class="row">
         <div class="col-lg-12">
           <!-- Nav Tabs Card -->
-          <div class="card">
-            <ul class="nav nav-tabs card-header-tabs" role="tablist">
-              <li class="nav-item" role="presentation">
+          <div class="card roles-permissions-card">
+            <div class="roles-tabs-wrap">
+            <ul class="nav nav-tabs card-header-tabs roles-tabs" role="tablist">
+              <li class="nav-item roles-tab-item" role="presentation">
                 <button
-                  class="nav-link"
+                  class="nav-link roles-tab-btn"
                   :class="{ active: activeTab === 'roles' }"
                   id="roles-tab"
                   type="button"
@@ -25,9 +26,9 @@
                   Roles
                 </button>
               </li>
-              <li class="nav-item" role="presentation">
+              <li class="nav-item roles-tab-item" role="presentation">
                 <button
-                  class="nav-link"
+                  class="nav-link roles-tab-btn"
                   :class="{ active: activeTab === 'permissions' }"
                   id="permissions-tab"
                   type="button"
@@ -39,8 +40,9 @@
                 </button>
               </li>
             </ul>
+            </div>
 
-            <div class="card-body">
+            <div class="card-body roles-permissions-body">
               <!-- Roles Tab -->
               <div v-if="activeTab === 'roles'">
                 <RoleManagement :roles-permissions="rolesPermissions" />
@@ -117,6 +119,60 @@ watch([originalSuccess, originalError], () => {
 .nav-tabs .nav-link.active {
   color: #000 !important;
   border-bottom-color: #000;
+}
+
+.roles-permissions-card {
+  overflow: hidden;
+}
+
+.roles-tabs-wrap {
+  padding: 0 1rem;
+  overflow: hidden;
+}
+
+.roles-tabs {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  margin-bottom: 0;
+  width: auto;
+  min-width: 0;
+}
+
+.roles-tab-item {
+  flex: 0 0 auto;
+}
+
+.roles-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  white-space: nowrap;
+  padding: 0.65rem 0.9rem;
+}
+
+.roles-permissions-body {
+  padding-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .roles-tabs-wrap {
+    padding: 0 0.75rem;
+  }
+
+  .roles-tabs {
+    gap: 0.35rem;
+  }
+
+  .roles-tab-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .roles-permissions-body {
+    padding: 0.75rem;
+  }
 }
 </style>
 

@@ -157,7 +157,6 @@
                                     'cursor-not-allowed':
                                       value.status === 'INACTIVE',
                                   }"
-                                  style="cursor: pointer"
                                 >
                                   {{ value.value }}
                                   <span
@@ -1243,6 +1242,12 @@ onMounted(() => {
 .variant-attribute-option {
   background-color: transparent;
   border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.variant-attribute-option .form-check-input,
+.variant-attribute-option .form-check-label {
+  cursor: pointer;
 }
 
 .variant-attribute-option.is-selected {
@@ -1253,6 +1258,12 @@ onMounted(() => {
 
 .variant-attribute-option.is-disabled:not(.is-selected) {
   background-color: transparent;
+}
+
+.variant-attribute-option.is-disabled,
+.variant-attribute-option.is-disabled .form-check-input,
+.variant-attribute-option.is-disabled .form-check-label {
+  cursor: not-allowed;
 }
 
 .selected-option-label {

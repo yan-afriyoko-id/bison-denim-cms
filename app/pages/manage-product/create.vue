@@ -366,15 +366,14 @@
                 </div>
               </div>
 
-              <!-- Step 3: Basic Information -->
-              <div v-if="currentStep === 3" class="tab-pane fade show active">
-                <h5 class="mb-4">Basic Information</h5>
+              <div
+                v-if="currentStep === 3"
+                class="tab-pane fade show active basic-info-step"
+              >
                 <div class="row g-3">
-                  <!-- Basic Information -->
                   <div class="col-12 d-none">
                       <div class="border-bottom pb-2 mb-3">
                         <h6 class="mb-0 text-dark">
-                        <i class="bi bi-info-circle me-2"></i>Basic Information
                       </h6>
                     </div>
                   </div>
@@ -435,9 +434,6 @@
                   <!-- Information -->
                   <div class="col-12 mt-4">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-dark">
-                        <i class="bi bi-file-text me-2"></i>Information
-                      </h6>
                     </div>
                   </div>
                   <div class="col-12">
@@ -453,9 +449,6 @@
                   <!-- Pricing -->
                   <div class="col-12 mt-4">
                       <div class="border-bottom pb-2 mb-3">
-                        <h6 class="mb-0 text-dark">
-                        <i class="bi bi-currency-dollar me-2"></i>Pricing
-                      </h6>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -3079,6 +3072,11 @@ onMounted(async () => {
   font-size: 0.875rem;
   font-weight: 600;
   flex-shrink: 0;
+}
+
+.basic-info-step {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 .seo-meta-panel {

@@ -13,7 +13,7 @@
 
     <!-- Form Card -->
     <div class="card">
-      <div class="card-body">
+      <div class="card-body blog-create-body">
         <form @submit.prevent="handleSubmit">
           <div class="row g-3">
             <!-- Title -->
@@ -626,6 +626,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.blog-create-body {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
 .seo-meta-panel {
   background: #fafafa;
   border-color: #e9ecef !important;

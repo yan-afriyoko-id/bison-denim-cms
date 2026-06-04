@@ -187,16 +187,19 @@ onMounted(() => {
 <style scoped>
 .header-brand {
   width: 320px;
+  min-width: 320px;
   gap: 12px;
   overflow: hidden;
   transition:
     width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    min-width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
     gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
+  min-width: 0;
   max-width: 280px;
   overflow: hidden;
   flex-shrink: 0;
@@ -217,6 +220,7 @@ onMounted(() => {
 
 .logo-text {
   display: inline-block;
+  width: max-content;
   max-width: 180px;
   overflow: hidden;
   font-size: 1.25rem;
@@ -283,24 +287,19 @@ onMounted(() => {
 }
 
 @media (min-width: 1200px) {
-  .sidebar-collapsed {
-    padding-left: 12px;
-  }
-
   .sidebar-collapsed .header-brand {
-    width: 92px;
+    width: 320px;
+    min-width: 320px;
     justify-content: flex-start !important;
-    gap: 8px;
+    gap: 12px;
   }
 
   .sidebar-collapsed .toggle-sidebar-btn {
-    padding-left: 0;
-    margin-right: 0;
     transform: translateX(0);
   }
 
   .sidebar-collapsed .logo {
-    max-width: none;
+    max-width: 280px;
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
@@ -312,11 +311,10 @@ onMounted(() => {
   }
 
   .sidebar-collapsed .logo-text {
-    opacity: 0;
-    max-width: 0;
-    width: 0;
-    margin-left: 0 !important;
-    transform: translateX(-8px);
+    opacity: 1;
+    max-width: 180px;
+    width: max-content;
+    transform: translateX(0);
   }
 }
 </style>

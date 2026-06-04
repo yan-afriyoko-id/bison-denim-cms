@@ -45,10 +45,8 @@
       <div class="row">
         <!-- Main Info -->
         <div class="col-md-8">
-          <!-- Basic Information -->
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="mb-0">Basic Information</h5>
             </div>
             <div class="card-body">
               <div class="row mb-3">

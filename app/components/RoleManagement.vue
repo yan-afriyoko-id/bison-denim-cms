@@ -1,12 +1,12 @@
 <template>
   <div class="role-management">
     <!-- Action Buttons -->
-    <div class="mb-4 d-flex gap-2 justify-content-between align-items-center">
-      <h5 class="mb-0">
+    <div class="management-toolbar mb-4 d-flex gap-2 justify-content-between align-items-center">
+      <h5 class="management-title mb-0">
         <i class="bi bi-shield-lock me-2"></i>
         Roles List
       </h5>
-      <button class="btn btn-primary btn-sm action-btn-dark" @click="openCreateModal">
+      <button class="btn btn-primary btn-sm action-btn-dark management-action-btn" @click="openCreateModal">
         <i class="bi bi-plus-circle me-2"></i>
         Add New Role
       </button>
@@ -295,6 +295,19 @@ const performDelete = async () => {
   padding: 1.5rem 0;
 }
 
+.management-toolbar {
+  flex-wrap: wrap;
+}
+
+.management-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.management-action-btn {
+  flex-shrink: 0;
+}
+
 .table {
   margin-bottom: 0;
 }
@@ -357,6 +370,20 @@ const performDelete = async () => {
 .modal-title {
   font-weight: 600;
   color: #111111;
+}
+
+@media (max-width: 768px) {
+  .role-management {
+    padding: 1rem 0;
+  }
+
+  .management-toolbar {
+    align-items: stretch !important;
+  }
+
+  .management-action-btn {
+    width: 100%;
+  }
 }
 </style>
 
