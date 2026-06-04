@@ -3,7 +3,7 @@
     <div>
       <label class="form-label fw-bold">Product Images</label>
       <small class="text-muted d-block mb-2">
-        Gambar paling kiri otomatis jadi featured. Drag dan drop urutan untuk mengganti featured.
+        The leftmost image is automatically set as featured. Drag and drop images to change the featured image.
       </small>
 
       <div class="product-images-upload">

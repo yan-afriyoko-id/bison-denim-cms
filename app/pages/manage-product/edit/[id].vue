@@ -3893,7 +3893,7 @@ const getProductSaveErrorMessage = (message?: string) => {
     message.includes("Numeric value out of range") ||
     message.includes("SQLSTATE[22003]")
   ) {
-    return "Harga diskon produk tidak valid. Pastikan harga coret lebih besar dari harga jual agar diskon berada di rentang 0-100%.";
+    return "Invalid discount price. Make sure the original price is higher than the selling price so the discount stays between 0% and 100%.";
   }
 
   if (message.includes("SQLSTATE[")) {
