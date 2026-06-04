@@ -16,6 +16,7 @@ export interface ProductBrand {
   id: number;
   product_id: number;
   brand_id: number;
+  name?: string | null;
   brand?: {
     id: number;
     name: string;
@@ -94,6 +95,7 @@ export interface Product {
     id: number;
     product_id: number;
     brand_id: number;
+    name?: string | null;
     brand?: {
       id: number;
       name: string;
@@ -106,6 +108,8 @@ export interface Product {
     model?: string | null;
     sku?: string | null;
     image_path?: string | null;
+    stock?: number | null;
+    discount?: number | null;
     price?: number | null;
     strike_price?: number | null;
     discount_percent?: number | null;

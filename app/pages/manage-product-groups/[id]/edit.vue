@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="py-2">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h4 class="mb-0">Edit Product Group</h4>
@@ -11,7 +11,7 @@
     </div>
 
     <div class="card">
-      <div class="card-body">
+      <div class="card-body py-4">
         <form @submit.prevent="handleSubmit">
           <div class="row g-3 mb-4">
             <div class="col-md-6">

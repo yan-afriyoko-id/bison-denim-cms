@@ -11,7 +11,7 @@
     </div>
 
     <div class="card">
-      <div class="card-body">
+      <div class="card-body py-4">
         <form @submit.prevent="handleSubmit">
           <div class="row g-3 mb-4">
             <div class="col-md-6">

@@ -522,7 +522,6 @@
                 <h5 class="mb-4">Product Images</h5>
                 
                 <ShopeeImageUpload
-                  v-model:featured="featuredImage"
                   v-model:images="pendingImages"
                   :disabled="uploadingImages"
                   @change="handleImageChange"
@@ -594,7 +593,12 @@
                             :key="value.id"
                             class="col-md-3"
                           >
-                            <div class="form-check">
+                            <div
+                              class="form-check attribute-value-option"
+                              :class="{
+                                'is-disabled': value.status === 'INACTIVE',
+                              }"
+                            >
                               <input
                                 class="form-check-input"
                                 type="checkbox"
@@ -1401,16 +1405,9 @@ const productFormErrors = ref<Record<string, string[]>>({});
 
 // Images
 const pendingImages = ref<
-  Array<{ file: File; preview: string; is_featured?: boolean }>
+  Array<{ file: File; preview: string; is_featured?: boolean; name?: string }>
 >([]);
 const uploadingImages = ref(false);
-const featuredImage = ref<{
-  file?: File;
-  preview?: string;
-  path?: string;
-  name?: string;
-  is_featured?: boolean;
-} | null>(null);
 
 // Variants
 const variants = ref<
@@ -1982,19 +1979,8 @@ const getPendingImageKey = (image: {
 const getImagesForUpload = () => {
   const imageMap = new Map<
     string,
-    { file: File; preview: string; is_featured?: boolean }
+    { file: File; preview: string; is_featured?: boolean; name?: string }
   >();
-
-  if (featuredImage.value?.file) {
-    const featuredKey = getPendingImageKey(featuredImage.value);
-    if (featuredKey) {
-      imageMap.set(featuredKey, {
-        file: featuredImage.value.file,
-        preview: featuredImage.value.preview || "",
-        is_featured: true,
-      });
-    }
-  }
 
   for (const image of pendingImages.value) {
     const imageKey = getPendingImageKey(image);
@@ -2013,6 +1999,7 @@ const getImagesForUpload = () => {
       file: image.file,
       preview: image.preview,
       is_featured: Boolean(image.is_featured),
+      name: image.name,
     });
   }
 
@@ -2031,9 +2018,15 @@ const getImagesForUpload = () => {
   return imagesToUpload;
 };
 
-const handleImageChange = ({ featured, images }: { featured: any; images: any }) => {
-  featuredImage.value = featured ?? null;
-  pendingImages.value = Array.isArray(images) ? images : [];
+const handleImageChange = ({ images }: { images: any }) => {
+  pendingImages.value = Array.isArray(images)
+    ? images.map((img, index) => ({
+        file: img.file,
+        preview: img.preview,
+        is_featured: index === 0,
+        name: img.name,
+      }))
+    : [];
 };
 
 const handleAddVariantClick = async () => {
@@ -2813,7 +2806,6 @@ const handleCreateProduct = async () => {
         } else if (validImages.length > 0) {
           toast.success(`Successfully uploaded ${validImages.length} image(s)`);
           pendingImages.value = [];
-          featuredImage.value = null;
         }
       } catch (err) {
         console.error("Error in image upload process:", err);
@@ -3115,5 +3107,17 @@ onMounted(async () => {
   --bs-btn-active-border-color: #c69214;
   --bs-btn-disabled-color: #c8a96a;
   --bs-btn-disabled-border-color: #e6d3a1;
+}
+
+.attribute-value-option,
+.attribute-value-option .form-check-input,
+.attribute-value-option .form-check-label {
+  cursor: pointer;
+}
+
+.attribute-value-option.is-disabled,
+.attribute-value-option.is-disabled .form-check-input,
+.attribute-value-option.is-disabled .form-check-label {
+  cursor: not-allowed;
 }
 </style>

@@ -197,24 +197,6 @@
                     />
                   </div>
 
-                  <!-- Image Quick Indicator -->
-                  <div class="col-12 mt-3">
-                    <div class="d-flex align-items-center gap-2 p-2 rounded bg-light">
-                      <img
-                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
-                        :src="
-                          localVariantForm.image_preview ??
-                          localVariantForm.image_path ??
-                          undefined
-                        "
-                        alt="Variant image"
-                        class="rounded"
-                        style="width: 40px; height: 40px; object-fit: cover;"
-                      />
-                      <i v-else class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
-                      <small class="text-muted">Image</small>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -231,46 +213,65 @@
                   </div>
                 </div>
                 <div class="col-12">
-                  <div class="d-flex align-items-start gap-3">
-                    <!-- Image Preview -->
+                  <div class="variant-image-upload">
+                    <input
+                      ref="variantImageInput"
+                      type="file"
+                      accept="image/*"
+                      class="d-none"
+                      @change="handleVariantImageSelect"
+                    />
+
                     <div
-                      class="border rounded d-flex align-items-center justify-content-center flex-shrink-0"
-                      style="width: 120px; height: 120px; background-color: #f8f9fa;"
+                      class="variant-image-box"
+                      :class="{
+                        'has-image':
+                          localVariantForm.image_preview ||
+                          localVariantForm.image_path,
+                      }"
+                      role="button"
+                      tabindex="0"
+                      @click="triggerVariantImageInput"
+                      @keydown.enter="triggerVariantImageInput"
+                      @keydown.space.prevent="triggerVariantImageInput"
                     >
-                      <img
-                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
-                        :src="
-                          localVariantForm.image_preview ??
-                          localVariantForm.image_path ??
-                          undefined
+                      <template
+                        v-if="
+                          localVariantForm.image_preview ||
+                          localVariantForm.image_path
                         "
-                        alt="Variant preview"
-                        class="rounded"
-                        style="max-width: 120px; max-height: 120px; object-fit: cover;"
-                      />
-                      <div v-else class="text-center text-muted">
-                        <i class="bi bi-image" style="font-size: 2rem;"></i>
-                      </div>
-                    </div>
-                    <!-- Upload Controls -->
-                    <div class="flex-grow-1">
-                      <input
-                        ref="variantImageInput"
-                        type="file"
-                        accept="image/*"
-                        class="form-control"
-                        @change="handleVariantImageSelect"
-                      />
-                      <button
-                        v-if="localVariantForm.image_preview || localVariantForm.image_path"
-                        type="button"
-                        class="btn btn-sm btn-outline-danger mt-2"
-                        @click="handleClearVariantImage"
                       >
-                        <i class="bi bi-x-circle me-1"></i>Remove Image
-                      </button>
+                        <img
+                          :src="
+                            localVariantForm.image_preview ??
+                            localVariantForm.image_path ??
+                            undefined
+                          "
+                          alt="Variant preview"
+                          class="variant-image-preview"
+                        />
+                        <div
+                          class="variant-image-overlay d-flex align-items-center justify-content-center"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn-remove-variant-image"
+                          @click.stop="handleClearVariantImage"
+                        >
+                          <i class="bi bi-x"></i>
+                        </button>
+                      </template>
+                      <template v-else>
+                        <i class="bi bi-image variant-image-icon"></i>
+                        <span class="mt-2">Upload Variant Image</span>
+                      </template>
                     </div>
                   </div>
+                  <small class="text-muted d-block mt-2">
+                    Supported formats: JPG, PNG, GIF, WEBP. Max size: 5MB.
+                  </small>
                 </div>
 
                 <!-- Product Details Section -->
@@ -1118,6 +1119,10 @@ const getStockStatusBadgeClass = (
   return "bg-light text-dark border";
 };
 
+const triggerVariantImageInput = () => {
+  variantImageInput.value?.click();
+};
+
 const handleVariantImageSelect = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (!target) return;
@@ -1269,6 +1274,89 @@ onMounted(() => {
 .selected-option-label {
   color: inherit !important;
   font-weight: 400;
+}
+
+.variant-image-upload {
+  max-width: 180px;
+}
+
+.variant-image-box {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 2px dashed #000;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  background-color: #fafafa;
+}
+
+.variant-image-box:hover {
+  border-color: #000;
+  background-color: #f3f3f3;
+}
+
+.variant-image-box:focus-visible {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+.variant-image-box.has-image {
+  border-style: solid;
+}
+
+.variant-image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.variant-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: white;
+  font-size: 1.8rem;
+}
+
+.variant-image-box:hover .variant-image-overlay {
+  opacity: 1;
+}
+
+.btn-remove-variant-image {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  color: #ff4d4f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+
+.variant-image-box.has-image:hover .btn-remove-variant-image {
+  opacity: 1;
+}
+
+.variant-image-icon {
+  font-size: 2.5rem;
+  color: #000;
 }
 
 .btn-outline-primary {

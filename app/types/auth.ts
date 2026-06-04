@@ -7,6 +7,8 @@ export interface AuthUser {
   id: number
   name: string
   last_name: string
+  avatar?: string | null
+  avatar_url?: string | null
   email: string
   phone: string
   gender: 'MALE' | 'FEMALE'

@@ -253,7 +253,7 @@
                 :key="bp.id"
                 class="badge bg-info me-1 mb-1"
               >
-                {{ bp.name }}
+                {{ bp.name || bp.brand?.name || `Brand ID: ${bp.brand_id}` }}
               </span>
             </div>
           </div>

@@ -34,8 +34,8 @@
         <!-- Profile -->
         <li v-if="user" class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img v-if="user?.avatar" 
-                    :src="user.avatar" 
+            <img v-if="userAvatar"
+                    :src="userAvatar"
                     :alt="`${user?.name} ${user?.last_name}`" class="rounded-circle" />
             <span class="d-none d-md-block dropdown-toggle ps-2">{{ user?.name }}</span>
           </a>
@@ -87,6 +87,7 @@ const logoUrl = ref<string | null>(null)
 
 // Computed
 const user = auth.user
+const userAvatar = computed(() => user.value?.avatar_url || user.value?.avatar || null)
 const userRoles = computed(() => {
   if (!user.value?.roles) return []
   return user.value.roles.map((r: any) => {
@@ -169,7 +170,7 @@ onMounted(() => {
   }
 
   // Close sidebar on overlay click (mobile)
-  if (process.client && window.innerWidth < 768) {
+  if (import.meta.client && window.innerWidth < 768) {
     document.addEventListener('click', (e: any) => {
       const target = e.target as HTMLElement
       const isSidebar = target.closest('.sidebar')

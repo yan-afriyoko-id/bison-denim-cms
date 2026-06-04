@@ -7,6 +7,58 @@ import type {
 
 export const useProductGroupApi = () => {
   const { baseURL, getHeaders } = useApiBase();
+  const assetBaseURL = baseURL.replace(/\/api\/?$/, "");
+  const backendOrigin = (() => {
+    try {
+      return new URL(assetBaseURL).origin;
+    } catch {
+      return assetBaseURL;
+    }
+  })();
+
+  const resolveImageUrl = (value?: string | null) => {
+    if (!value) return null;
+    if (value.startsWith("data:")) {
+      return value;
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+      try {
+        const url = new URL(value);
+        const backendUrl = new URL(assetBaseURL);
+
+        // Backend kadang mengirim http://localhost/... tanpa port.
+        // Untuk asset lokal, pakai origin backend dari apiBase agar file storage terbaca.
+        if (
+          url.hostname === backendUrl.hostname &&
+          url.port !== backendUrl.port
+        ) {
+          return `${backendOrigin}${url.pathname}${url.search}${url.hash}`;
+        }
+
+        return value;
+      } catch {
+        return value;
+      }
+    }
+
+    const normalizedPath = value.startsWith("/") ? value : `/${value}`;
+    return `${assetBaseURL}${normalizedPath}`;
+  };
+
+  const normalizeProductGroup = <T extends { image?: string | null; image_url?: string | null }>(
+    group: T,
+  ): T => {
+    if (!group) return group;
+
+    const resolvedImageUrl =
+      resolveImageUrl(group.image_url) || resolveImageUrl(group.image) || null;
+
+    return {
+      ...group,
+      image_url: resolvedImageUrl,
+    };
+  };
 
   const fetchWithHandling = async <T>(url: string, options: any = {}) => {
     try {
@@ -27,24 +79,44 @@ export const useProductGroupApi = () => {
   };
 
   const getProductGroups = async (page = 1) => {
-    return fetchWithHandling<ProductGroupsResponse>(
+    const result = await fetchWithHandling<ProductGroupsResponse>(
       `${baseURL}/product-groups?page=${page}`,
       { method: "GET" },
     );
+
+    if (result.data?.data?.data) {
+      result.data.data.data = result.data.data.data.map((group) =>
+        normalizeProductGroup(group),
+      );
+    }
+
+    return result;
   };
 
   const getProductGroup = async (id: number) => {
-    return fetchWithHandling<ProductGroupResponse>(
+    const result = await fetchWithHandling<ProductGroupResponse>(
       `${baseURL}/product-groups/${id}`,
       { method: "GET" },
     );
+
+    if (result.data?.data) {
+      result.data.data = normalizeProductGroup(result.data.data);
+    }
+
+    return result;
   };
 
   const getProductGroupByKey = async (key: string) => {
-    return fetchWithHandling<ProductGroupResponse>(
+    const result = await fetchWithHandling<ProductGroupResponse>(
       `${baseURL}/product-groups/key/${key}`,
       { method: "GET" },
     );
+
+    if (result.data?.data) {
+      result.data.data = normalizeProductGroup(result.data.data);
+    }
+
+    return result;
   };
 
   const createProductGroup = async (payload: ProductGroupCreatePayload) => {
@@ -61,7 +133,7 @@ export const useProductGroupApi = () => {
       formData.append("image", payload.image);
     }
 
-    return fetchWithHandling<ProductGroupResponse>(
+    const result = await fetchWithHandling<ProductGroupResponse>(
       `${baseURL}/product-groups`,
       {
         method: "POST",
@@ -69,6 +141,12 @@ export const useProductGroupApi = () => {
         isFormData: true,
       },
     );
+
+    if (result.data?.data) {
+      result.data.data = normalizeProductGroup(result.data.data);
+    }
+
+    return result;
   };
 
   const updateProductGroup = async (
@@ -89,7 +167,7 @@ export const useProductGroupApi = () => {
       formData.append("image", payload.image);
     }
 
-    return fetchWithHandling<ProductGroupResponse>(
+    const result = await fetchWithHandling<ProductGroupResponse>(
       `${baseURL}/product-groups/${id}`,
       {
         method: "POST", // <-- Ganti jadi POST
@@ -97,6 +175,12 @@ export const useProductGroupApi = () => {
         isFormData: true,
       },
     );
+
+    if (result.data?.data) {
+      result.data.data = normalizeProductGroup(result.data.data);
+    }
+
+    return result;
   };
 
   const deleteProductGroup = async (id: number) => {

@@ -473,8 +473,7 @@
                   
                   <ShopeeImageUpload
                     v-if="!loadingImages"
-                    v-model:featured="featuredImage"
-                    v-model:images="existingImagesWithPending"
+                    :images="existingImagesWithPending"
                     :disabled="uploadingImages"
                     @change="handleImageChange"
                     @set-featured="handleSetFeaturedFromUpload"
@@ -557,7 +556,12 @@
                               :key="value.id"
                               class="col-md-3"
                             >
-                              <div class="form-check">
+                              <div
+                                class="form-check attribute-value-option"
+                                :class="{
+                                  'is-disabled': value.status === 'INACTIVE',
+                                }"
+                              >
                                 <input
                                   class="form-check-input"
                                   type="checkbox"
@@ -1616,33 +1620,22 @@ const imageToDelete = ref<{
   path: string;
   order_number: number;
 } | null>(null);
-const featuredImage = ref<{
-  file?: File;
-  preview?: string;
-  path?: string;
-  name?: string;
-  is_featured?: boolean;
-  id?: number;
-} | null>(null);
 
 // Combine existing images with pending images for the ShopeeImageUpload component
-const existingImagesWithPending = computed({
-  get: () => {
-    const convertedExisting = existingImages.value.map((img) => ({
-      ...img,
-      file: undefined,
-      preview: img.path,
-      is_featured: img.is_featured,
-    }));
+const existingImagesWithPending = computed(() => {
+  const convertedExisting = existingImages.value.map((img) => ({
+    ...img,
+    file: undefined,
+    preview: img.path,
+    is_featured: img.is_featured,
+  }));
 
-    const pendingConverted = pendingImages.value.map((img) => ({
-      ...img,
-      is_featured: Boolean(img.is_featured),
-    }));
+  const pendingConverted = pendingImages.value.map((img) => ({
+    ...img,
+    is_featured: Boolean(img.is_featured),
+  }));
 
-    return [...convertedExisting, ...pendingConverted];
-  },
-  set: () => {},
+  return [...convertedExisting, ...pendingConverted];
 });
 
 const getPendingImageKey = (image: {
@@ -1672,18 +1665,6 @@ const getPendingUploads = () => {
     string,
     { file: File; preview: string; is_featured?: boolean; name?: string }
   >();
-
-  if (featuredImage.value?.file) {
-    const featuredKey = getPendingImageKey(featuredImage.value);
-    if (featuredKey) {
-      imageMap.set(featuredKey, {
-        file: featuredImage.value.file,
-        preview: featuredImage.value.preview || "",
-        is_featured: true,
-        name: featuredImage.value.name,
-      });
-    }
-  }
 
   for (const image of pendingImages.value) {
     const imageKey = getPendingImageKey(image);
@@ -1958,28 +1939,24 @@ const loadImages = async () => {
     if (error || !data?.success) {
       console.error("Failed to load images:", error);
       existingImages.value = [];
-      featuredImage.value = null;
     } else {
-      existingImages.value = (data.data.images || []).map((img: any) => ({
-        id: img.id,
-        path: img.path,
-        order_number: img.order_number,
-        is_featured: img.is_featured || false,
-      }));
-
-      const existingFeatured = existingImages.value.find((img) => img.is_featured);
-      featuredImage.value = existingFeatured
-        ? {
-            ...existingFeatured,
-            preview: existingFeatured.path,
-            is_featured: true,
+      existingImages.value = (data.data.images || [])
+        .map((img: any) => ({
+          id: img.id,
+          path: img.path,
+          order_number: img.order_number,
+          is_featured: img.is_featured || false,
+        }))
+        .sort((a: any, b: any) => {
+          if (Boolean(a.is_featured) !== Boolean(b.is_featured)) {
+            return a.is_featured ? -1 : 1;
           }
-        : null;
+          return (a.order_number || 0) - (b.order_number || 0);
+        });
     }
   } catch (err) {
     console.error("Error loading images:", err);
     existingImages.value = [];
-    featuredImage.value = null;
   } finally {
     loadingImages.value = false;
   }
@@ -2574,16 +2551,6 @@ const handleRemoveImageFromUpload = async (image: any) => {
         pendingImage.file.lastModified === image?.file?.lastModified
       ),
   );
-
-  if (
-    featuredImage.value?.file &&
-    image?.file &&
-    featuredImage.value.file.name === image.file.name &&
-    featuredImage.value.file.size === image.file.size &&
-    featuredImage.value.file.lastModified === image.file.lastModified
-  ) {
-    featuredImage.value = null;
-  }
 };
 
 const handleRemoveFeaturedFromUpload = async (image: any) => {
@@ -2591,27 +2558,24 @@ const handleRemoveFeaturedFromUpload = async (image: any) => {
     await handleDeleteClick(image);
     return;
   }
-
-  featuredImage.value = null;
+  await handleRemoveImageFromUpload(image);
 };
 
-const handleImageChange = ({ featured, images }: { featured: any; images: any }) => {
-  featuredImage.value = featured ?? null;
-
+const handleImageChange = ({ images }: { images: any }) => {
   if (images && Array.isArray(images)) {
     const existing = images.filter((img) => img.path && !img.file);
     const pending = images.filter((img) => img.file);
 
-    existingImages.value = existing.map((img) => ({
+    existingImages.value = existing.map((img, index) => ({
       id: img.id,
       path: img.path,
-      order_number: img.order_number,
-      is_featured: Boolean(img.is_featured),
+      order_number: index + 1,
+      is_featured: index === 0,
     }));
-    pendingImages.value = pending.map((img) => ({
+    pendingImages.value = pending.map((img, index) => ({
       file: img.file,
       preview: img.preview,
-      is_featured: Boolean(img.is_featured),
+      is_featured: existing.length === 0 && index === 0,
       name: img.name,
     }));
   }
@@ -4409,5 +4373,17 @@ onMounted(async () => {
   --bs-btn-active-color: #111827;
   --bs-btn-active-bg: #dbe4ee;
   --bs-btn-active-border-color: #cbd5e1;
+}
+
+.attribute-value-option,
+.attribute-value-option .form-check-input,
+.attribute-value-option .form-check-label {
+  cursor: pointer;
+}
+
+.attribute-value-option.is-disabled,
+.attribute-value-option.is-disabled .form-check-input,
+.attribute-value-option.is-disabled .form-check-label {
+  cursor: not-allowed;
 }
 </style>

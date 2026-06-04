@@ -1,61 +1,13 @@
 <template>
   <div class="shopee-image-upload">
-    <!-- Featured Image Section -->
-    <div class="mb-4">
-      <label class="form-label fw-bold">
-        Featured Image <span class="text-danger">*</span>
-        <small class="text-muted">(Image will be displayed first)</small>
-      </label>
-      <div class="featured-image-upload">
-        <input
-          ref="featuredInputRef"
-          type="file"
-          accept="image/*"
-          class="d-none"
-          @change="handleFeaturedImageSelect"
-          :disabled="disabled"
-        />
-        <div
-          class="featured-image-box"
-          :class="{ 'has-image': featuredImage }"
-          @click="!disabled && triggerFeaturedFileInput()"
-          role="button"
-          tabindex="0"
-          @keydown.enter="!disabled && triggerFeaturedFileInput()"
-          @keydown.space.prevent="!disabled && triggerFeaturedFileInput()"
-        >
-          <template v-if="featuredImage">
-            <img
-              :src="featuredImage.preview || featuredImage.path"
-              :alt="featuredImage.name || featuredImage.alt"
-              class="featured-preview"
-            />
-            <div class="image-overlay d-flex align-items-center justify-content-center">
-              <i class="bi bi-pencil"></i>
-            </div>
-            <button
-              v-if="!disabled"
-              type="button"
-              class="btn-remove-featured"
-              @click.stop="removeFeaturedImage"
-            >
-              <i class="bi bi-x"></i>
-            </button>
-          </template>
-          <template v-else>
-            <i class="bi bi-image featured-icon"></i>
-            <span class="mt-2">Click to upload featured image</span>
-          </template>
-        </div>
-      </div>
-    </div>
-
-    <!-- Product Images Section -->
     <div>
       <label class="form-label fw-bold">Product Images</label>
+      <small class="text-muted d-block mb-2">
+        Gambar paling kiri otomatis jadi featured. Drag dan drop urutan untuk mengganti featured.
+      </small>
+
       <div class="product-images-upload">
         <div class="images-grid">
-          <!-- Upload Button -->
           <div
             class="image-upload-box"
             @click="!disabled && triggerMultiFileInput()"
@@ -68,42 +20,53 @@
             <span class="mt-2">Add Images</span>
           </div>
 
-          <!-- Product Images -->
           <div
-            v-for="(image, index) in displayImages"
-            :key="index"
+            v-for="(image, index) in imagesModel"
+            :key="getImageKey(image) || index"
             class="product-image-box position-relative"
+            :class="{
+              'is-dragging': draggedIndex === index,
+              'is-drop-target': dragOverIndex === index && draggedIndex !== index,
+            }"
+            :draggable="!disabled"
+            @dragstart="handleDragStart(index, $event)"
+            @dragover.prevent="handleDragOver(index)"
+            @dragenter.prevent="handleDragOver(index)"
+            @dragleave="handleDragLeave(index)"
+            @drop.prevent="handleDrop(index)"
+            @dragend="handleDragEnd"
           >
             <img
               :src="image.preview || image.path"
-              :alt="`Product image ${index + 1}`"
+              :alt="image.name || `Product image ${index + 1}`"
               class="product-image-preview"
             />
-            
-            <!-- Featured Badge -->
+
             <span
-              v-if="image.is_featured"
+              v-if="index === 0"
               class="badge-featured position-absolute top-0 start-0 m-2"
             >
-              <i class="bi bi-star-fill"></i> Featured
+              <i class="bi bi-star-fill"></i>
             </span>
 
-            <!-- Image Actions -->
+            <div class="image-order-chip position-absolute bottom-0 start-0 m-2">
+              {{ index + 1 }}
+            </div>
+
+            <div
+              v-if="!disabled"
+              class="drag-hint position-absolute top-0 end-0 m-2"
+              title="Drag untuk ubah urutan"
+            >
+              <i class="bi bi-grip-vertical"></i>
+            </div>
+
             <div class="image-actions">
-              <button
-                v-if="!image.is_featured && pendingImages.length > 0 && !disabled"
-                type="button"
-                class="btn-action btn-featured"
-                @click="handleSetFeaturedPending(index)"
-                title="Set as Featured"
-              >
-                <i class="bi bi-star"></i>
-              </button>
               <button
                 v-if="!disabled"
                 type="button"
                 class="btn-action btn-remove"
-                @click="removePendingImage(index)"
+                @click="removeImage(index)"
                 title="Remove"
               >
                 <i class="bi bi-trash"></i>
@@ -112,7 +75,6 @@
           </div>
         </div>
 
-        <!-- File Input for Multiple Images -->
         <input
           ref="multiFileInputRef"
           type="file"
@@ -123,6 +85,7 @@
           :disabled="disabled"
         />
       </div>
+
       <small class="text-muted d-block mt-2" v-if="!disabled">
         <i class="bi bi-info-circle me-1"></i>
         Supported formats: JPG, PNG, GIF. Max size: 5MB per image.
@@ -133,224 +96,249 @@
 
 <script setup>
 const emit = defineEmits([
-  'update:featured',
-  'update:images',
-  'change',
-  'set-featured',
-  'remove-image',
-  'remove-featured'
-])
+  "update:featured",
+  "update:images",
+  "change",
+  "set-featured",
+  "remove-image",
+  "remove-featured",
+]);
 
 const props = defineProps({
   featured: {
     type: [Object, null],
-    default: null
+    default: null,
   },
   images: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   disabled: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const featuredInputRef = ref(null)
-const multiFileInputRef = ref(null)
-
-const featuredImage = ref(props.featured)
-const pendingImages = ref(props.images || [])
+const multiFileInputRef = ref(null);
+const imagesModel = ref([]);
+const draggedIndex = ref(null);
+const dragOverIndex = ref(null);
 
 const getImageKey = (image) => {
-  if (!image) return null
-  if (image.id) return `id:${image.id}`
+  if (!image) return null;
+  if (image.id) return `id:${image.id}`;
   if (image.file) {
-    return `file:${image.file.name}-${image.file.size}-${image.file.lastModified}`
+    return `file:${image.file.name}-${image.file.size}-${image.file.lastModified}`;
   }
-  if (image.path) return `path:${image.path}`
-  if (image.preview) return `preview:${image.preview}`
-  return null
-}
+  if (image.path) return `path:${image.path}`;
+  if (image.preview) return `preview:${image.preview}`;
+  return image.name || null;
+};
 
-const displayImages = computed(() => {
-  const featuredKey = getImageKey(featuredImage.value)
-  if (!featuredKey) return pendingImages.value
+const getImagesSignature = (images) =>
+  (images || [])
+    .map((image, index) => `${getImageKey(image)}:${index === 0 ? 1 : 0}`)
+    .join("|");
 
-  return pendingImages.value.filter((image) => getImageKey(image) !== featuredKey)
-})
+const normalizeImages = (images) => {
+  const uniqueImages = [];
+  const seen = new Set();
 
-// Watch for prop changes
-watch(() => props.featured, (newVal) => {
-  featuredImage.value = newVal
-})
+  for (const image of images || []) {
+    const key = getImageKey(image);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    uniqueImages.push({
+      ...image,
+      is_featured: false,
+    });
+  }
 
-watch(() => props.images, (newVal) => {
-  pendingImages.value = newVal || []
-})
+  if (uniqueImages[0]) {
+    uniqueImages[0].is_featured = true;
+  }
 
-watch([featuredImage, pendingImages], () => {
-  emit('update:featured', featuredImage.value)
-  emit('update:images', pendingImages.value)
-  emit('change', { featured: featuredImage.value, images: pendingImages.value })
-}, { deep: true })
+  return uniqueImages;
+};
 
-// Trigger file input
-const triggerFeaturedFileInput = () => {
-  if (props.disabled) return
-  featuredInputRef.value?.click()
-}
+const syncImages = (images) => {
+  const normalized = normalizeImages(images);
+  if (getImagesSignature(imagesModel.value) === getImagesSignature(normalized)) {
+    return;
+  }
+  imagesModel.value = normalized;
+};
+
+const emitChanges = () => {
+  const featured = imagesModel.value[0] || null;
+  emit("update:featured", featured);
+  emit("update:images", imagesModel.value);
+  emit("change", { featured, images: imagesModel.value });
+};
+
+watch(
+  () => props.images,
+  (newVal) => {
+    syncImages(newVal || []);
+  },
+  { immediate: true, deep: true },
+);
+
+watch(
+  imagesModel,
+  () => {
+    emitChanges();
+  },
+  { deep: true },
+);
 
 const triggerMultiFileInput = () => {
-  if (props.disabled) return
-  multiFileInputRef.value?.click()
-}
+  if (props.disabled) return;
+  multiFileInputRef.value?.click();
+};
 
-// Handle featured image selection
-const handleFeaturedImageSelect = (event) => {
-  const file = event.target.files?.[0]
-  if (file && !props.disabled) {
-    validateAndSetFeatured(file)
-  }
-  event.target.value = ''
-}
-
-const validateAndSetFeatured = (file) => {
-  if (!validateImage(file)) return
-  
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    featuredImage.value = {
-      file,
-      preview: e.target.result,
-      name: file.name,
-      is_featured: true
-    }
-  }
-  reader.readAsDataURL(file)
-}
-
-// Handle multiple image selection
 const handleMultipleImageSelect = (event) => {
-  const files = event.target.files
+  const files = event.target.files;
   if (files && files.length > 0 && !props.disabled) {
-    processMultipleFiles(files)
+    processMultipleFiles(files);
   }
-  event.target.value = ''
-}
+  event.target.value = "";
+};
 
 const processMultipleFiles = (files) => {
-  const validFiles = []
-  
+  const validFiles = [];
+
   for (let i = 0; i < files.length; i++) {
     if (validateImage(files[i])) {
-      validFiles.push(files[i])
+      validFiles.push(files[i]);
     }
   }
 
   validFiles.forEach((file) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
-      pendingImages.value.push({
-        file,
-        preview: e.target.result,
-        name: file.name,
-        is_featured: false
-      })
-    }
-    reader.readAsDataURL(file)
-  })
-}
+      imagesModel.value = [
+        ...normalizeImages(imagesModel.value),
+        {
+          file,
+          preview: e.target.result,
+          name: file.name,
+          is_featured: false,
+        },
+      ];
+      imagesModel.value = normalizeImages(imagesModel.value);
+    };
+    reader.readAsDataURL(file);
+  });
+};
 
-// Validate image file
 const validateImage = (file) => {
-  const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-  const maxSize = 5 * 1024 * 1024 // 5MB
-  
+  const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+  const maxSize = 5 * 1024 * 1024;
+
   if (!validTypes.includes(file.type)) {
-    alert('Invalid file type. Please use JPG, PNG, GIF, or WEBP.')
-    return false
+    alert("Invalid file type. Please use JPG, PNG, GIF, or WEBP.");
+    return false;
   }
-  
+
   if (file.size > maxSize) {
-    alert(`File ${file.name} is too large. Maximum size is 5MB.`)
-    return false
-  }
-  
-  return true
-}
-
-// Remove featured image
-const removeFeaturedImage = () => {
-  if (props.disabled) return
-  if (featuredImage.value?.id && !featuredImage.value?.file) {
-    emit('remove-featured', featuredImage.value)
-    return
+    alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+    return false;
   }
 
-  const featuredKey = getImageKey(featuredImage.value)
-  if (featuredKey) {
-    pendingImages.value = pendingImages.value.map((image) => ({
-      ...image,
-      is_featured: getImageKey(image) === featuredKey ? false : image.is_featured
-    }))
-  }
+  return true;
+};
 
-  featuredImage.value = null
-}
-
-// Remove pending image
-const removePendingImage = (index) => {
-  if (props.disabled) return
-  const image = displayImages.value[index]
-  if (!image) return
+const removeImage = (index) => {
+  if (props.disabled) return;
+  const image = imagesModel.value[index];
+  if (!image) return;
 
   if (image.id && !image.file) {
-    emit('remove-image', image)
-    return
+    if (index === 0) {
+      emit("remove-featured", image);
+      return;
+    }
+
+    emit("remove-image", image);
+    return;
   }
 
-  const imageKey = getImageKey(image)
-  pendingImages.value = pendingImages.value.filter(
-    (currentImage) => getImageKey(currentImage) !== imageKey
-  )
-}
+  imagesModel.value = normalizeImages(
+    imagesModel.value.filter((_, currentIndex) => currentIndex !== index),
+  );
+};
 
-// Set featured image from pending images
-const handleSetFeaturedPending = (index) => {
-  if (props.disabled) return
-  const image = displayImages.value[index]
-  if (!image) return
-
-  // Remove featured flag from current featured image
-  if (featuredImage.value) {
-    featuredImage.value.is_featured = false
+const reorderImages = (fromIndex, toIndex) => {
+  if (props.disabled) return;
+  if (
+    fromIndex < 0 ||
+    toIndex < 0 ||
+    fromIndex >= imagesModel.value.length ||
+    toIndex >= imagesModel.value.length ||
+    fromIndex === toIndex
+  ) {
+    return;
   }
 
-  const targetKey = getImageKey(image)
-  pendingImages.value = pendingImages.value.map((currentImage) => ({
-    ...currentImage,
-    is_featured: getImageKey(currentImage) === targetKey
-  }))
+  const previousFirst = imagesModel.value[0] || null;
+  const reordered = [...imagesModel.value];
+  const [movedImage] = reordered.splice(fromIndex, 1);
+  reordered.splice(toIndex, 0, movedImage);
+  imagesModel.value = normalizeImages(reordered);
 
-  // Update featured image
-  featuredImage.value = { ...image, is_featured: true }
-
-  if (image.id && !image.file) {
-    emit('set-featured', image)
+  const nextFirst = imagesModel.value[0] || null;
+  if (
+    nextFirst?.id &&
+    !nextFirst?.file &&
+    getImageKey(previousFirst) !== getImageKey(nextFirst)
+  ) {
+    emit("set-featured", nextFirst);
   }
-}
+};
 
-// Clear all images
+const handleDragStart = (index, event) => {
+  if (props.disabled) return;
+  draggedIndex.value = index;
+  dragOverIndex.value = index;
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", String(index));
+  }
+};
+
+const handleDragOver = (index) => {
+  if (props.disabled || draggedIndex.value === null) return;
+  dragOverIndex.value = index;
+};
+
+const handleDragLeave = (index) => {
+  if (dragOverIndex.value === index) {
+    dragOverIndex.value = null;
+  }
+};
+
+const handleDrop = (index) => {
+  if (props.disabled || draggedIndex.value === null) return;
+  reorderImages(draggedIndex.value, index);
+  draggedIndex.value = null;
+  dragOverIndex.value = null;
+};
+
+const handleDragEnd = () => {
+  draggedIndex.value = null;
+  dragOverIndex.value = null;
+};
+
 const clearAll = () => {
-  featuredImage.value = null
-  pendingImages.value = []
-}
+  imagesModel.value = [];
+  draggedIndex.value = null;
+  dragOverIndex.value = null;
+};
 
-// Expose clearAll for parent components
 defineExpose({
-  clearAll
-})
+  clearAll,
+});
 </script>
 
 <style scoped>
@@ -358,96 +346,6 @@ defineExpose({
   width: 100%;
 }
 
-/* Featured Image Box */
-.featured-image-upload {
-  max-width: 300px;
-}
-
-.featured-image-box {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border: 2px dashed #000;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  background-color: #fafafa;
-}
-
-.featured-image-box:hover {
-  border-color: #000;
-  background-color: #f3f3f3;
-}
-
-.featured-image-box:focus-visible {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-}
-
-.featured-image-box.has-image {
-  border: none;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.featured-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.image-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.2s;
-  color: white;
-  font-size: 2rem;
-}
-
-.featured-image-box:hover .image-overlay {
-  opacity: 1;
-}
-
-.btn-remove-featured {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  color: #ff4d4f;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
-  opacity: 0;
-  transition: opacity 0.2s;
-  z-index: 10;
-}
-
-.featured-image-box.has-image:hover .btn-remove-featured {
-  opacity: 1;
-}
-
-.featured-icon {
-  font-size: 3rem;
-  color: #000;
-}
-
-/* Product Images Grid */
 .product-images-upload {
   width: 100%;
 }
@@ -473,12 +371,23 @@ defineExpose({
   transition: all 0.2s ease;
   background-color: #fafafa;
   position: relative;
+  overflow: hidden;
 }
 
 .image-upload-box:hover,
 .product-image-box:hover {
   border-color: #000;
   background-color: #f3f3f3;
+}
+
+.product-image-box.is-dragging {
+  opacity: 0.45;
+  transform: scale(0.96);
+}
+
+.product-image-box.is-drop-target {
+  border-color: #198754;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.18);
 }
 
 .image-upload-box:focus-visible {
@@ -498,15 +407,22 @@ defineExpose({
   border-radius: 8px;
 }
 
-/* Image Actions */
+.drag-hint {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.72);
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
 .image-actions {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -534,13 +450,10 @@ defineExpose({
   padding: 0;
 }
 
-.btn-featured {
-  background: rgba(0, 122, 255, 0.8);
-}
-
-.btn-featured:hover {
-  background: rgba(0, 122, 255, 1);
-  transform: scale(1.1);
+.image-actions .btn-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-remove {
@@ -556,14 +469,27 @@ defineExpose({
   opacity: 1;
 }
 
-/* Featured Badge */
 .badge-featured {
   background: #52c41a;
   color: white;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  z-index: 10;
+  z-index: 2;
+}
+
+.image-order-chip {
+  background: rgba(0, 0, 0, 0.72);
+  color: white;
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
 }
 </style>
