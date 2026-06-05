@@ -88,7 +88,7 @@
                 <span class="text-sm sm:text-base md:text-lg font-semibold text-[#1A1919]">
                   Kargo Rp209.500</span
                 >
-                <p class="text-xs sm:text-sm text-[#7B7B7B]">
+                <p class="text-xs sm:text-sm text-[#5f6368]">
                   Estimasi tiba 23 November - 28 November 2025.
                 </p>
               </div>
@@ -129,7 +129,7 @@
                 <span class="text-sm sm:text-base md:text-lg font-semibold text-[#1A1919]"
                   >Toko Rp100.500</span
                 >
-                <p class="text-xs sm:text-sm text-[#7B7B7B]">
+                <p class="text-xs sm:text-sm text-[#5f6368]">
                   Estimasi tiba 23 November - 28 November 2025.
                 </p>
               </div>

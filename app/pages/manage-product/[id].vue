@@ -347,7 +347,31 @@ onMounted(async () => {
 }
 
 .product-detail-page :deep(.text-muted) {
-  color: #000 !important;
+  color: #4f5b66 !important;
+}
+
+.product-detail-page :deep(.badge) {
+  font-weight: 600;
+}
+
+.product-detail-page :deep(.badge.bg-secondary) {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.product-detail-page :deep(.badge.bg-success) {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.product-detail-page :deep(.badge.bg-warning) {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
+.product-detail-page :deep(.badge.bg-info) {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
 }
 
 .action-btn-dark {

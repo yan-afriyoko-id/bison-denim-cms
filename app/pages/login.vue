@@ -481,7 +481,7 @@ p,
   text-align: center;
   margin-top: 30px;
   font-size: 13px;
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .credits a {

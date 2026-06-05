@@ -325,7 +325,7 @@ onMounted(() => {
 .input-group-text {
   background-color: transparent;
   border: 1px solid #dee2e6;
-  color: #6c757d;
+  color: #495057;
 }
 
 .form-control {
@@ -358,13 +358,14 @@ onMounted(() => {
 }
 
 .btn-outline-secondary {
-  color: #6c757d;
+  color: #495057;
   border-color: #6c757d;
 }
 
 .btn-outline-secondary:hover {
   background-color: #6c757d;
   border-color: #6c757d;
+  color: #fff;
 }
 
 .text-primary {
@@ -376,7 +377,7 @@ onMounted(() => {
 }
 
 .text-muted {
-  color: #6c757d !important;
+  color: #4f5b66 !important;
   font-size: 12px;
 }
 
@@ -404,7 +405,7 @@ onMounted(() => {
   text-align: center;
   margin-top: 30px;
   font-size: 13px;
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .credits a {

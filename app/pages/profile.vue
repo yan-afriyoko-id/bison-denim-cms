@@ -542,7 +542,7 @@ const handleDeleteAccount = async () => {
 .pagetitle h1 {
   font-size: 32px;
   font-weight: 700;
-  color: #111111;
+  color: #1f2933;
   margin-bottom: 10px;
 }
 
@@ -619,7 +619,7 @@ const handleDeleteAccount = async () => {
 .profile-name {
   font-size: 22px;
   font-weight: 700;
-  color: #111111;
+  color: #1f2933;
   margin-bottom: 8px;
   margin-top: 15px;
 }
@@ -627,6 +627,16 @@ const handleDeleteAccount = async () => {
 .profile-role {
   font-size: 14px;
   margin-bottom: 12px;
+}
+
+.profile-page :deep(.badge.bg-info) {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
+}
+
+.profile-page :deep(.badge.bg-success) {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
 }
 
 .profile-email {
@@ -648,7 +658,7 @@ const handleDeleteAccount = async () => {
   height: 40px;
   border-radius: 50%;
   background-color: #f3f5f7;
-  color: #111111;
+  color: #374151;
   transition: all 0.3s ease;
   font-size: 16px;
 }
@@ -681,13 +691,13 @@ const handleDeleteAccount = async () => {
 
 .nav-tabs-bordered .nav-link {
   border-bottom: 3px solid transparent;
-  color: #000;
+  color: #4f5b66;
   margin-bottom: -2px;
 }
 
 .nav-tabs-bordered .nav-link.active {
-  border-color: #000;
-  color: #000;
+  border-color: #1f2933;
+  color: #1f2933;
 }
 
 .profile-overview .row {
@@ -696,7 +706,7 @@ const handleDeleteAccount = async () => {
 
 .profile-overview .label {
   font-weight: 600;
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .profile-edit .row {
@@ -705,7 +715,7 @@ const handleDeleteAccount = async () => {
 
 .profile-edit .col-form-label {
   font-weight: 500;
-  color: #111111;
+  color: #374151;
   padding-top: 8px;
 }
 
@@ -719,14 +729,14 @@ const handleDeleteAccount = async () => {
 .profile-edit .form-control:focus,
 .profile-edit .form-select:focus {
   background-color: white;
-  border-color: #000;
-  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+  border-color: #374151;
+  box-shadow: 0 0 0 0.2rem rgba(55, 65, 81, 0.12);
 }
 
 .profile-edit form input[disabled],
 .profile-edit form input:disabled {
   background-color: #f8f9fa;
-  color: #6c757d;
+  color: #4f5b66;
   cursor: not-allowed;
 }
 
@@ -744,7 +754,7 @@ const handleDeleteAccount = async () => {
 .section-title {
   font-size: 16px;
   font-weight: 600;
-  color: #111111;
+  color: #1f2933;
   margin-bottom: 20px;
 }
 
@@ -763,8 +773,8 @@ const handleDeleteAccount = async () => {
 }
 
 .form-control-lg:focus {
-  border-color: #000;
-  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+  border-color: #374151;
+  box-shadow: 0 0 0 0.2rem rgba(55, 65, 81, 0.12);
 }
 
 .btn-lg {
@@ -778,11 +788,13 @@ const handleDeleteAccount = async () => {
 .btn-danger {
   background-color: #dc3545;
   border-color: #dc3545;
+  color: rgba(255, 255, 255, 0.96);
 }
 
 .btn-danger:hover:not(:disabled) {
   background-color: #c82333;
   border-color: #c82333;
+  color: rgba(255, 255, 255, 0.96);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
@@ -794,23 +806,30 @@ const handleDeleteAccount = async () => {
 }
 
 .action-btn-dark {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #000;
-  --bs-btn-border-color: #000;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #1f1f1f;
-  --bs-btn-hover-border-color: #1f1f1f;
+  --bs-btn-color: rgba(255, 255, 255, 0.96);
+  --bs-btn-bg: #1f2933;
+  --bs-btn-border-color: #1f2933;
+  --bs-btn-hover-color: rgba(255, 255, 255, 0.96);
+  --bs-btn-hover-bg: #273444;
+  --bs-btn-hover-border-color: #273444;
   --bs-btn-focus-shadow-rgb: 33, 37, 41;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #000;
-  --bs-btn-active-border-color: #000;
+  --bs-btn-active-color: rgba(255, 255, 255, 0.96);
+  --bs-btn-active-bg: #1f2933;
+  --bs-btn-active-border-color: #1f2933;
 }
 
 .card-title,
 .pagetitle h1,
 .breadcrumb-item.active,
 .profile-page :deep(.text-muted) {
-  color: #000 !important;
+  color: #4f5b66 !important;
+}
+
+.profile-page :deep(.card-title),
+.profile-page :deep(.card-title span),
+.profile-page :deep(.profile-overview .col-lg-9),
+.profile-page :deep(.profile-overview .col-md-8) {
+  color: #1f2933 !important;
 }
 
 /* Alert Styling */
@@ -820,17 +839,17 @@ const handleDeleteAccount = async () => {
 }
 
 .alert-danger {
-  background-color: #f8d7da;
+  background-color: #f6dddf;
   color: #721c24;
 }
 
 .alert-success {
-  background-color: #d4edda;
+  background-color: #dceddf;
   color: #155724;
 }
 
 .alert-warning {
-  background-color: #fff3cd;
+  background-color: #fdf1d3;
   color: #856404;
 }
 
@@ -842,11 +861,11 @@ const handleDeleteAccount = async () => {
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .breadcrumb-item a {
-  color: #111111;
+  color: #374151;
   text-decoration: none;
   transition: color 0.3s ease;
 }

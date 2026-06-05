@@ -111,17 +111,4 @@ defineEmits<{
 </script>
 
 <style scoped>
-.table :deep(.badge),
-.table .badge {
-  color: #fff !important;
-}
-
-.table :deep(.bg-secondary),
-.table :deep(.bg-success),
-.table :deep(.bg-info),
-.table .bg-secondary,
-.table .bg-success,
-.table .bg-info {
-  color: #fff !important;
-}
 </style>

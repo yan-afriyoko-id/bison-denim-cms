@@ -31,7 +31,7 @@
             v-else
             class="w-full h-full flex items-center justify-center bg-gray-100 rounded-sm sm:rounded-xl aspect-[3.75] sm:aspect-[3.75] shadow-sm"
           >
-            <span class="text-gray-400 text-sm sm:text-base md:text-lg">{{
+            <span class="text-gray-600 text-sm sm:text-base md:text-lg">{{
               brand.name
             }}</span>
           </div>

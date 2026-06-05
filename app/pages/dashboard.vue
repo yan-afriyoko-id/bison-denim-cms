@@ -251,7 +251,22 @@ onMounted(() => {
 }
 
 .dashboard-page :deep(.badge) {
-  color: #fff !important;
+  font-weight: 600;
+}
+
+.dashboard-page :deep(.badge.bg-success) {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.dashboard-page :deep(.badge.bg-warning) {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
+.dashboard-page :deep(.badge.bg-secondary) {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
 }
 
 .activity-item {

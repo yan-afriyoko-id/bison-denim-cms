@@ -1815,7 +1815,6 @@ onMounted(async () => {
 .settings-page :deep(.breadcrumb-item a),
 .settings-page :deep(.card-title),
 .settings-page :deep(.form-label),
-.settings-page :deep(.form-text),
 .settings-page :deep(.table),
 .settings-page :deep(.table th),
 .settings-page :deep(.table td),
@@ -1823,9 +1822,33 @@ onMounted(async () => {
   color: #000 !important;
 }
 
-.settings-page :deep(.table .badge),
-.settings-page :deep(.table .badge span) {
-  color: #fff !important;
+.settings-page :deep(.form-text),
+.settings-page :deep(.text-muted) {
+  color: #4f5b66 !important;
+}
+
+.settings-page :deep(.table .badge) {
+  font-weight: 600;
+}
+
+.settings-page :deep(.table .badge.bg-secondary) {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.settings-page :deep(.table .badge.bg-success) {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.settings-page :deep(.table .badge.bg-info) {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
+}
+
+.settings-page :deep(.table .badge.bg-warning) {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
 }
 
 .nav-tabs .nav-link {

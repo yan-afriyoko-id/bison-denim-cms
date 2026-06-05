@@ -159,6 +159,14 @@ defineEmits<{
 </script>
 
 <style scoped>
+.alert-light {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+  border-color: #d3d7dd !important;
+}
+</style>
+
+<style scoped>
 .payment-method-card {
   border: 1px solid #e9ecef;
   box-shadow: none;

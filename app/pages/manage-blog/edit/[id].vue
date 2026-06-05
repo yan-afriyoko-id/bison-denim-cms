@@ -788,6 +788,20 @@ onUnmounted(() => {
   padding-bottom: 1.25rem;
 }
 
+.badge {
+  font-weight: 600;
+}
+
+.badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.badge.bg-warning {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
 .seo-meta-panel {
   background: #fafafa;
   border-color: #e9ecef !important;

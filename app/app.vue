@@ -12,6 +12,11 @@
 <style>
 :root {
   --app-text-black: #111111;
+  --app-text-muted: #4f5b66;
+  --app-light-surface: #f3f4f6;
+  --app-light-border: #d3d7dd;
+  --app-warning-text: #3b2f00;
+  --app-info-text: #083344;
 }
 
 .text-primary,
@@ -35,19 +40,138 @@ a.text-primary:focus,
 .btn-outline-primary {
   color: #b7791f !important;
   border-color: #d4a017 !important;
+  background-color: transparent !important;
 }
 
 .btn-outline-primary i {
-  color: inherit !important;
+  color: #b7791f !important;
+}
+
+.text-muted,
+.text-body-secondary,
+small.text-muted,
+.form-text,
+.breadcrumb-item,
+.breadcrumb-item a {
+  color: var(--app-text-muted) !important;
+}
+
+.bg-light,
+.card-header.bg-light,
+.form-control.bg-light,
+.alert-light,
+.table-light {
+  background-color: var(--app-light-surface) !important;
+  color: var(--app-text-black) !important;
+}
+
+.bg-light,
+.card-header.bg-light,
+.form-control.bg-light,
+.alert-light {
+  border-color: var(--app-light-border) !important;
+}
+
+.badge.bg-warning,
+.badge.text-bg-warning,
+.bg-warning.badge {
+  color: var(--app-warning-text) !important;
+}
+
+.badge.bg-info,
+.badge.text-bg-info,
+.bg-info.badge {
+  color: var(--app-info-text) !important;
 }
 
 .btn-outline-primary:hover,
 .btn-outline-primary:focus,
 .btn-outline-primary:active {
-  color: #ffffff !important;
-  background-color: #d4a017 !important;
+  color: #b7791f !important;
+  background-color: rgba(212, 160, 23, 0.16) !important;
   border-color: #d4a017 !important;
   box-shadow: none !important;
+}
+
+.btn-outline-primary:hover i,
+.btn-outline-primary:focus i,
+.btn-outline-primary:active i {
+  color: #b7791f !important;
+}
+
+.btn-outline-success {
+  color: #198754 !important;
+  border-color: #198754 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-success i {
+  color: #198754 !important;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus,
+.btn-outline-success:active {
+  color: #198754 !important;
+  background-color: rgba(25, 135, 84, 0.14) !important;
+  border-color: #198754 !important;
+  box-shadow: none !important;
+}
+
+.btn-outline-success:hover i,
+.btn-outline-success:focus i,
+.btn-outline-success:active i {
+  color: #198754 !important;
+}
+
+.btn-outline-info {
+  color: #0c7489 !important;
+  border-color: #0ea5b7 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-info i {
+  color: #0c7489 !important;
+}
+
+.btn-outline-info:hover,
+.btn-outline-info:focus,
+.btn-outline-info:active {
+  color: #0c7489 !important;
+  background-color: rgba(14, 165, 183, 0.14) !important;
+  border-color: #0ea5b7 !important;
+  box-shadow: none !important;
+}
+
+.btn-outline-info:hover i,
+.btn-outline-info:focus i,
+.btn-outline-info:active i {
+  color: #0c7489 !important;
+}
+
+.btn-outline-danger {
+  color: #c2410c !important;
+  border-color: #dc3545 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-danger i {
+  color: #c2410c !important;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus,
+.btn-outline-danger:active {
+  color: #c2410c !important;
+  background-color: rgba(220, 53, 69, 0.14) !important;
+  border-color: #dc3545 !important;
+  box-shadow: none !important;
+}
+
+.btn-outline-danger:hover i,
+.btn-outline-danger:focus i,
+.btn-outline-danger:active i {
+  color: #c2410c !important;
 }
 
 .btn.action-btn-dark,

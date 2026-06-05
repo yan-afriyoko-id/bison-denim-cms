@@ -282,3 +282,19 @@ const confirmDelete = async () => {
   )?.hide();
 };
 </script>
+
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.table .badge.bg-secondary {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+</style>

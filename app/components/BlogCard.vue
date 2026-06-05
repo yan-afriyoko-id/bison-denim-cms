@@ -29,7 +29,7 @@
       >
         {{ getTitle(blog) }}
       </h3>
-      <p class="text-[#7B7B7B]">
+      <p class="text-[#5f6368]">
         {{ formatDate(blog?.created_at) }}
       </p>
     </div>

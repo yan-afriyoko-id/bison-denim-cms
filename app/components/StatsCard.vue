@@ -112,7 +112,7 @@ const trendIcon = computed(() => {
 }
 
 .text-muted {
-  color: #a8adb5 !important;
+  color: #5f6b7a !important;
   font-size: 0.875rem;
 }
 </style>

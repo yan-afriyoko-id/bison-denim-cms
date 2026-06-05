@@ -6,7 +6,7 @@
       </h2>
 
       <!-- Disclaimer -->
-      <p class="text-sm sm:text-base md:text-lg text-[#7B7B7B] mb-6 sm:mb-8 md:mb-10">
+      <p class="text-sm sm:text-base md:text-lg text-[#5f6368] mb-6 sm:mb-8 md:mb-10">
         *Perbedaan harga mungkin terjadi, harga terbaru tertera pada halaman
         detail produk
       </p>

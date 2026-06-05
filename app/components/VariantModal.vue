@@ -1300,8 +1300,9 @@ onMounted(() => {
 }
 
 .btn-outline-primary {
-  color: #000 !important;
-  border-color: #000 !important;
+  color: #b7791f !important;
+  border-color: #d4a017 !important;
+  background-color: transparent !important;
 }
 
 .modal-content .btn-primary,
@@ -1348,8 +1349,8 @@ onMounted(() => {
 .modal-content .btn-outline-primary:hover,
 .modal-content .btn-outline-primary:focus,
 .modal-content .btn-outline-primary:active {
-  color: #fff !important;
-  background-color: #d4a017 !important;
+  color: #b7791f !important;
+  background-color: rgba(212, 160, 23, 0.16) !important;
   border-color: #d4a017 !important;
 }
 

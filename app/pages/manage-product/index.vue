@@ -595,3 +595,34 @@ onMounted(async () => {
 })
 </script>
 
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-secondary {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.table .badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.table .badge.bg-warning {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
+.table .badge.bg-info {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
+}
+
+.table .badge.bg-primary {
+  background-color: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+</style>
+

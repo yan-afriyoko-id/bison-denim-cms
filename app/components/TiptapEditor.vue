@@ -479,6 +479,7 @@ onBeforeUnmount(() => {
 .editor-toolbar {
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
+  background-color: #f3f4f6 !important;
 }
 
 .editor-toolbar .btn.active {
@@ -503,7 +504,7 @@ onBeforeUnmount(() => {
 }
 
 .editor-content :deep(.ProseMirror p.is-editor-empty:first-child::before) {
-  color: #adb5bd;
+  color: #6b7280;
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -600,7 +601,7 @@ onBeforeUnmount(() => {
   padding-left: 1rem;
   margin: 1rem 0;
   font-style: italic;
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .editor-content :deep(.ProseMirror code) {

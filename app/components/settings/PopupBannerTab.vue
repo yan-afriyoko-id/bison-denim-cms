@@ -112,3 +112,14 @@ defineEmits<{
   "delete-banner": [banner: PopupBanner];
 }>();
 </script>
+
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-secondary {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+</style>

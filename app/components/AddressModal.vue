@@ -55,7 +55,7 @@
                 'px-3 sm:px-4 py-1.5 sm:py-2 border rounded-lg font-medium text-sm sm:text-base md:text-lg transition hover:cursor-pointer',
                 form.label === label
                   ? 'border-[#E9322B] text-[#E9322B] bg-[#E9322B14]'
-                  : 'border-[#E6E9F0] text-[#808080] hover:border-[#E9322B] hover:bg-[#E9322B14]',
+                  : 'border-[#E6E9F0] text-[#5f6368] hover:border-[#E9322B] hover:bg-[#E9322B14]',
               ]"
             >
               {{ label }}
@@ -127,7 +127,7 @@
           <div class="flex items-center justify-center bg-[#F8F8F8] border border-dashed border-[#E6E9F0] rounded-md py-5 sm:py-6 md:py-7">
             <button
               type="button"
-              class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border border-[#E6E9F0] rounded-md text-[#ACACAC] hover:bg-[#F8F8F8] transition hover:cursor-pointer bg-white text-xs sm:text-sm md:text-[15px]"
+              class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border border-[#D5DAE3] rounded-md text-[#5f6368] hover:bg-[#F8F8F8] transition hover:cursor-pointer bg-white text-xs sm:text-sm md:text-[15px]"
             >
               <div class="w-4 h-4 sm:w-[18px] sm:h-[18px] shrink-0">
                 <svg
@@ -137,8 +137,8 @@
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <g clip-path="url(#clip0_703_8334)">
-                    <path d="M9 9.75C11.4853 9.75 13.5 7.73528 13.5 5.25C13.5 2.76472 11.4853 0.75 9 0.75C6.51472 0.75 4.5 2.76472 4.5 5.25C4.5 7.73528 6.51472 9.75 9 9.75Z" stroke="#ACACAC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 9.75V17.25" stroke="#ACACAC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9.75C11.4853 9.75 13.5 7.73528 13.5 5.25C13.5 2.76472 11.4853 0.75 9 0.75C6.51472 0.75 4.5 2.76472 4.5 5.25C4.5 7.73528 6.51472 9.75 9 9.75Z" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9.75V17.25" stroke="#5f6368" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </g>
                   <defs>
                     <clipPath id="clip0_703_8334">

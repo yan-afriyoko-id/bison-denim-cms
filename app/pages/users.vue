@@ -220,3 +220,29 @@ onMounted(async () => {
   await loadUsers()
 })
 </script>
+
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-secondary {
+  color: rgba(255, 255, 255, 0.96) !important;
+}
+
+.table .badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.table .badge.bg-warning {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
+.table .badge.bg-primary {
+  background-color: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+
+</style>

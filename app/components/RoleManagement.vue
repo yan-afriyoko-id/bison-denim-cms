@@ -52,14 +52,14 @@
             </td>
             <td>
               <button
-                class="btn btn-sm btn-warning me-2"
+                class="btn btn-sm btn-outline-primary me-2"
                 @click="openEditModal(role)"
                 :disabled="rolesPermissions.isLoading.value"
               >
                 <i class="bi bi-pencil"></i>
               </button>
               <button
-                class="btn btn-sm btn-danger"
+                class="btn btn-sm btn-outline-danger"
                 @click="confirmDelete(role)"
                 :disabled="rolesPermissions.isLoading.value"
               >
@@ -355,6 +355,11 @@ const performDelete = async () => {
 .badge {
   font-size: 0.8rem;
   padding: 0.4rem 0.6rem;
+}
+
+.role-management .badge.bg-info {
+  color: #083344 !important;
+  background-color: #cff4fc !important;
 }
 
 .btn-sm {

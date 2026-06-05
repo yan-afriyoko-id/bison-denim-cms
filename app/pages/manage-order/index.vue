@@ -109,7 +109,7 @@
                     <button
                       v-if="order.status === 'PACKING'"
                       @click="openUpdateStatusModal(order)"
-                      class="btn btn-sm btn-primary"
+                      class="btn btn-sm btn-outline-info"
                       title="Update Status ke Delivering"
                     >
                       <i class="bi bi-truck"></i>
@@ -117,7 +117,7 @@
                     <button
                       v-if="order.status === 'DELIVERING'"
                       @click="openUpdateStatusModal(order)"
-                      class="btn btn-sm btn-success"
+                      class="btn btn-sm btn-outline-success"
                       title="Update Status ke Delivered"
                     >
                       <i class="bi bi-check-circle"></i>
@@ -551,3 +551,39 @@ onMounted(() => {
   loadOrders();
 });
 </script>
+
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-secondary {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.table .badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.table .badge.bg-warning {
+  background-color: #fdf1d3 !important;
+  color: #8a5a00 !important;
+}
+
+.table .badge.bg-info {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
+}
+
+.table .badge.bg-primary {
+  background-color: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+
+.table .badge.bg-danger {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+</style>

@@ -2940,7 +2940,7 @@ onMounted(async () => {
 }
 
 .create-product-page :deep(.text-muted) {
-  color: #000 !important;
+  color: #4f5b66 !important;
 }
 
 .nav-tabs .nav-link {
@@ -2959,6 +2959,30 @@ onMounted(async () => {
   border-bottom-color: #000;
   color: #000;
   font-weight: 500;
+}
+
+.create-product-page :deep(.badge) {
+  font-weight: 600;
+}
+
+.create-product-page :deep(.badge.bg-secondary) {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+
+.create-product-page :deep(.badge.bg-success) {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.create-product-page :deep(.badge.bg-primary) {
+  background-color: #dbeafe !important;
+  color: #1d4ed8 !important;
+}
+
+.create-product-page :deep(.alert-light) {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
 }
 
 .card {
@@ -3029,7 +3053,7 @@ onMounted(async () => {
 
 .category-count-pill {
   padding: 0.2rem 0.45rem;
-  color: #6c757d;
+  color: #4f5b66;
   background: #f3f4f6;
 }
 
@@ -3060,7 +3084,7 @@ onMounted(async () => {
 .category-flow-step {
   display: inline-flex;
   align-items: center;
-  color: #6c757d;
+  color: #4f5b66;
   font-size: 0.875rem;
   font-weight: 600;
   flex-shrink: 0;
@@ -3098,12 +3122,13 @@ onMounted(async () => {
 .btn-outline-primary {
   --bs-btn-color: #b7791f;
   --bs-btn-border-color: #d4a017;
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #d4a017;
+  --bs-btn-bg: transparent;
+  --bs-btn-hover-color: #b7791f;
+  --bs-btn-hover-bg: rgba(212, 160, 23, 0.16);
   --bs-btn-hover-border-color: #d4a017;
   --bs-btn-focus-shadow-rgb: 212, 160, 23;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #c69214;
+  --bs-btn-active-color: #b7791f;
+  --bs-btn-active-bg: rgba(198, 146, 20, 0.2);
   --bs-btn-active-border-color: #c69214;
   --bs-btn-disabled-color: #c8a96a;
   --bs-btn-disabled-border-color: #e6d3a1;

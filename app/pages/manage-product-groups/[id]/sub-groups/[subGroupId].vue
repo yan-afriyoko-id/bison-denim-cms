@@ -52,7 +52,7 @@
                 <td>Rp {{ formatPrice(p.base_price) }}</td>
                 <td class="text-end">
                   <button
-                    class="btn btn-sm btn-danger"
+                    class="btn btn-sm btn-outline-danger"
                     :disabled="removing === p.id"
                     @click="handleRemove(p.id)"
                   >
@@ -264,3 +264,20 @@ const handleRemove = async (productId: number) => {
 // ================= LIFECYCLE =================
 onMounted(fetchData);
 </script>
+
+<style scoped>
+.card-header {
+  background-color: #f8fafc;
+}
+
+.bg-light {
+  background-color: #eef2f7 !important;
+}
+
+.text-muted.bg-light,
+.bg-light.text-muted,
+.bg-light .text-muted,
+.border.rounded.mt-1.bg-white .text-muted {
+  color: #4f5b66 !important;
+}
+</style>

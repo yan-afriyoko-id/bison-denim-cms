@@ -69,19 +69,19 @@
                 >
                   <path
                     d="M7 4.37521C7.36003 4.37521 7.69954 4.44357 8.01855 4.58029C8.33757 4.71701 8.61556 4.90386 8.85254 5.14084C9.08952 5.37782 9.27865 5.65809 9.41992 5.98166C9.5612 6.30523 9.62956 6.64474 9.625 7.00021C9.625 7.3648 9.55664 7.70432 9.41992 8.01877C9.2832 8.33322 9.09635 8.61122 8.85938 8.85275C8.6224 9.09429 8.34212 9.28342 8.01855 9.42014C7.69499 9.55685 7.35547 9.62521 7 9.62521C6.63542 9.62521 6.2959 9.55685 5.98145 9.42014C5.66699 9.28342 5.389 9.09657 5.14746 8.85959C4.90592 8.62261 4.7168 8.34461 4.58008 8.0256C4.44336 7.70659 4.375 7.3648 4.375 7.00021C4.375 6.64019 4.44336 6.30067 4.58008 5.98166C4.7168 5.66265 4.90365 5.38465 5.14062 5.14767C5.3776 4.9107 5.6556 4.72157 5.97461 4.58029C6.29362 4.43902 6.63542 4.37066 7 4.37521Z"
-                    fill="#ACACAC"
+                    fill="#5f6368"
                   />
                 </svg>
               </div>
-              <p class="text-xs sm:text-sm text-[#7B7B7B]">{{ address.phone }}</p>
+              <p class="text-xs sm:text-sm text-[#5f6368]">{{ address.phone }}</p>
             </div>
-            <p class="text-xs sm:text-sm text-[#7B7B7B] mb-4 sm:mb-5">{{ address.fullAddress }}</p>
+            <p class="text-xs sm:text-sm text-[#5f6368] mb-4 sm:mb-5">{{ address.fullAddress }}</p>
           </div>
           <div class="pt-4 sm:pt-5 border-t border-[#E6E9F0]">
             <div class="flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 md:pb-5">
               <button
                 @click.stop="$emit('edit', index)"
-                class="text-xs sm:text-sm md:text-base text-[#7B7B7B] bg-[#F8F8F8] px-3 sm:px-4 py-1.5 sm:py-2 rounded-md font-medium hover:underline hover:cursor-pointer"
+                class="text-xs sm:text-sm md:text-base text-[#5f6368] bg-[#F8F8F8] px-3 sm:px-4 py-1.5 sm:py-2 rounded-md font-medium hover:underline hover:cursor-pointer"
               >
                 Ubah
               </button>
@@ -100,7 +100,7 @@
       <div class="flex gap-2 sm:gap-3 pt-4 sm:pt-5 border-t border-[#E6E9F0]">
         <button
           @click="$emit('add')"
-          class="flex-1 bg-[#F8F8F8] text-[#7B7B7B] py-2 sm:py-2.5 rounded-lg font-medium text-sm sm:text-base md:text-lg hover:bg-[#E6E9F0] transition hover:cursor-pointer"
+          class="flex-1 bg-[#F8F8F8] text-[#5f6368] py-2 sm:py-2.5 rounded-lg font-medium text-sm sm:text-base md:text-lg hover:bg-[#E6E9F0] transition hover:cursor-pointer"
         >
           +Alamat
         </button>

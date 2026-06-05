@@ -15,7 +15,7 @@
             'px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition hover:cursor-pointer',
             activeFilter === filter.id
               ? 'bg-[#E9322B] text-white'
-              : 'bg-[#F8F8F8] text-[#7B7B7B] hover:bg-[#7B7B7B]/9',
+              : 'bg-[#F8F8F8] text-[#5f6368] hover:bg-[#7B7B7B]/9',
           ]"
         >
           {{ filter.label }}

@@ -46,14 +46,14 @@
             </td>
             <td>
               <button
-                class="btn btn-sm btn-warning me-2"
+                class="btn btn-sm btn-outline-primary me-2"
                 @click="openEditModal(permission)"
                 :disabled="rolesPermissions.isLoading.value"
               >
                 <i class="bi bi-pencil"></i>
               </button>
               <button
-                class="btn btn-sm btn-danger"
+                class="btn btn-sm btn-outline-danger"
                 @click="confirmDelete(permission)"
                 :disabled="rolesPermissions.isLoading.value"
               >

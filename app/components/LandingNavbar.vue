@@ -125,7 +125,7 @@ const handleLogout = async () => {
 }
 
 .nav-link {
-  color: #6c757d !important;
+  color: #495057 !important;
   font-weight: 500;
   transition: color 0.3s;
   margin: 0 10px;
@@ -151,7 +151,7 @@ const handleLogout = async () => {
 }
 
 .dropdown-item {
-  color: #6c757d;
+  color: #495057;
   transition: background-color 0.2s;
 }
 

@@ -201,3 +201,24 @@ const handleDelete = async (id: number) => {
 
 onMounted(fetchGroups);
 </script>
+
+<style scoped>
+.table .badge {
+  font-weight: 600;
+}
+
+.table .badge.bg-info {
+  background-color: #d8f0f7 !important;
+  color: #164e63 !important;
+}
+
+.table .badge.bg-success {
+  background-color: #dff3e7 !important;
+  color: #166534 !important;
+}
+
+.table .badge.bg-secondary {
+  background-color: #e5e7eb !important;
+  color: #374151 !important;
+}
+</style>

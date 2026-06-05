@@ -184,7 +184,7 @@ const handleResend = async () => {
 .input-group-text {
   background-color: transparent;
   border: 1px solid #dee2e6;
-  color: #6c757d;
+  color: #495057;
 }
 
 .form-control {
@@ -228,7 +228,7 @@ const handleResend = async () => {
   text-align: center;
   margin-top: 30px;
   font-size: 13px;
-  color: #6c757d;
+  color: #4f5b66;
 }
 
 .credits a {
