@@ -3121,15 +3121,15 @@ onMounted(async () => {
 
 .btn-outline-primary {
   --bs-btn-color: #b7791f;
-  --bs-btn-border-color: #d4a017;
-  --bs-btn-bg: transparent;
+  --bs-btn-border-color: rgba(212, 160, 23, 0.72);
+  --bs-btn-bg: rgba(212, 160, 23, 0.03);
   --bs-btn-hover-color: #b7791f;
-  --bs-btn-hover-bg: rgba(212, 160, 23, 0.16);
-  --bs-btn-hover-border-color: #d4a017;
+  --bs-btn-hover-bg: rgba(212, 160, 23, 0.1);
+  --bs-btn-hover-border-color: rgba(212, 160, 23, 0.78);
   --bs-btn-focus-shadow-rgb: 212, 160, 23;
   --bs-btn-active-color: #b7791f;
-  --bs-btn-active-bg: rgba(198, 146, 20, 0.2);
-  --bs-btn-active-border-color: #c69214;
+  --bs-btn-active-bg: rgba(198, 146, 20, 0.12);
+  --bs-btn-active-border-color: rgba(198, 146, 20, 0.8);
   --bs-btn-disabled-color: #c8a96a;
   --bs-btn-disabled-border-color: #e6d3a1;
 }

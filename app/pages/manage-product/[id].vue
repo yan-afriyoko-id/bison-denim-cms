@@ -376,15 +376,15 @@ onMounted(async () => {
 
 .action-btn-dark {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #000;
-  --bs-btn-border-color: #000;
+  --bs-btn-bg: var(--app-action-dark-bg);
+  --bs-btn-border-color: var(--app-action-dark-bg);
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #1f1f1f;
-  --bs-btn-hover-border-color: #1f1f1f;
+  --bs-btn-hover-bg: var(--app-action-dark-hover-bg);
+  --bs-btn-hover-border-color: var(--app-action-dark-hover-bg);
   --bs-btn-focus-shadow-rgb: 33, 37, 41;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #000;
-  --bs-btn-active-border-color: #000;
+  --bs-btn-active-bg: var(--app-action-dark-bg);
+  --bs-btn-active-border-color: var(--app-action-dark-bg);
 }
 
 .back-nav-btn {

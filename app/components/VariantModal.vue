@@ -1301,8 +1301,8 @@ onMounted(() => {
 
 .btn-outline-primary {
   color: #b7791f !important;
-  border-color: #d4a017 !important;
-  background-color: transparent !important;
+  border-color: rgba(212, 160, 23, 0.72) !important;
+  background-color: rgba(212, 160, 23, 0.03) !important;
 }
 
 .modal-content .btn-primary,
@@ -1317,13 +1317,13 @@ onMounted(() => {
 .modal-content .btn-outline-primary {
   color: #b7791f !important;
   background-color: #fff !important;
-  border-color: #d4a017 !important;
+  border-color: rgba(212, 160, 23, 0.72) !important;
 }
 
 .modal-content .btn-primary.action-btn-dark {
   color: #fff !important;
-  background-color: #000 !important;
-  border-color: #000 !important;
+  background-color: var(--app-action-dark-bg) !important;
+  border-color: var(--app-action-dark-bg) !important;
 }
 
 .modal-content .btn-primary:hover,
@@ -1350,16 +1350,16 @@ onMounted(() => {
 .modal-content .btn-outline-primary:focus,
 .modal-content .btn-outline-primary:active {
   color: #b7791f !important;
-  background-color: rgba(212, 160, 23, 0.16) !important;
-  border-color: #d4a017 !important;
+  background-color: rgba(212, 160, 23, 0.1) !important;
+  border-color: rgba(212, 160, 23, 0.78) !important;
 }
 
 .modal-content .btn-primary.action-btn-dark:hover,
 .modal-content .btn-primary.action-btn-dark:focus,
 .modal-content .btn-primary.action-btn-dark:active {
   color: #fff !important;
-  background-color: #1f1f1f !important;
-  border-color: #1f1f1f !important;
+  background-color: var(--app-action-dark-hover-bg) !important;
+  border-color: var(--app-action-dark-hover-bg) !important;
 }
 
 .modal-content .btn-primary:disabled,
@@ -1379,8 +1379,8 @@ onMounted(() => {
 
 .modal-content .btn-primary.action-btn-dark:disabled {
   color: #fff !important;
-  background-color: #4b4b4b !important;
-  border-color: #4b4b4b !important;
+  background-color: var(--app-action-dark-disabled-bg) !important;
+  border-color: var(--app-action-dark-disabled-bg) !important;
 }
 
 .stock-summary-card {
