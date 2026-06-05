@@ -1184,6 +1184,13 @@ const togglePaymentMethod = (method: PaymentMethod) => {
   const targetKey = `${method}_is_active`;
   const nextValue = !formData.value[targetKey];
 
+  if (nextValue) {
+    paymentMethods.forEach((paymentMethod) => {
+      formData.value[`${paymentMethod}_is_active`] = paymentMethod === method;
+    });
+    return;
+  }
+
   if (!nextValue) {
     const hasAnotherActiveMethod = paymentMethods.some(
       (paymentMethod) =>

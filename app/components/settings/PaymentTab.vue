@@ -8,8 +8,8 @@
 
     <form @submit.prevent="$emit('save-settings', 'payment')">
       <div class="alert alert-light border mt-4 mb-4" role="alert">
-        Customers can pay using Midtrans and Xendit. You can disable one of
-        them, but at least one method must remain active.
+        Customers can pay using Midtrans or Xendit. Only one payment method
+        can be active at a time, and at least one method must remain active.
       </div>
 
       <div class="row g-4">
@@ -30,6 +30,7 @@
                     type="checkbox"
                     role="switch"
                     :checked="formData.midtrans_is_active"
+                    :disabled="isMidtransLastActive"
                     @change="$emit('toggle-method', 'midtrans')"
                   />
                   <label class="form-check-label" for="midtrans-active">
@@ -91,6 +92,7 @@
                     type="checkbox"
                     role="switch"
                     :checked="formData.xendit_is_active"
+                    :disabled="isXenditLastActive"
                     @change="$emit('toggle-method', 'xendit')"
                   />
                   <label class="form-check-label" for="xendit-active">
@@ -137,7 +139,11 @@
       </div>
 
       <div class="d-flex gap-2 mt-4">
-        <button type="submit" class="btn btn-primary" :disabled="isLoading">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          :disabled="isLoading || !hasActivePaymentMethod"
+        >
           {{ isLoading ? "Saving..." : "Save" }}
         </button>
       </div>
@@ -146,7 +152,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
   formData: any;
   isLoading: boolean;
   isActive?: boolean;
@@ -156,6 +164,24 @@ defineEmits<{
   "save-settings": [category: string];
   "toggle-method": [method: "midtrans" | "xendit"];
 }>();
+
+const hasActivePaymentMethod = computed(() => {
+  return Boolean(
+    props.formData.midtrans_is_active || props.formData.xendit_is_active,
+  );
+});
+
+const isMidtransLastActive = computed(() => {
+  return Boolean(
+    props.formData.midtrans_is_active && !props.formData.xendit_is_active,
+  );
+});
+
+const isXenditLastActive = computed(() => {
+  return Boolean(
+    props.formData.xendit_is_active && !props.formData.midtrans_is_active,
+  );
+});
 </script>
 
 <style scoped>
@@ -175,5 +201,15 @@ defineEmits<{
 .payment-method-card .card-body {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
+}
+
+.form-check-input:not(:disabled),
+.form-check-label {
+  cursor: pointer;
+}
+
+.form-check-input:disabled,
+.form-check-label:has(+ .form-check-input:disabled) {
+  cursor: not-allowed;
 }
 </style>
