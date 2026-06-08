@@ -1353,6 +1353,7 @@ const {
   getVariantStoreStocks,
   createOrUpdateVariantStoreStock,
   deleteVariantStoreStock,
+  deleteProductVariant,
 } = useProductRelationsApi();
 const { getAllStores } = useStoreApi();
 const router = useRouter();
@@ -1412,6 +1413,7 @@ const uploadingImages = ref(false);
 // Variants
 const variants = ref<
   Array<{
+    id?: number;
     attribute_value_ids: number[];
     variant_name?: string;
     sku?: string;
@@ -2259,7 +2261,16 @@ const editVariant = async (index: number) => {
   }
 };
 
-const removeVariant = (index: number) => {
+const removeVariant = async (index: number) => {
+  const variant = variants.value[index];
+  if (variant?.id) {
+    if (!confirm("Are you sure you want to delete this variant?")) return;
+    const { error } = await deleteProductVariant(variant.id);
+    if (error) {
+      toast.error(error.message || "Failed to delete variant");
+      return;
+    }
+  }
   variants.value.splice(index, 1);
 };
 
@@ -2866,12 +2877,13 @@ const handleCreateProduct = async () => {
           });
 
           // Create store stocks if variant has store stocks
+          const newVariantId = variantResponse.data?.data?.variant?.id ?? variantResponse.data?.data?.id;
           if (
             variant.store_stocks &&
             variant.store_stocks.length > 0 &&
-            variantResponse.data?.data?.variant?.id
+            newVariantId
           ) {
-            const variantId = variantResponse.data.data.variant.id;
+            const variantId = newVariantId;
             for (const storeStock of variant.store_stocks) {
               try {
                 await createOrUpdateVariantStoreStock(variantId, {

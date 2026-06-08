@@ -1093,6 +1093,7 @@
       :editing-variant-index="editingVariantIndex"
       :available-attributes="availableAttributes"
       :product-slug="product?.slug"
+      :api-errors="variantApiErrors"
       @save="handleSaveVariant"
       @cancel="handleCancelVariant"
       @update:variant-form="variantForm = $event"
@@ -1749,6 +1750,7 @@ const loadingVariants = ref(false);
 const editingVariantIndex = ref<number | null>(null);
 const deletingVariantId = ref<number | null>(null);
 const savingVariant = ref(false);
+const variantApiErrors = ref<Record<string, string[]>>({});
 
 const variantForm = ref({
   selectedAttributeValues: {} as Record<number, number>, // attribute_id -> attribute_value_id
@@ -1972,7 +1974,11 @@ const loadVariants = async () => {
       console.error("Failed to load variants:", error);
       variants.value = [];
     } else {
-      const variantsArray = Array.isArray(data.data) ? data.data : [];
+      const variantsArray = Array.isArray(data.data?.variants)
+        ? data.data.variants
+        : Array.isArray(data.data)
+          ? data.data
+          : [];
 
       variants.value = variantsArray.map((variant: any) => {
         // Extract attribute_value_ids from options array if attribute_value_ids is not directly available
@@ -2727,13 +2733,7 @@ const updateVariantName = () => {
   }
   variantForm.value.attribute_value_ids = selectedValueIds;
 
-  // Generate SKU automatically if empty or if this is a new variant
-  // Or regenerate when editing to match attribute selection
-  if (!variantForm.value.sku || editingVariantIndex.value === null) {
-    variantForm.value.sku = generateSKU();
-  } else {
-    // When editing, regenerate SKU based on current attribute selection
-    // This ensures SKU matches the attribute combination
+  if (editingVariantIndex.value === null) {
     variantForm.value.sku = generateSKU();
   }
 };
@@ -2774,9 +2774,21 @@ const generateSKU = () => {
     return `${productPrefix}-${timestamp}`;
   }
 
-  // Combine product prefix with attribute value slugs (sorted)
+  // Combine product prefix with attribute value slugs
   const attrSuffix = attrValueSlugs.join("-");
-  return `${productPrefix}-${attrSuffix}`;
+  const baseSku = `${productPrefix}-${attrSuffix}`;
+
+  // Ensure uniqueness against existing variants (skip the one being edited)
+  const existingSKUs = new Set(
+    variants.value
+      .filter((_, i) => i !== editingVariantIndex.value)
+      .map((v) => v.sku)
+      .filter(Boolean),
+  );
+  if (!existingSKUs.has(baseSku)) return baseSku;
+  let counter = 2;
+  while (existingSKUs.has(`${baseSku}-${counter}`)) counter++;
+  return `${baseSku}-${counter}`;
 };
 
 const handleSaveVariant = async (variantData: any) => {
@@ -2904,10 +2916,12 @@ const saveVariant = async () => {
           variantData,
         );
         if (error) {
+          variantApiErrors.value = (error as any).errors ?? {};
           toast.error(error.message || "Failed to update variant");
           savingVariant.value = false;
           return;
         }
+        variantApiErrors.value = {};
 
         // Save store stocks
         if (variantStoreStocks.value.length > 0) {
@@ -2937,12 +2951,14 @@ const saveVariant = async () => {
       // Create new variant
       const { data, error } = await createProductVariant(variantData);
       if (error) {
+        variantApiErrors.value = (error as any).errors ?? {};
         toast.error(error.message || "Failed to create variant");
         savingVariant.value = false;
         return;
       }
+      variantApiErrors.value = {};
 
-      const newVariantId = data?.data?.variant?.id;
+      const newVariantId = data?.data?.variant?.id ?? data?.data?.id;
       if (newVariantId) {
         // Save store stocks
         if (variantStoreStocks.value.length > 0) {
@@ -3149,6 +3165,7 @@ const handleDeleteVariant = async (
 };
 
 const handleCancelVariant = () => {
+  variantApiErrors.value = {};
   editingVariantIndex.value = null;
   variantForm.value = {
     selectedAttributeValues: {},
@@ -4220,6 +4237,7 @@ useHead({
 onMounted(async () => {
   await loadProduct();
   await Promise.all([
+    loadVariants(),
     loadAvailableAttributes(),
     loadProductAttributes(),
     loadAvailableCategories(),

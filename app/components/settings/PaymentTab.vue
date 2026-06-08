@@ -8,8 +8,7 @@
 
     <form @submit.prevent="$emit('save-settings', 'payment')">
       <div class="alert alert-light border mt-4 mb-4" role="alert">
-        Customers can pay using Midtrans or Xendit. Only one payment method
-        can be active at a time, and at least one method must remain active.
+        Customers can pay using Midtrans or Xendit. At least one payment method must remain active.
       </div>
 
       <div class="row g-4">

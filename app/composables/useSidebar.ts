@@ -47,8 +47,14 @@ export const useSidebar = () => {
   if (import.meta.client) {
     watch(isOpen, syncBodyClass, { immediate: true })
 
-    // Handle window resize for responsive behavior
+    let lastIsDesktop = window.innerWidth >= desktopBreakpoint
+
     const handleResize = () => {
+      const nowIsDesktop = window.innerWidth >= desktopBreakpoint
+      if (nowIsDesktop !== lastIsDesktop) {
+        lastIsDesktop = nowIsDesktop
+        isOpen.value = nowIsDesktop
+      }
       syncBodyClass()
     }
 

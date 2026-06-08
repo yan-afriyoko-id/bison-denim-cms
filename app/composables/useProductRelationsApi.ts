@@ -214,7 +214,8 @@ export const useProductRelationsApi = () => {
       const response = await $fetch<{
         success: boolean;
         data: {
-          variant: any;
+          variant?: any;
+          id?: number;
         };
       }>(`${baseURL}/product-variants`, {
         method: "POST",

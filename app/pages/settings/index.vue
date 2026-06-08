@@ -1184,13 +1184,6 @@ const togglePaymentMethod = (method: PaymentMethod) => {
   const targetKey = `${method}_is_active`;
   const nextValue = !formData.value[targetKey];
 
-  if (nextValue) {
-    paymentMethods.forEach((paymentMethod) => {
-      formData.value[`${paymentMethod}_is_active`] = paymentMethod === method;
-    });
-    return;
-  }
-
   if (!nextValue) {
     const hasAnotherActiveMethod = paymentMethods.some(
       (paymentMethod) =>
@@ -1200,7 +1193,6 @@ const togglePaymentMethod = (method: PaymentMethod) => {
 
     if (!hasAnotherActiveMethod) {
       const message = "At least one payment method must remain active";
-      formData.value[targetKey] = true;
       errorMessage.value = message;
       toast.error(message);
       clearMessagesAfterTimeout();

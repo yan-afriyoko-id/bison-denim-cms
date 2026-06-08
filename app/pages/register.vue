@@ -278,7 +278,7 @@
                       <div class="col-12">
                         <button
                           type="submit"
-                          class="btn btn-primary w-100"
+                          class="btn btn-auth-dark w-100"
                           :disabled="isLoading || !formData.agreeTerms"
                         >
                           <span
@@ -480,6 +480,28 @@ const handleRegister = async () => {
   }
 };
 </script>
+
+<style scoped>
+.btn-auth-dark {
+  background-color: #111111 !important;
+  border-color: #111111;
+  color: #ffffff;
+}
+
+.btn-auth-dark:hover,
+.btn-auth-dark:focus {
+  background-color: #000000;
+  border-color: #000000;
+  color: #ffffff;
+}
+
+.btn-auth-dark:disabled {
+  background-color: #111111;
+  border-color: #111111;
+  color: #ffffff;
+  opacity: 0.7;
+}
+</style>
 
 <style scoped>
 .register-page {

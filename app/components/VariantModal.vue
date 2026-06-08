@@ -278,25 +278,33 @@
                   <input
                     v-model="localVariantForm.sku"
                     type="text"
-                    class="form-control"
+                    :class="['form-control', { 'is-invalid': formErrors.sku || apiErrors.sku }]"
                     placeholder="SKU-001"
+                    @input="clearError('sku')"
                   />
+                  <div v-if="formErrors.sku || apiErrors.sku" class="invalid-feedback d-block">
+                    {{ formErrors.sku || (apiErrors.sku || []).join(', ') }}
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">
                     <i class="bi bi-currency-dollar me-1"></i>
                     Selling Price <span class="text-danger">*</span>
                   </label>
-                  <div class="input-group">
+                  <div class="input-group" :class="{ 'is-invalid': formErrors.price || apiErrors.price }">
                     <span class="input-group-text">Rp</span>
                     <input
                       v-model.number="localVariantForm.price"
                       type="number"
                       step="0.01"
                       required
-                      class="form-control"
+                      :class="['form-control', { 'is-invalid': formErrors.price || apiErrors.price }]"
                       placeholder="0.00"
+                      @input="clearError('price')"
                     />
+                  </div>
+                  <div v-if="formErrors.price || apiErrors.price" class="invalid-feedback d-block">
+                    {{ formErrors.price || (apiErrors.price || []).join(', ') }}
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -384,11 +392,20 @@
                 </div>
                 <div class="col-12">
                   <div
-                    v-if="isReservedExceedingQty"
-                    class="alert alert-light border mb-0 py-2"
+                    v-if="formErrors.reserved"
+                    class="alert alert-danger mb-0 py-2 d-flex align-items-center gap-2"
                     role="alert"
                   >
-                    Reserved cannot exceed stock.
+                    <i class="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                    {{ formErrors.reserved }}
+                  </div>
+                  <div
+                    v-else-if="isReservedExceedingQty"
+                    class="alert alert-warning mb-0 py-2 d-flex align-items-center gap-2"
+                    role="alert"
+                  >
+                    <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+                    Reserved qty tidak boleh melebihi stock qty.
                   </div>
                 </div>
                 <!-- Weight fields (hidden but functional) -->
@@ -422,34 +439,49 @@
 
           </div>
         </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-            @click="handleCancel"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            :class="
-              editingVariantIndex !== null
-                ? 'btn btn-success'
-                : 'btn btn-primary action-btn-dark'
-            "
-            @click="handleSave"
-            :disabled="savingVariant"
-          >
-            <span
-              v-if="savingVariant"
-              class="spinner-border spinner-border-sm me-2"
-              role="status"
-            ></span>
-            {{
-              editingVariantIndex !== null ? "Update Variant" : "Add Variant"
-            }}
-          </button>
+        <div class="modal-footer flex-column align-items-stretch gap-2">
+          <!-- API error summary -->
+          <div v-if="hasApiErrors" class="alert alert-danger mb-0 py-2 w-100">
+            <div class="fw-semibold mb-1 d-flex align-items-center gap-1">
+              <i class="bi bi-exclamation-triangle-fill"></i> Gagal menyimpan variant:
+            </div>
+            <ul class="mb-0 ps-3">
+              <template v-for="(msgs, field) in apiErrors" :key="field">
+                <li v-for="msg in msgs" :key="msg">
+                  <strong>{{ fieldLabel(String(field)) }}:</strong> {{ msg }}
+                </li>
+              </template>
+            </ul>
+          </div>
+          <div class="d-flex justify-content-end gap-2 w-100">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="handleCancel"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              :class="
+                editingVariantIndex !== null
+                  ? 'btn btn-success'
+                  : 'btn btn-primary action-btn-dark'
+              "
+              @click="handleSave"
+              :disabled="savingVariant"
+            >
+              <span
+                v-if="savingVariant"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+              ></span>
+              {{
+                editingVariantIndex !== null ? "Update Variant" : "Add Variant"
+              }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -505,9 +537,12 @@ interface Props {
     }>;
   }>;
   productSlug?: string;
+  apiErrors?: Record<string, string[]>;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  apiErrors: () => ({}),
+});
 
 const emit = defineEmits<{
   save: [variantData: any];
@@ -529,6 +564,32 @@ const localStoreStockForm = ref({
   qty: 0,
   reserved_qty: 0,
 });
+
+// Inline validation errors
+const formErrors = ref<Record<string, string>>({});
+
+const hasApiErrors = computed(() => {
+  const errs = props.apiErrors;
+  return !!errs && Object.keys(errs).length > 0;
+});
+
+const clearError = (field: string) => {
+  delete formErrors.value[field];
+};
+
+const fieldLabel = (field: string): string => {
+  const labels: Record<string, string> = {
+    sku: "SKU",
+    price: "Harga Jual",
+    strike_price: "Harga Coret",
+    variant_name: "Nama Variant",
+    attribute_value_ids: "Attribute",
+    qty: "Stock Qty",
+    reserved_qty: "Reserved Qty",
+    store_id: "Store",
+  };
+  return labels[field] ?? field.replace(/_/g, " ");
+};
 const stores = ref<
   Array<{
     id: number;
@@ -654,13 +715,7 @@ const handleUpdateVariantName = () => {
   }
   localVariantForm.value.attribute_value_ids = selectedValueIds;
 
-  // Generate SKU automatically if empty or if this is a new variant
-  // Or regenerate when editing to match attribute selection
-  if (!localVariantForm.value.sku || props.editingVariantIndex === null) {
-    localVariantForm.value.sku = generateSKU();
-  } else {
-    // When editing, regenerate SKU based on current attribute selection
-    // This ensures SKU matches the attribute combination
+  if (props.editingVariantIndex === null) {
     localVariantForm.value.sku = generateSKU();
   }
 
@@ -789,33 +844,39 @@ const handleClearVariantImage = () => {
 };
 
 const handleSave = () => {
+  formErrors.value = {};
+
   const selectedCount = Object.keys(
     localVariantForm.value.selectedAttributeValues,
   ).filter(
     (attrId) => localVariantForm.value.selectedAttributeValues[Number(attrId)],
   ).length;
 
+  let hasError = false;
+
   if (selectedCount === 0) {
-    toast.error("Please select at least one attribute value");
-    return;
+    formErrors.value.attributes = "Pilih minimal satu attribute value.";
+    hasError = true;
   }
 
   if (!localVariantForm.value.price || localVariantForm.value.price <= 0) {
-    toast.error("Price is required and must be greater than 0");
-    return;
+    formErrors.value.price = "Harga jual wajib diisi dan harus lebih dari 0.";
+    hasError = true;
   }
 
   if (isReservedExceedingQty.value) {
-    toast.error("Reserved quantity cannot be greater than stock quantity");
-    return;
+    formErrors.value.reserved = "Reserved qty tidak boleh melebihi stock qty.";
+    hasError = true;
   }
+
+  if (hasError) return;
 
   const existingStock = localVariantStoreStocks.value[0];
   const selectedStore =
     stores.value.find((store) => store.id === localStoreStockForm.value.store_id) ||
     existingStock?.store;
   const normalizedStoreStocks =
-    localStoreStockForm.value.store_id !== null
+    localStoreStockForm.value.store_id != null
       ? [
           {
             ...(existingStock?.id ? { id: existingStock.id } : {}),

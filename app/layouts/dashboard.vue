@@ -28,68 +28,43 @@ const { isOpen: isSidebarOpen } = useSidebar()
   min-height: 100vh;
 }
 
-/* Main content area - default state (sidebar open) */
+/* Mobile (<768px): sidebar is overlay, content stays full-width */
 #main {
   flex: 1;
   margin-top: 60px;
-  margin-left: 300px;
+  margin-left: 0;
   padding: 20px;
   transition: margin-left 0.3s ease;
 }
 
-/* When sidebar is closed on desktop */
-@media (min-width: 1200px) {
-  .dashboard-layout.sidebar-closed #main {
-    margin-left: 0;
-  }
-}
-
-/* ========================================
-   RESPONSIVE BREAKPOINTS
-   ======================================== */
-
-/* Tablet (768px - 1024px) */
-@media (max-width: 1024px) {
+/* Tablet & up (≥768px): sidebar pushes content */
+@media (min-width: 768px) {
   #main {
-    margin-left: 80px;
+    margin-left: 300px;
   }
-  
-  .dashboard-layout.sidebar-closed #main {
-    margin-left: 0;
-  }
-}
 
-/* Mobile (< 768px) */
-@media (max-width: 768px) {
-  #main {
+  .dashboard-layout.sidebar-closed #main {
     margin-left: 0;
   }
 }
 </style>
 
 <style>
-/* Global styles for compatibility with style.css */
-/* Using better CSS specificity than !important */
-/* Desktop: when toggle-sidebar is active, remove margin-left */
+/* Sidebar position — controlled by body.toggle-sidebar (from useSidebar) */
+
+/* Desktop: sidebar slides out when closed */
 @media (min-width: 1200px) {
-  body.toggle-sidebar #main,
-  body.toggle-sidebar #footer {
-    margin-left: 0;
-  }
-  
   body.toggle-sidebar .sidebar {
     left: -300px;
   }
 }
 
-/* Tablet/Mobile: when toggle-sidebar is active, sidebar appears */
+/* Tablet/Mobile: sidebar slides in when opened */
 @media (max-width: 1199px) {
   body.toggle-sidebar .sidebar {
     left: 0;
   }
-  
-  body.toggle-sidebar #main {
-    margin-left: 0;
-  }
+  /* Margin is driven by .sidebar-closed Vue class, NOT toggle-sidebar body class,
+     so we do NOT set margin-left here to avoid overriding the scoped rule. */
 }
 </style>

@@ -197,6 +197,15 @@ onMounted(() => {
     gap 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@media (max-width: 1199px) {
+  .header-brand {
+    width: auto;
+    min-width: 0;
+    justify-content: flex-start !important;
+    gap: 8px;
+  }
+}
+
 .logo {
   display: inline-flex;
   align-items: center;
