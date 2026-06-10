@@ -143,96 +143,36 @@
         </NuxtLink>
       </li>
 
-      <!-- Settings Dropdown -->
+      <!-- Settings -->
       <li class="nav-item">
-        <a
+        <NuxtLink
+          v-if="
+            hasPermission('stores.read') ||
+            hasPermission('configs.read')
+          "
+          to="/setting"
           class="nav-link"
-          @click.prevent="toggleSettings"
-          :class="{ collapsed: !isSettingsOpen }"
-          href="#"
+          :class="{ active: isActive('/setting') || isActive('/settings') }"
         >
           <i class="bi bi-gear"></i>
           <span>Settings</span>
-          <i
-            class="bi bi-chevron-down ms-auto chevron-icon"
-            :class="{ rotated: isSettingsOpen }"
-          ></i>
-        </a>
-        <ul
-          id="settings-nav"
-          class="nav-content"
-          :class="{ show: isSettingsOpen }"
-        >
-          <li
-            v-if="
-              hasPermission('stores.read') ||
-              hasPermission('configs.read')
-            "
-          >
-            <NuxtLink to="/settings" :class="{ active: isActive('/settings') }">
-              <i class="bi bi-circle"></i>
-              <span>App Settings</span>
-            </NuxtLink>
-          </li>
-          <!-- <li>
-            <NuxtLink to="/settings/notifications">
-              <i class="bi bi-circle"></i>
-              <span>Notifications</span>
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink to="/settings/payment">
-              <i class="bi bi-circle"></i>
-              <span>Payment Gateway</span>
-            </NuxtLink>
-          </li> -->
-          <li>
-            <NuxtLink to="/profile" :class="{ active: isActive('/profile') }">
-              <i class="bi bi-circle"></i>
-              <span>Profile</span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </li>
-
-      <!-- Profile -->
-      <!-- <li class="nav-item">
-        <NuxtLink to="/profile" class="nav-link" :class="{ active: isActive('/profile') }">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
         </NuxtLink>
-      </li> -->
+      </li>
     </ul>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { ref, watch } from "vue";
 import { usePermission } from "~/composables/usePermission";
 
 const route = useRoute();
-const isSettingsOpen = ref(false);
 const { hasPermission } = usePermission();
 
 const isActive = (path: string) => {
   // Exact match atau jika path diikuti dengan / (untuk sub-routes)
   return route.path === path || route.path.startsWith(path + "/");
 };
-
-const toggleSettings = () => {
-  isSettingsOpen.value = !isSettingsOpen.value;
-};
-
-// Auto-open berdasarkan route
-watch(
-  () => route.path,
-  () => {
-    isSettingsOpen.value =
-      route.path.startsWith("/settings") || route.path === "/profile";
-  },
-  { immediate: true },
-);
 </script>
 
 <style scoped>
@@ -275,82 +215,6 @@ watch(
 
 .sidebar-nav .nav-link:hover i {
   color: #000000;
-}
-
-.chevron-icon {
-  transition: transform 0.3s ease;
-  transform-origin: center;
-}
-
-.chevron-icon.rotated {
-  transform: rotate(180deg);
-}
-
-.nav-content {
-  padding: 5px 0 0 0;
-  margin: 0;
-  list-style: none;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease;
-}
-
-.nav-content.show {
-  max-height: 500px;
-}
-
-.nav-content li {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.nav-content a {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1a1a1a;
-  transition: all 0.3s ease;
-  padding: 10px 0 10px 40px;
-  text-decoration: none;
-  border-radius: 0;
-  font-family: var(--font-poppins), 'Open Sans', sans-serif;
-}
-
-.nav-content a i {
-  font-size: 6px;
-  margin-right: 8px;
-  line-height: 0;
-  border-radius: 50%;
-  background-color: transparent;
-  width: 6px;
-  height: 6px;
-  transition: all 0.3s ease;
-}
-
-.nav-content a:hover {
-  color: #000000;
-  background-color: rgba(0, 0, 0, 0.05);
-  padding-left: 45px;
-}
-
-.nav-content a:hover i {
-  background-color: #000000;
-}
-
-.nav-content a.active {
-  color: #000000;
-  background-color: rgba(0, 0, 0, 0.08);
-  border-left: 3px solid #000000;
-  padding-left: calc(40px - 3px);
-  font-weight: 700;
-}
-
-.nav-content a.active i {
-  background-color: #000000;
-  width: 8px;
-  height: 8px;
 }
 
 .sidebar-nav .nav-heading {

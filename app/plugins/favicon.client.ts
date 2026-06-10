@@ -62,11 +62,22 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     });
   };
 
-  try {
-    // Always use images.png as favicon
-    updateFavicon(defaultFavicon);
-  } catch (error) {
-    console.error("Failed to load favicon:", error);
-    updateFavicon(defaultFavicon);
-  }
+  const loadFavicon = async () => {
+    try {
+      const response = await $fetch<any>(`${apiBase}/public-configs/store_favicon`);
+      const configData = response?.data;
+      const faviconUrl =
+        configData?.value_image ||
+        (typeof configData?.value === "string" ? configData.value : "") ||
+        defaultFavicon;
+
+      updateFavicon(faviconUrl);
+    } catch (error) {
+      console.error("Failed to load favicon:", error);
+      updateFavicon(defaultFavicon);
+    }
+  };
+
+  await loadFavicon();
+  window.addEventListener("app-settings-updated", loadFavicon);
 });

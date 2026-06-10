@@ -22,10 +22,10 @@
       <NuxtLink to="/dashboard" class="logo d-flex align-items-center h-full">
         <img 
           :src="logoUrl || '/assets/img/images.png'" 
-          alt="Bison Denim Logo" 
+          :alt="`${appName} Logo`" 
           @error="handleLogoError"
         />
-        <span class="logo-text ms-2 fw-bold">Bison Denim</span>
+        <span class="logo-text ms-2 fw-bold">{{ appName }}</span>
       </NuxtLink>
     </div>
 
@@ -84,6 +84,7 @@ const { fetchPublicConfig } = useConfig()
 // State
 const isLoggingOut = ref(false)
 const logoUrl = ref<string | null>(null)
+const appName = ref("Bison Denim")
 
 // Computed
 const user = auth.user
@@ -106,14 +107,13 @@ const handleLogoError = () => {
 
 const loadLogo = async () => {
   try {
-    const res = await fetchPublicConfig("store_logo_website")
-    if (!res) {
-      logoUrl.value = '/assets/img/images.png'
-      return
-    }
+    const [logoRes, appNameRes] = await Promise.all([
+      fetchPublicConfig("store_logo_website"),
+      fetchPublicConfig("app_name"),
+    ])
     
     // Response structure: { success, data: Config }
-    const configData = res?.data
+    const configData = logoRes?.data
     if (configData) {
       if (configData.value_image) {
         logoUrl.value = configData.value_image
@@ -121,6 +121,11 @@ const loadLogo = async () => {
         // Fallback to value if value_image is not available
         logoUrl.value = configData.value
       }
+    }
+
+    const appNameData = appNameRes?.data
+    if (appNameData?.value && typeof appNameData.value === "string") {
+      appName.value = appNameData.value
     }
   } catch (error) {
     console.error("Failed to load logo from config:", error)
@@ -150,6 +155,7 @@ const handleLogout = async () => {
 onMounted(() => {
   // Load logo from database
   loadLogo()
+  window.addEventListener("app-settings-updated", loadLogo)
 
   // Handle back to top button
   const backtotop = document.querySelector('.back-to-top')
@@ -182,6 +188,10 @@ onMounted(() => {
       }
     })
   }
+})
+
+onUnmounted(() => {
+  window.removeEventListener("app-settings-updated", loadLogo)
 })
 </script>
 

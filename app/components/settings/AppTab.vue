@@ -40,15 +40,12 @@
         </div>
 
         <div class="col-md-6">
-          <label class="form-label"
-            >App Logo (store_logo_website)</label
-          >
+          <label class="form-label">App Logo</label>
           <div class="mb-2">
             <img
               :src="
                 appLogoPreview ||
                 formData.store_logo_website ||
-                formData.app_logo ||
                 defaultImage
               "
               alt="App Logo"
@@ -65,19 +62,15 @@
           <div v-if="formData.store_logo_website" class="form-text">
             Current URL: {{ formData.store_logo_website }}
           </div>
-          <div v-else-if="formData.app_logo" class="form-text">
-            Current (legacy): {{ formData.app_logo }}
-          </div>
         </div>
 
         <div class="col-md-6">
-          <label class="form-label">Favicon (store_favicon)</label>
+          <label class="form-label">Favicon</label>
           <div class="mb-2">
             <img
               :src="
                 appFaviconPreview ||
                 formData.store_favicon ||
-                formData.app_favicon ||
                 defaultImage
               "
               alt="Favicon"
@@ -93,9 +86,6 @@
           />
           <div v-if="formData.store_favicon" class="form-text">
             Current URL: {{ formData.store_favicon }}
-          </div>
-          <div v-else-if="formData.app_favicon" class="form-text">
-            Current (legacy): {{ formData.app_favicon }}
           </div>
         </div>
       </div>

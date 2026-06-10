@@ -79,6 +79,7 @@ export default defineNuxtPlugin((nuxtApp) => {
              path.startsWith('/users') ||
              path.startsWith('/manage-') ||
              path.startsWith('/profile') ||
+             path.startsWith('/setting') ||
              path.startsWith('/settings') ||
              path === '/login' ||
              path === '/register' ||
