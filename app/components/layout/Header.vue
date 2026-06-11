@@ -79,12 +79,10 @@
 // Composables
 const auth = useAuth()
 const { logout } = auth
-const { fetchPublicConfig } = useConfig()
+const { appName, logoUrl, loadAppIdentity } = useAppIdentity()
 
 // State
 const isLoggingOut = ref(false)
-const logoUrl = ref<string | null>(null)
-const appName = ref("Bison Denim")
 
 // Computed
 const user = auth.user
@@ -106,30 +104,7 @@ const handleLogoError = () => {
 }
 
 const loadLogo = async () => {
-  try {
-    const [logoRes, appNameRes] = await Promise.all([
-      fetchPublicConfig("store_logo_website"),
-      fetchPublicConfig("app_name"),
-    ])
-    
-    // Response structure: { success, data: Config }
-    const configData = logoRes?.data
-    if (configData) {
-      if (configData.value_image) {
-        logoUrl.value = configData.value_image
-      } else if (configData.value && typeof configData.value === 'string') {
-        // Fallback to value if value_image is not available
-        logoUrl.value = configData.value
-      }
-    }
-
-    const appNameData = appNameRes?.data
-    if (appNameData?.value && typeof appNameData.value === "string") {
-      appName.value = appNameData.value
-    }
-  } catch (error) {
-    console.error("Failed to load logo from config:", error)
-  }
+  await loadAppIdentity()
 }
 
 // Handle account settings
@@ -155,7 +130,6 @@ const handleLogout = async () => {
 onMounted(() => {
   // Load logo from database
   loadLogo()
-  window.addEventListener("app-settings-updated", loadLogo)
 
   // Handle back to top button
   const backtotop = document.querySelector('.back-to-top')
@@ -190,9 +164,6 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() => {
-  window.removeEventListener("app-settings-updated", loadLogo)
-})
 </script>
 
 <style scoped>

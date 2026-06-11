@@ -206,11 +206,6 @@
               <div class="row g-3">
                 <!-- Variant Image Section -->
                 <div class="col-12">
-                  <div class="border-bottom pb-2 mb-3">
-                    <h6 class="mb-0 text-primary">
-                      <i class="bi bi-image me-2"></i>Variant Image
-                    </h6>
-                  </div>
                 </div>
                 <div class="col-12">
                   <div class="variant-image-upload">
@@ -277,9 +272,6 @@
                 <!-- Product Details Section -->
                 <div class="col-12 mt-4">
                   <div class="border-bottom pb-2 mb-3">
-                    <h6 class="mb-0 text-primary">
-                      <i class="bi bi-info-circle me-2"></i>Details
-                    </h6>
                   </div>
                 </div>
                 <div class="col-md-6">

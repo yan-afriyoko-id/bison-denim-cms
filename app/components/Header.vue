@@ -24,7 +24,7 @@
         <NuxtLink to="/" class="hidden sm:flex items-center gap-2 sm:gap-3 shrink-0">
           <NuxtImg 
             :src="logoUrl" 
-            alt="Bison Denim Logo" 
+            :alt="`${appName} Logo`" 
             width="144" 
             height="46"
             class="w-24 sm:w-32 md:w-36 h-auto"
@@ -188,7 +188,7 @@
           <NuxtLink to="/" @click="isSidebarOpen = false" class="flex items-center gap-2 sm:gap-3">
             <NuxtImg 
               :src="logoUrl" 
-              alt="Bison Denim Logo" 
+              :alt="`${appName} Logo`" 
               width="144" 
               height="46"
               class="w-32 md:w-36 h-auto"
@@ -246,7 +246,7 @@ const router = useRouter();
 const cartCount = ref(0);
 const isCategoryOpen = ref(false);
 const isSidebarOpen = ref(false);
-const logoUrl = ref("/assets/img/images.png");
+const { appName, logoUrl, loadAppIdentity } = useAppIdentity();
 
 const handleSearch = () => {
   router.push("/products");
@@ -264,23 +264,7 @@ const categories = [
 ];
 
 const loadLogo = async () => {
-  try {
-    const { fetchPublicConfig } = useConfig();
-
-    const res = await fetchPublicConfig("store_logo_website");
-    if (!res) return;
-    
-    const configData = res?.data?.config || res?.data;
-    if (configData) {
-      const data = configData as any;
-
-      if (data.value_image) {
-        logoUrl.value = data.value_image;
-      }
-    }
-  } catch (error) {
-    console.error("Failed to load logo from config:", error);
-  }
+  await loadAppIdentity();
 };
 
 // Prevent body scroll when sidebar is open

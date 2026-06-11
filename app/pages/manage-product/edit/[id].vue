@@ -4228,11 +4228,9 @@ const formatNumber = (num: number) => {
   return new Intl.NumberFormat("id-ID").format(num);
 };
 
-useHead({
-  title: product.value
-    ? `Edit ${product.value.name} - Bison Denim`
-    : "Edit Product - Bison Denim",
-});
+useAppTitle(computed(() =>
+  product.value ? `Edit ${product.value.name}` : "Edit Product",
+));
 
 onMounted(async () => {
   await loadProduct();

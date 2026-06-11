@@ -1314,9 +1314,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Create Product - Bison Denim",
-});
+useAppTitle("Create Product");
 
 // Register components
 import ShopeeImageUpload from "~/components/ShopeeImageUpload.vue";

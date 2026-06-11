@@ -7,6 +7,28 @@
 </template>
 
 <script setup lang="ts">
+const { appName } = useAppIdentity();
+
+useHead({
+  title: computed(() => appName.value),
+  meta: [
+    {
+      key: "description",
+      name: "description",
+      content: computed(() => `${appName.value} - Toko Online Terpercaya`),
+    },
+    {
+      key: "og:title",
+      property: "og:title",
+      content: computed(() => appName.value),
+    },
+    {
+      key: "og:description",
+      property: "og:description",
+      content: computed(() => `${appName.value} - Toko Online Terpercaya`),
+    },
+  ],
+});
 </script>
 
 <style>

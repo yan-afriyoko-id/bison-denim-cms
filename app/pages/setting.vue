@@ -876,6 +876,8 @@ definePageMeta({
   layout: "dashboard",
 });
 
+useAppTitle("Setting");
+
 const { token } = useApiBase();
 const { fetchAllConfigs, updateConfig } = useConfig();
 const { getStores, getAllStores, createStore, updateStore, deleteStore } =

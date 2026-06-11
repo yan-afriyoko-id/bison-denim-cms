@@ -9,8 +9,8 @@
                 <!-- Logo -->
                 <div class="d-flex justify-content-center py-4">
                   <NuxtLink to="/" class="logo d-flex align-items-center w-auto">
-                    <img src="/assets/img/images.png" alt="Bison Denim Logo" />
-                    <span class="d-none d-lg-block">Bison Denim</span>
+                    <img :src="logoUrl" :alt="`${appName} Logo`" />
+                    <span class="d-none d-lg-block">{{ appName }}</span>
                   </NuxtLink>
                 </div>
 
@@ -84,13 +84,12 @@ definePageMeta({
   middleware: 'guest'
 })
 
-useHead({
-  title: "Verify Email - Bison Denim",
-})
+useAppTitle("Verify Email")
 
 // Router
 const route = useRoute()
 const router = useRouter()
+const { appName, logoUrl } = useAppIdentity()
 
 // Auth state (using same pattern as useAuth composable)
 const token = useCookie('auth_token')

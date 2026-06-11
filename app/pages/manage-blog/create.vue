@@ -330,9 +330,7 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-useHead({
-  title: "Create Blog Post - Bison Denim",
-})
+useAppTitle("Create Blog Post")
 
 const { createBlog, getCategories, createCategory, updateCategory, deleteCategory } = useBlogApi()
 const toast = useToast()

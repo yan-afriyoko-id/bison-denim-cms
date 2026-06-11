@@ -9,8 +9,8 @@
                 <!-- Logo -->
                 <div class="d-flex justify-content-center py-4">
                   <NuxtLink to="/" class="logo d-flex align-items-center w-auto">
-                    <img src="/assets/img/images.png" alt="Bison Denim Logo" />
-                    <span class="d-none d-lg-block">Bison Denim</span>
+                    <img :src="logoUrl" :alt="`${appName} Logo`" />
+                    <span class="d-none d-lg-block">{{ appName }}</span>
                   </NuxtLink>
                 </div>
 
@@ -95,9 +95,7 @@ definePageMeta({
   middleware: 'guest'
 })
 
-useHead({
-  title: "Resend Verification Email - Bison Denim",
-})
+useAppTitle("Resend Verification Email")
 
 // Auth composable
 const { user } = useAuth()
@@ -111,7 +109,8 @@ const successMessage = ref('')
 
 // Pre-fill email from query param, logged-in user, or remembered email
 onMounted(() => {
-  const route = useRoute()
+const route = useRoute()
+const { appName, logoUrl } = useAppIdentity()
   if (route.query.email) {
     email.value = route.query.email as string
   } else if (user.value?.email) {

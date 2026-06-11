@@ -34,14 +34,14 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'id'
       },
-      title: 'Bison Denim',
+      title: 'APP_NAME',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { name: 'description', content: 'Bison Denim - Toko Furnitur Online Terpercaya' },
-        { property: 'og:image', content: '/assets/img/images.png' },
-        { property: 'og:title', content: 'Bison Denim' },
-        { property: 'og:description', content: 'Bison Denim - Toko Furnitur Online Terpercaya' }
+        { key: 'description', name: 'description', content: 'APP_NAME - Toko Online Terpercaya' },
+        { key: 'og:image', property: 'og:image', content: '/assets/img/images.png' },
+        { key: 'og:title', property: 'og:title', content: 'APP_NAME' },
+        { key: 'og:description', property: 'og:description', content: 'APP_NAME - Toko Online Terpercaya' }
       ],
       link: [
         // Favicons

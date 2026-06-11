@@ -290,9 +290,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Manage Vouchers - Bison Denim",
-});
+useAppTitle("Manage Vouchers");
 
 const { getVouchers, deleteVoucher, getAllVouchers } = useVoucherApi();
 const { hasPermission } = usePermission();

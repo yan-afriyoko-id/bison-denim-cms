@@ -232,9 +232,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Order Details - Bison Denim",
-});
+useAppTitle("Order Details");
 
 const route = useRoute();
 const router = useRouter();

@@ -98,6 +98,7 @@
 
 <script setup lang="ts">
 const activeFilter = ref(1);
+const { appName } = useAppIdentity();
 
 const filters = [
   { id: 1, label: "Tas & Dompet" },
@@ -109,10 +110,10 @@ const nextLink = computed(() => {
   return `/products/official-store?filter=${activeFilter.value}`;
 });
 
-const products = ref([
+const products = computed(() => [
   {
     id: 1,
-    name: "Bison Denim Tas Selempang Kulit Pria",
+    name: `${appName.value} Tas Selempang Kulit Pria`,
     image: "/assets/img/official-stores/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -123,7 +124,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Bison Denim Dompet Bifold Kulit Asli",
+    name: `${appName.value} Dompet Bifold Kulit Asli`,
     image: "/assets/img/official-stores/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -134,7 +135,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Bison Denim Ikat Pinggang Automatic Buckle",
+    name: `${appName.value} Ikat Pinggang Automatic Buckle`,
     image: "/assets/img/official-stores/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -145,7 +146,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Bison Denim Tas Ransel Kulit Pria",
+    name: `${appName.value} Tas Ransel Kulit Pria`,
     image: "/assets/img/official-stores/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

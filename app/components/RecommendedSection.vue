@@ -65,6 +65,7 @@
 
 <script setup lang="ts">
 const activeFilter = ref(1);
+const { appName } = useAppIdentity();
 
 const filters = [
   { id: 1, label: "Spesial Online" },
@@ -73,10 +74,10 @@ const filters = [
   { id: 4, label: "Beli 1 gratis 1" },
 ];
 
-const products = ref([
+const products = computed(() => [
   {
     id: 1,
-    name: "Bison Denim Clutch Bag Kulit Premium",
+    name: `${appName.value} Clutch Bag Kulit Premium`,
     image: "/assets/img/recommended/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -87,7 +88,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Bison Denim Key Holder Kulit Asli",
+    name: `${appName.value} Key Holder Kulit Asli`,
     image: "/assets/img/recommended/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -98,7 +99,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Bison Denim Tas Pinggang Kulit Pria",
+    name: `${appName.value} Tas Pinggang Kulit Pria`,
     image: "/assets/img/recommended/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -109,7 +110,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Bison Denim Dompet Panjang Kulit Wanita",
+    name: `${appName.value} Dompet Panjang Kulit Wanita`,
     image: "/assets/img/recommended/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -120,7 +121,7 @@ const products = ref([
   },
   {
     id: 5,
-    name: "Bison Denim Travel Bag Kulit Premium",
+    name: `${appName.value} Travel Bag Kulit Premium`,
     image: "/assets/img/recommended/product-5.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

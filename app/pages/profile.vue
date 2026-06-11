@@ -310,9 +310,7 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-useHead({
-  title: "Profile - Bison Denim",
-})
+useAppTitle("Profile")
 
 const auth = useAuth()
 const { getProfile, updateProfile, updatePassword } = useProfileApi()

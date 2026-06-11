@@ -332,9 +332,9 @@ const formatDate = (date: string | undefined) => {
 }
 
 
-useHead({
-  title: product.value ? `${product.value.name} - Product Details` : 'Product Details - Bison Denim',
-})
+useAppTitle(computed(() =>
+  product.value ? `${product.value.name} - Product Details` : "Product Details",
+))
 
 onMounted(async () => {
   await loadProduct()

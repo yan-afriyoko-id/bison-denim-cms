@@ -6,7 +6,7 @@
         <div class="col-md-4 mb-4">
           <h5 class="mb-3">
             <i class="bi bi-shop me-2"></i>
-            Bison Denim
+            {{ appName }}
           </h5>
           <p class="text-muted small">
         <span style="color: white !important;">Professional Admin Dashboard for Managing Your Business with modern UI and powerful features.</span>
@@ -63,10 +63,10 @@
       <!-- Copyright -->
       <div class="row">
         <div class="col-md-6 text-muted small">
-         <span style="color: white !important;"> &copy; 2025 Bison Denim. All rights reserved.</span>
+         <span style="color: white !important;"> &copy; 2025 {{ appName }}. All rights reserved.</span>
         </div>
         <div class="col-md-6 text-end text-muted small">
-       <span style="color: white !important;">  Made with <i class="bi bi-heart-fill text-danger"></i> by Bison Denim Team</span>
+       <span style="color: white !important;">  Made with <i class="bi bi-heart-fill text-danger"></i> by {{ appName }} Team</span>
         </div>
       </div>
     </div>
@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+const { appName } = useAppIdentity();
 </script>
 
 <style scoped>

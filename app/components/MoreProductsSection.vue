@@ -53,10 +53,12 @@
 </template>
 
 <script setup lang="ts">
-const products = ref([
+const { appName } = useAppIdentity();
+
+const products = computed(() => [
   {
     id: 1,
-    name: "Bison Denim Tas Messenger Kulit Premium",
+    name: `${appName.value} Tas Messenger Kulit Premium`,
     image: "/assets/img/more-products/product-1.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -67,7 +69,7 @@ const products = ref([
   },
   {
     id: 2,
-    name: "Bison Denim Card Holder Kulit Asli",
+    name: `${appName.value} Card Holder Kulit Asli`,
     image: "/assets/img/more-products/product-2.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -78,7 +80,7 @@ const products = ref([
   },
   {
     id: 3,
-    name: "Bison Denim Tas Laptop Kulit Genuine Leather",
+    name: `${appName.value} Tas Laptop Kulit Genuine Leather`,
     image: "/assets/img/more-products/product-3.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -89,7 +91,7 @@ const products = ref([
   },
   {
     id: 4,
-    name: "Bison Denim Dompet Wanita Kulit Sapi",
+    name: `${appName.value} Dompet Wanita Kulit Sapi`,
     image: "/assets/img/more-products/product-4.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",
@@ -100,7 +102,7 @@ const products = ref([
   },
   {
     id: 5,
-    name: "Bison Denim Tas Tote Bag Kulit Premium",
+    name: `${appName.value} Tas Tote Bag Kulit Premium`,
     image: "/assets/img/more-products/product-5.png",
     price: "Rp 74.500",
     discountedPrice: "Rp 54.500",

@@ -145,9 +145,7 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-useHead({
-  title: "Users - Bison Denim",
-})
+useAppTitle("Users")
 
 const { getUsers } = useUserManagementApi()
 const { hasPermission } = usePermission()

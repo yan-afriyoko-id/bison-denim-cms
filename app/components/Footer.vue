@@ -32,7 +32,7 @@
             <ul class="space-y-2 sm:space-y-2.5 text-sm sm:text-base text-[#F3D4D5]">
               <li>
                 <a href="#" class="hover:text-white transition"
-                  >Tentang Bison Denim</a
+                  >Tentang {{ appName }}</a
                 >
               </li>
               <li>
@@ -180,12 +180,12 @@
 
       <!-- Bottom -->
       <div class="border-t border-[#FFFFFF1A] py-3 sm:py-[14.5px] text-center text-xs sm:text-sm">
-        <p>&copy; Bison Denim 2025</p>
+        <p>&copy; {{ appName }} 2025</p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-// Footer component
+const { appName } = useAppIdentity();
 </script>

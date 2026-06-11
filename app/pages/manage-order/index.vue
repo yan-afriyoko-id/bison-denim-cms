@@ -328,9 +328,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Manage Orders - Bison Denim",
-});
+useAppTitle("Manage Orders");
 
 const { hasPermission } = usePermission();
 const { getOrders, updateOrderStatus } = useOrderApi();

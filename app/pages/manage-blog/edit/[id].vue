@@ -476,9 +476,7 @@ const route = useRoute()
 const router = useRouter()
 const blogId = computed(() => route.params.id as string)
 
-useHead({
-  title: "Edit Blog Post - Bison Denim",
-})
+useAppTitle("Edit Blog Post")
 
 const { updateBlog, getAllBlogs, getCategories, createCategory, updateCategory, deleteCategory } = useBlogApi()
 const toast = useToast()

@@ -11,7 +11,7 @@
                   <NuxtLink to="/" class="logo d-flex align-items-center w-auto">
                     <img 
                       :src="logoUrl || '/assets/img/images.png'" 
-                      alt="Bison Denim Logo"
+                      :alt="`${appName} Logo`"
                       @error="handleLogoError"
                     />
                   </NuxtLink>
@@ -106,38 +106,17 @@ definePageMeta({
   middleware: 'guest'
 })
 
-useHead({
-  title: "Forgot Password - Bison Denim",
-})
+useAppTitle("Forgot Password")
 
 const { forgotPassword } = useAuthApi()
-const { fetchPublicConfig } = useConfig()
-
-// Logo state
-const logoUrl = ref<string | null>(null)
+const { appName, logoUrl, loadAppIdentity } = useAppIdentity()
 
 const handleLogoError = () => {
   logoUrl.value = '/assets/img/images.png'
 }
 
 const loadLogo = async () => {
-  try {
-    const response = await fetchPublicConfig('store_logo_website')
-    if (!response) return
-    
-    // Response structure: { success, data: Config }
-    const configData = response?.data
-    if (configData) {
-      if (configData.value_image) {
-        logoUrl.value = configData.value_image
-      } else if (configData.value && typeof configData.value === 'string') {
-        // Fallback to value if value_image is not available
-        logoUrl.value = configData.value
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load logo:', error)
-  }
+  await loadAppIdentity()
 }
 
 // State

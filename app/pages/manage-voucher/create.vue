@@ -317,7 +317,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({ title: "Create Voucher - Bison Denim" });
+useAppTitle("Create Voucher");
 
 const { createVoucher, getCategories } = useVoucherApi();
 const toast = useToast();

@@ -117,9 +117,7 @@ definePageMeta({
   layout: 'dashboard'
 })
 
-useHead({
-  title: "Blog Categories - Bison Denim",
-})
+useAppTitle("Blog Categories")
 
 const { getCategories } = useBlogApi()
 const { hasPermission } = usePermission()

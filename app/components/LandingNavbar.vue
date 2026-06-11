@@ -4,7 +4,7 @@
       <!-- Brand -->
       <NuxtLink to="/" class="navbar-brand fw-bold">
         <i class="bi bi-shop me-2"></i>
-        <span>Bison Denim</span>
+        <span>{{ appName }}</span>
       </NuxtLink>
 
       <!-- Toggler for mobile -->
@@ -95,6 +95,7 @@
 <script setup lang="ts">
 const auth = useAuth()
 const router = useRouter()
+const { appName } = useAppIdentity()
 
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
 const user = computed(() => auth.user.value)

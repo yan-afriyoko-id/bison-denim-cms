@@ -321,9 +321,7 @@ definePageMeta({
   layout: 'dashboard',
 })
 
-useHead({
-  title: 'Manage Products - Bison Denim',
-})
+useAppTitle("Manage Products")
 
 const { getProducts, deleteProduct } = useProductApi()
 const { attachCategories, getCategoryProducts, getCategoryProductsByProduct } = useCategoryProductApi()

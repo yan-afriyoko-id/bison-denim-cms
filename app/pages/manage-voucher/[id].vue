@@ -151,9 +151,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Voucher Details - Bison Denim",
-});
+useAppTitle("Voucher Details");
 
 const route = useRoute();
 const { getAdminVoucher } = useVoucherApi();

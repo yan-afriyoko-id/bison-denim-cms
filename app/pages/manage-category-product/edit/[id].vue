@@ -170,9 +170,7 @@ definePageMeta({
 const route = useRoute()
 const categoryId = parseInt(route.params.id as string)
 
-useHead({
-  title: 'Manage Category Products - Bison Denim CMS',
-})
+useAppTitle("Manage Category Products")
 
 interface Category {
   id: number

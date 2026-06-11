@@ -410,9 +410,7 @@ definePageMeta({
   layout: "dashboard",
 });
 
-useHead({
-  title: "Manage Category Products - Bison Denim CMS",
-});
+useAppTitle("Manage Category Products");
 
 interface Category {
   id: number;

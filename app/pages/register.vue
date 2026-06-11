@@ -19,7 +19,7 @@
                   >
                     <img
                       :src="logoUrl || '/assets/img/images.png'"
-                      alt="Bison Denim Logo"
+                      :alt="`${appName} Logo`"
                       @error="handleLogoError"
                     />
                   </NuxtLink>
@@ -333,9 +333,8 @@ import { useAuthApi } from "~/composables/useAuthApi";
 // Auth
 const { isLoading, error, clearError } = useAuth();
 const { register: registerApi } = useAuthApi();
-const { fetchPublicConfig } = useConfig();
+const { appName, logoUrl, loadAppIdentity } = useAppIdentity();
 
-const logoUrl = ref<string | null>(null);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
@@ -352,23 +351,7 @@ const handleLogoError = () => {
 };
 
 const loadLogo = async () => {
-  try {
-    const response = await fetchPublicConfig("store_logo_website");
-    if (!response) return;
-
-    // Response structure: { success, data: Config }
-    const configData = response?.data;
-    if (configData) {
-      if (configData.value_image) {
-        logoUrl.value = configData.value_image;
-      } else if (configData.value && typeof configData.value === "string") {
-        // Fallback to value if value_image is not available
-        logoUrl.value = configData.value;
-      }
-    }
-  } catch (error) {
-    console.error("Failed to load logo:", error);
-  }
+  await loadAppIdentity();
 };
 
 onMounted(() => {
