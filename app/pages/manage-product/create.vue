@@ -730,8 +730,8 @@
                           <span v-else class="text-muted">-</span>
                         </td>
                         <td class="text-nowrap">
-                          <span v-if="variant.discount_percent">
-                            {{ variant.discount_percent }}%
+                          <span v-if="getVariantDiscountPercent(variant) !== null">
+                            {{ getVariantDiscountPercent(variant) }}%
                           </span>
                           <span v-else class="text-muted">-</span>
                         </td>
@@ -1531,6 +1531,31 @@ const newBrand = ref({
   description: "",
 });
 
+const calculateVariantDiscountPercent = (
+  price?: number | null,
+  strikePrice?: number | null,
+) => {
+  const sellingPrice = Number(price) || 0;
+  const originalPrice = Number(strikePrice) || 0;
+
+  if (originalPrice <= 0 || sellingPrice <= 0 || sellingPrice >= originalPrice) {
+    return null;
+  }
+
+  return Math.round(((originalPrice - sellingPrice) / originalPrice) * 10000) / 100;
+};
+
+const getVariantDiscountPercent = (variant: {
+  price?: number | null;
+  strike_price?: number | null;
+  discount_percent?: number | null;
+}) => {
+  return variant.discount_percent ?? calculateVariantDiscountPercent(
+    variant.price,
+    variant.strike_price,
+  );
+};
+
 const generateSlugFromName = () => {
   if (!productForm.value.name) return;
   productForm.value.slug = generateSlug(productForm.value.name);
@@ -2149,6 +2174,11 @@ const handleSaveVariant = (variantData: any) => {
     variant_name: variantData.variant_name || "Unnamed Variant",
     sku: variantData.sku || "",
     price: variantData.price || 0,
+    strike_price: variantData.strike_price || null,
+    discount_percent: calculateVariantDiscountPercent(
+      variantData.price,
+      variantData.strike_price,
+    ),
     status: variantData.status || "ACTIVE",
     store_stocks: variantData.store_stocks || [],
   };
