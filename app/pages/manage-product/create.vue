@@ -2687,6 +2687,31 @@ const getProductSaveErrorMessage = (message?: string) => {
   return message;
 };
 
+const formatApiValidationErrors = (errors?: Record<string, string[] | string>) => {
+  if (!errors || Object.keys(errors).length === 0) return "";
+
+  return Object.entries(errors)
+    .map(([field, messages]) => {
+      const text = Array.isArray(messages) ? messages.join(", ") : messages;
+      return `${field}: ${text}`;
+    })
+    .join(" | ");
+};
+
+const getVariantSaveErrorMessage = (
+  variantName: string | null | undefined,
+  message?: string,
+  errors?: Record<string, string[] | string>,
+) => {
+  const name = variantName || "Unnamed Variant";
+  const validationDetails = formatApiValidationErrors(errors);
+  const baseMessage = message || "Backend did not return a message";
+
+  return validationDetails
+    ? `Failed to create variant "${name}": ${baseMessage}. Detail: ${validationDetails}`
+    : `Failed to create variant "${name}": ${baseMessage}`;
+};
+
 const removeBrand = (brandId: number) => {
   selectedBrandIds.value = selectedBrandIds.value.filter(
     (id) => id !== brandId,
@@ -2861,7 +2886,7 @@ const handleCreateProduct = async () => {
             }
           }
 
-          const variantResponse = await createProductVariant({
+          const variantPayload = {
             fk_product_id: productId,
             variant_name: variant.variant_name || null,
             attribute_value_ids: variant.attribute_value_ids || [],
@@ -2872,7 +2897,26 @@ const handleCreateProduct = async () => {
             status: variant.status,
             weight: variant.weight || null,
             type_weight: variant.type_weight || null,
-          });
+          };
+
+          const variantResponse = await createProductVariant(variantPayload);
+
+          if (variantResponse.error || !variantResponse.data?.success) {
+            const message = getVariantSaveErrorMessage(
+              variant.variant_name,
+              variantResponse.error?.message || (variantResponse.data as any)?.message,
+              variantResponse.error?.errors,
+            );
+
+            console.error("Error creating product variant:", {
+              variant: variant.variant_name,
+              payload: variantPayload,
+              error: variantResponse.error,
+              response: variantResponse.data,
+            });
+            toast.error(message);
+            continue;
+          }
 
           // Create store stocks if variant has store stocks
           const newVariantId = variantResponse.data?.data?.variant?.id ?? variantResponse.data?.data?.id;

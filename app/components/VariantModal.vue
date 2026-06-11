@@ -384,17 +384,14 @@
               <div class="row g-3">
                 <div class="col-12">
 
-                  <!-- Add / Edit Form -->
+                  <!-- Store Stock Form -->
                   <div
                     class="card mb-4"
                     :class="{ 'border-primary': localEditingStoreStockIndex !== null }"
                   >
                     <div class="card-header bg-white">
                       <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">
-                          <i class="bi bi-plus-circle me-2"></i>
-                          {{ localEditingStoreStockIndex !== null ? 'Edit Store Stock' : 'Add Store Stock' }}
-                        </h6>
+                        
                         <button
                           v-if="localEditingStoreStockIndex !== null"
                           type="button"
@@ -453,29 +450,10 @@
                             />
                           </div>
                         </div>
-                        <div class="col-lg-2 col-md-6 col-6">
+                        <div class="col-lg-4 col-md-6 col-12">
                           <div class="stock-form-field h-100 d-flex flex-column">
                             <label class="form-label fw-semibold">Available</label>
                             <div class="form-control bg-light">{{ stockFormAvailableQty }}</div>
-                          </div>
-                        </div>
-                        <div class="col-lg-2 col-md-6 col-6">
-                          <div class="stock-form-field h-100 d-flex flex-column">
-                            <label class="form-label fw-semibold text-transparent stock-form-helper-placeholder">Action</label>
-                            <button
-                              type="button"
-                              class="btn btn-primary action-btn-dark w-100 py-2"
-                              @click="handleSaveStoreStock"
-                              :disabled="!canSaveStoreStock"
-                            >
-                              <span
-                                v-if="savingStoreStock"
-                                class="spinner-border spinner-border-sm me-2"
-                                role="status"
-                              ></span>
-                              <i v-else class="bi bi-save me-2"></i>
-                              {{ localEditingStoreStockIndex !== null ? 'Update' : 'Add' }}
-                            </button>
                           </div>
                         </div>
                       </div>
@@ -731,7 +709,6 @@ const fieldLabel = (field: string): string => {
 
 const stores = ref<Array<{ id: number; name: string; code?: string }>>([]);
 const loadingStores = ref(false);
-const savingStoreStock = ref(false);
 const savingVariant = ref(false);
 const variantImageInput = ref<HTMLInputElement | null>(null);
 
@@ -798,14 +775,11 @@ const isReservedExceedingQty = computed(() =>
   (Number(localStoreStockForm.value.qty) || 0),
 );
 
-const canSaveStoreStock = computed(() =>
+const hasPendingStoreStockForm = computed(() =>
   Boolean(
-    localStoreStockForm.value.store_id &&
-    localStoreStockForm.value.qty >= 0 &&
-    localStoreStockForm.value.reserved_qty >= 0 &&
-    !isStoreStockDuplicate.value &&
-    !isReservedExceedingQty.value &&
-    !savingStoreStock.value,
+    localStoreStockForm.value.store_id ||
+      Number(localStoreStockForm.value.qty) > 0 ||
+      Number(localStoreStockForm.value.reserved_qty) > 0,
   ),
 );
 
@@ -984,24 +958,26 @@ const handleDeleteStoreStock = (index: number) => {
   toast.success("Stock removed successfully");
 };
 
-const handleSaveStoreStock = () => {
+const commitPendingStoreStock = () => {
+  if (!hasPendingStoreStockForm.value) return true;
+
   if (!localStoreStockForm.value.store_id) {
     toast.error("Please select a store");
-    return;
+    return false;
   }
   if (isReservedExceedingQty.value) {
     toast.error("Reserved quantity cannot be greater than stock quantity");
-    return;
+    return false;
   }
   if (isStoreStockDuplicate.value) {
     toast.error("This store already has stock assigned");
-    return;
+    return false;
   }
 
   const store = stores.value.find((s) => s.id === localStoreStockForm.value.store_id);
   if (!store) {
     toast.error("Store not found");
-    return;
+    return false;
   }
 
   const stockEntry = {
@@ -1016,14 +992,13 @@ const handleSaveStoreStock = () => {
       ...localVariantStoreStocks.value[localEditingStoreStockIndex.value],
       ...stockEntry,
     };
-    toast.success("Stock updated successfully");
   } else {
     localVariantStoreStocks.value.push(stockEntry);
-    toast.success("Stock added successfully");
   }
 
   emit("update:variantStoreStocks", [...localVariantStoreStocks.value]);
   handleResetStoreStockForm();
+  return true;
 };
 
 const handleResetStoreStockForm = () => {
@@ -1124,6 +1099,8 @@ const handleSave = () => {
   }
 
   if (hasError) return;
+
+  if (!commitPendingStoreStock()) return;
 
   savingVariant.value = true;
   emit("save", {

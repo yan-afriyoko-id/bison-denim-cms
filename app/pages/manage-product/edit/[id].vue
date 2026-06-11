@@ -2917,7 +2917,14 @@ const saveVariant = async () => {
         );
         if (error) {
           variantApiErrors.value = (error as any).errors ?? {};
-          toast.error(error.message || "Failed to update variant");
+          toast.error(
+            getVariantSaveErrorMessage(
+              "update",
+              variantForm.value.variant_name,
+              error.message,
+              variantApiErrors.value,
+            ),
+          );
           savingVariant.value = false;
           return;
         }
@@ -2952,7 +2959,14 @@ const saveVariant = async () => {
       const { data, error } = await createProductVariant(variantData);
       if (error) {
         variantApiErrors.value = (error as any).errors ?? {};
-        toast.error(error.message || "Failed to create variant");
+        toast.error(
+          getVariantSaveErrorMessage(
+            "create",
+            variantForm.value.variant_name,
+            error.message,
+            variantApiErrors.value,
+          ),
+        );
         savingVariant.value = false;
         return;
       }
@@ -3920,6 +3934,33 @@ const getProductSaveErrorMessage = (message?: string) => {
   return message;
 };
 
+const formatApiValidationErrors = (errors?: Record<string, string[] | string>) => {
+  if (!errors || Object.keys(errors).length === 0) return "";
+
+  return Object.entries(errors)
+    .map(([field, messages]) => {
+      const text = Array.isArray(messages) ? messages.join(", ") : messages;
+      return `${field}: ${text}`;
+    })
+    .join(" | ");
+};
+
+const getVariantSaveErrorMessage = (
+  action: "create" | "update",
+  variantName: string | null | undefined,
+  message?: string,
+  errors?: Record<string, string[] | string>,
+) => {
+  const name = variantName || "Unnamed Variant";
+  const validationDetails = formatApiValidationErrors(errors);
+  const baseMessage = message || "Backend did not return a message";
+  const actionLabel = action === "create" ? "create" : "update";
+
+  return validationDetails
+    ? `Failed to ${actionLabel} variant "${name}": ${baseMessage}. Detail: ${validationDetails}`
+    : `Failed to ${actionLabel} variant "${name}": ${baseMessage}`;
+};
+
 const removeBrand = (brandId: number) => {
   selectedBrandIds.value = selectedBrandIds.value.filter(
     (id) => id !== brandId,
@@ -4148,12 +4189,52 @@ const handleUpdateProduct = async () => {
         let variantId = variant.id;
 
         if (variantId) {
-          await updateProductVariant(variantId, updatePayload);
+          const { error: updateVariantError } = await updateProductVariant(
+            variantId,
+            updatePayload,
+          );
+
+          if (updateVariantError) {
+            const message = getVariantSaveErrorMessage(
+              "update",
+              variant.variant_name,
+              updateVariantError.message,
+              updateVariantError.errors,
+            );
+            console.error("Error updating product variant:", {
+              variant: variant.variant_name,
+              variantId,
+              payload: updatePayload,
+              error: updateVariantError,
+            });
+            toast.error(message);
+            continue;
+          }
         } else {
-          const { data: newV } = await createProductVariant({
+          const createPayload = {
             fk_product_id: product.value.id,
             ...updatePayload,
-          });
+          };
+          const { data: newV, error: createVariantError } =
+            await createProductVariant(createPayload);
+
+          if (createVariantError || !newV?.success) {
+            const message = getVariantSaveErrorMessage(
+              "create",
+              variant.variant_name,
+              createVariantError?.message || (newV as any)?.message,
+              createVariantError?.errors,
+            );
+            console.error("Error creating product variant:", {
+              variant: variant.variant_name,
+              payload: createPayload,
+              error: createVariantError,
+              response: newV,
+            });
+            toast.error(message);
+            continue;
+          }
+
           variantId = newV?.data?.variant?.id;
           variant.id = variantId;
         }
