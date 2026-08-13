@@ -2088,30 +2088,27 @@ const loadProductAttributes = async () => {
     const { data, error } = await getProductAttributes(product.value.id);
 
     if (error || !data?.success) {
+      // Leave attributesLoaded false so the save never reads an unknown state
+      // as "user cleared everything" and detaches the product's attributes.
       selectedAttributes.value = [];
       return;
     }
 
     const productAttributes = data.data || [];
 
-    const productAttrMap = new Map();
-
-    productAttributes.forEach((pa: any) => {
-      productAttrMap.set(
-        Number(pa.attribute_id),
-        (pa.attribute_values || [])
+    // Map straight off the response. Filtering against availableAttributes
+    // made this depend on a second request that loads in parallel, and also
+    // dropped attributes whose parent attribute is INACTIVE.
+    selectedAttributes.value = productAttributes
+      .map((pa: any) => ({
+        attribute_id: Number(pa.attribute_id),
+        sort: Number(pa.sort ?? 0),
+        values: (pa.attribute_values || [])
           .map((v: any) => Number(v.attribute_value_id))
-          .filter(Boolean),
-      );
-    });
-
-    selectedAttributes.value = availableAttributes.value
-      .filter((attr) => productAttrMap.has(attr.id))
-      .map((attr) => ({
-        attribute_id: attr.id,
-        sort: attr.sort || 0,
-        values: productAttrMap.get(attr.id) || [],
-      }));
+          .filter((id: number) => Number.isFinite(id) && id > 0),
+      }))
+      .filter((sa) => Number.isFinite(sa.attribute_id) && sa.attribute_id > 0)
+      .sort((a, b) => a.sort - b.sort);
 
     attributesLoaded.value = true;
   } finally {
@@ -3940,38 +3937,73 @@ const handleUpdateProduct = async () => {
       }
     }
     try {
-      const { data: current } = await getProductAttributes(product.value.id);
+      if (!attributesLoaded.value) {
+        // Attributes were never loaded successfully for this page, so an empty
+        // selection means "unknown", not "user removed everything". Detaching
+        // here would delete attributes the user never saw.
+        console.warn("Skipping attribute sync: attributes were never loaded");
+      } else {
+        const { data: current } = await getProductAttributes(product.value.id);
 
-      const currentMap = new Map(
-        (current?.data || []).map((a) => [a.attribute_id, a]),
-      );
-
-      const toDetach = Array.from(currentMap.keys()).filter(
-        (id) =>
-          !selectedAttributes.value.some(
-            (sa) => sa.attribute_id === Number(id),
-          ),
-      );
-
-      if (toDetach.length > 0) {
-        const productId = product.value.id;
-        await Promise.all(
-          toDetach.map((id) =>
-            detachProductAttributes(productId, Number(id)),
-          ),
+        const currentMap = new Map(
+          (current?.data || []).map((a) => [a.attribute_id, a]),
         );
-      }
 
-      if (selectedAttributes.value.length > 0) {
-        await attachProductAttributes(
-          product.value.id,
-          selectedAttributes.value,
+        // An attribute with no values is rejected by the API, and one bad entry
+        // fails the whole attach payload. Keep it out and tell the user.
+        const attributesToSave = selectedAttributes.value.filter(
+          (sa) => (sa.values?.length || 0) > 0,
         );
-      }
 
-      await loadProductAttributes();
+        const incomplete = selectedAttributes.value.filter(
+          (sa) => (sa.values?.length || 0) === 0,
+        );
+
+        if (incomplete.length > 0) {
+          toast.warning(
+            `Atribut tanpa nilai tidak disimpan: ${incomplete
+              .map((sa) => getAttributeName(sa.attribute_id))
+              .join(", ")}. Tambahkan minimal satu nilai.`,
+          );
+        }
+
+        const toDetach = Array.from(currentMap.keys()).filter(
+          (id) =>
+            !attributesToSave.some((sa) => sa.attribute_id === Number(id)),
+        );
+
+        if (toDetach.length > 0) {
+          const productId = product.value.id;
+          await Promise.all(
+            toDetach.map((id) =>
+              detachProductAttributes(productId, Number(id)),
+            ),
+          );
+        }
+
+        if (attributesToSave.length > 0) {
+          const { data: attachData, error: attachError } =
+            await attachProductAttributes(product.value.id, attributesToSave);
+
+          if (attachError || !attachData?.success) {
+            console.error("Error saving product attributes:", {
+              payload: attributesToSave,
+              error: attachError,
+              response: attachData,
+            });
+            toast.error(
+              attachError?.message ||
+                attachData?.message ||
+                "Gagal menyimpan atribut produk",
+            );
+          }
+        }
+
+        await loadProductAttributes();
+      }
     } catch (err) {
       console.warn("Sync attributes gagal", err);
+      toast.error("Gagal menyimpan atribut produk");
     }
 
     try {
