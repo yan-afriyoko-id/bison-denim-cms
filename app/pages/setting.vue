@@ -1022,6 +1022,12 @@ const formData = ref<any>({
   xendit_secret_key: "",
   xendit_public_key: "",
   xendit_is_production: false,
+  xendit_callback_token: "",
+  doku_is_active: false,
+  doku_client_id: "",
+  doku_secret_key: "",
+  doku_is_production: false,
+  doku_payment_due_minutes: 1440,
   // gojek instant
   gojek_instant_key: "",
   // social
@@ -1066,7 +1072,7 @@ const clearMessagesAfterTimeout = () => {
   }, 3000);
 };
 
-const paymentMethods = ["midtrans", "xendit"] as const;
+const paymentMethods = ["midtrans", "xendit", "doku"] as const;
 
 type PaymentMethod = (typeof paymentMethods)[number];
 
@@ -1226,7 +1232,10 @@ const saveSettings = async (category: string) => {
       }
 
       categoryKeys = Object.keys(formData.value).filter(
-        (key) => key.startsWith("midtrans_") || key.startsWith("xendit_"),
+        (key) =>
+          key.startsWith("midtrans_") ||
+          key.startsWith("xendit_") ||
+          key.startsWith("doku_"),
       );
 
       categoryKeys.sort((a, b) => {
@@ -1283,6 +1292,11 @@ const saveSettings = async (category: string) => {
         (key === "store_logo_website" || key === "store_favicon") &&
         !valueToSend
       ) {
+        continue;
+      }
+
+      // the API rejects empty values, so leave blank credentials of unused gateways untouched
+      if (category === "payment" && valueToSend === "") {
         continue;
       }
 
