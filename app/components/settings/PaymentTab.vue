@@ -8,7 +8,7 @@
 
     <form @submit.prevent="$emit('save-settings', 'payment')">
       <div class="alert alert-light border mt-4 mb-4" role="alert">
-        Customers can pay using Midtrans or Xendit. At least one payment method must remain active.
+        Customers can pay using Midtrans, Xendit or DOKU. At least one payment method must remain active.
       </div>
 
       <div class="row g-4">
@@ -120,7 +120,19 @@
                       placeholder="xnd_public_development_xxxxx"
                     />
                   </div>
-                  <div class="col-12">
+                  <div class="col-md-6">
+                    <label class="form-label">Callback Verification Token</label>
+                    <input
+                      v-model="formData.xendit_callback_token"
+                      type="password"
+                      class="form-control"
+                      placeholder="Xendit Dashboard > Settings > Webhooks"
+                    />
+                    <div class="form-text">
+                      Required. Xendit webhooks without this token are rejected.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
                     <label class="form-label">Production Mode</label>
                     <select
                       v-model="formData.xendit_is_production"
@@ -128,6 +140,82 @@
                     >
                       <option :value="false">Development / Test</option>
                       <option :value="true">Production / Live</option>
+                    </select>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card payment-method-card h-100">
+            <div class="card-body">
+              <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4"
+              >
+                <div>
+                  <h6 class="mb-1">DOKU</h6>
+                </div>
+
+                <div class="form-check form-switch m-0">
+                  <input
+                    id="doku-active"
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    :checked="formData.doku_is_active"
+                    :disabled="isDokuLastActive"
+                    @change="$emit('toggle-method', 'doku')"
+                  />
+                  <label class="form-check-label" for="doku-active">
+                    {{ formData.doku_is_active ? "Active" : "Inactive" }}
+                  </label>
+                </div>
+              </div>
+
+              <fieldset :disabled="!formData.doku_is_active">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Client ID</label>
+                    <input
+                      v-model="formData.doku_client_id"
+                      type="text"
+                      class="form-control"
+                      placeholder="BRN-xxxx-xxxxxxxxxxxxx"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Secret Key</label>
+                    <input
+                      v-model="formData.doku_secret_key"
+                      type="password"
+                      class="form-control"
+                      placeholder="SK-xxxxx"
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Payment Due (minutes)</label>
+                    <input
+                      v-model.number="formData.doku_payment_due_minutes"
+                      type="number"
+                      min="1"
+                      max="999999"
+                      class="form-control"
+                      placeholder="1440"
+                    />
+                    <div class="form-text">
+                      How long the DOKU payment page stays valid. 1440 = 24 hours.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Production Mode</label>
+                    <select
+                      v-model="formData.doku_is_production"
+                      class="form-select"
+                    >
+                      <option :value="false">Sandbox (Test)</option>
+                      <option :value="true">Production (Live)</option>
                     </select>
                   </div>
                 </div>
@@ -161,26 +249,28 @@ const props = defineProps<{
 
 defineEmits<{
   "save-settings": [category: string];
-  "toggle-method": [method: "midtrans" | "xendit"];
+  "toggle-method": [method: "midtrans" | "xendit" | "doku"];
 }>();
 
+const paymentMethods = ["midtrans", "xendit", "doku"] as const;
+
+const activePaymentMethods = computed(() =>
+  paymentMethods.filter((method) => props.formData[`${method}_is_active`]),
+);
+
 const hasActivePaymentMethod = computed(() => {
-  return Boolean(
-    props.formData.midtrans_is_active || props.formData.xendit_is_active,
-  );
+  return activePaymentMethods.value.length > 0;
 });
 
-const isMidtransLastActive = computed(() => {
-  return Boolean(
-    props.formData.midtrans_is_active && !props.formData.xendit_is_active,
-  );
-});
+const isLastActive = (method: (typeof paymentMethods)[number]) =>
+  activePaymentMethods.value.length === 1 &&
+  activePaymentMethods.value[0] === method;
 
-const isXenditLastActive = computed(() => {
-  return Boolean(
-    props.formData.xendit_is_active && !props.formData.midtrans_is_active,
-  );
-});
+const isMidtransLastActive = computed(() => isLastActive("midtrans"));
+
+const isXenditLastActive = computed(() => isLastActive("xendit"));
+
+const isDokuLastActive = computed(() => isLastActive("doku"));
 </script>
 
 <style scoped>
