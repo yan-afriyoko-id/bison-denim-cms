@@ -1076,14 +1076,22 @@ const paymentMethods = ["midtrans", "xendit", "doku"] as const;
 
 type PaymentMethod = (typeof paymentMethods)[number];
 
-const ensureAtLeastOnePaymentMethodActive = (
+// Only one payment gateway may be active at a time
+const ensureSinglePaymentMethodActive = (
   preferredMethod: PaymentMethod = "midtrans",
 ) => {
-  const hasActiveMethod = paymentMethods.some(
+  const activeMethods = paymentMethods.filter(
     (method) => formData.value[`${method}_is_active`],
   );
 
-  if (!hasActiveMethod) {
+  // Older data may have several gateways active: keep the first one
+  if (activeMethods.length > 1) {
+    for (const method of activeMethods.slice(1)) {
+      formData.value[`${method}_is_active`] = false;
+    }
+  }
+
+  if (activeMethods.length === 0) {
     formData.value[`${preferredMethod}_is_active`] = true;
   }
 };
@@ -1127,7 +1135,7 @@ const loadSettings = async () => {
       ...incoming,
     };
 
-    ensureAtLeastOnePaymentMethodActive();
+    ensureSinglePaymentMethodActive();
 
     if (incoming.store_logo_website) {
       appLogoPreview.value =
@@ -1178,25 +1186,20 @@ function onFileChange(e: Event, type: "logo" | "favicon") {
 
 const togglePaymentMethod = (method: PaymentMethod) => {
   const targetKey = `${method}_is_active`;
-  const nextValue = !formData.value[targetKey];
 
-  if (!nextValue) {
-    const hasAnotherActiveMethod = paymentMethods.some(
-      (paymentMethod) =>
-        paymentMethod !== method &&
-        Boolean(formData.value[`${paymentMethod}_is_active`]),
-    );
-
-    if (!hasAnotherActiveMethod) {
-      const message = "At least one payment method must remain active";
-      errorMessage.value = message;
-      toast.error(message);
-      clearMessagesAfterTimeout();
-      return;
-    }
+  // Turning the active gateway off would leave none: switch by activating another one
+  if (formData.value[targetKey]) {
+    const message =
+      "One payment method must stay active. Activate another method to switch.";
+    errorMessage.value = message;
+    toast.error(message);
+    clearMessagesAfterTimeout();
+    return;
   }
 
-  formData.value[targetKey] = nextValue;
+  for (const paymentMethod of paymentMethods) {
+    formData.value[`${paymentMethod}_is_active`] = paymentMethod === method;
+  }
 };
 
 const updateConfigOrThrow = async (key: string, payload: any) => {
@@ -1223,12 +1226,12 @@ const saveSettings = async (category: string) => {
     );
 
     if (category === "payment") {
-      const hasActiveMethod = paymentMethods.some(
+      const activeCount = paymentMethods.filter(
         (method) => formData.value[`${method}_is_active`],
-      );
+      ).length;
 
-      if (!hasActiveMethod) {
-        throw new Error("At least one payment method must remain active");
+      if (activeCount !== 1) {
+        throw new Error("Exactly one payment method must be active");
       }
 
       categoryKeys = Object.keys(formData.value).filter(
