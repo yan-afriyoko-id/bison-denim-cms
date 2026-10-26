@@ -8,7 +8,7 @@
 
     <form @submit.prevent="$emit('save-settings', 'payment')">
       <div class="alert alert-light border mt-4 mb-4" role="alert">
-        Customers can pay using Midtrans, Xendit or DOKU. At least one payment method must remain active.
+        Customers can pay using Midtrans, Xendit or DOKU. Only one payment method can be active at a time: activating one deactivates the others.
       </div>
 
       <div class="row g-4">
@@ -259,7 +259,7 @@ const activePaymentMethods = computed(() =>
 );
 
 const hasActivePaymentMethod = computed(() => {
-  return activePaymentMethods.value.length > 0;
+  return activePaymentMethods.value.length === 1;
 });
 
 const isLastActive = (method: (typeof paymentMethods)[number]) =>
