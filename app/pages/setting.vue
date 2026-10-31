@@ -305,6 +305,31 @@
                   </p>
                 </div>
                 <div class="col-md-6">
+                  <label class="form-label">Kecamatan (District)</label>
+                  <select
+                    v-model="storeForm.district_id"
+                    @change="onDistrictChange"
+                    class="form-select"
+                    :class="{ 'is-invalid': storeFormErrors.district_id }"
+                    :disabled="loadingDistricts || !storeForm.selectedCityId"
+                  >
+                    <option :value="null">Pilih Kecamatan</option>
+                    <option
+                      v-for="district in districts"
+                      :key="district.id"
+                      :value="district.id"
+                    >
+                      {{ district.name }}
+                    </option>
+                  </select>
+                  <p v-if="loadingDistricts" class="text-muted small mt-1 mb-0">
+                    Memuat kecamatan...
+                  </p>
+                  <div class="form-text">
+                    Shipping costs are calculated from this district.
+                  </div>
+                </div>
+                <div class="col-md-6">
                   <label class="form-label">Country</label>
                   <input
                     v-model="storeForm.country"
@@ -484,6 +509,31 @@
                   <p v-if="loadingCities" class="text-muted small mt-1 mb-0">
                     Memuat kota...
                   </p>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Kecamatan (District)</label>
+                  <select
+                    v-model="storeForm.district_id"
+                    @change="onDistrictChange"
+                    class="form-select"
+                    :class="{ 'is-invalid': storeFormErrors.district_id }"
+                    :disabled="loadingDistricts || !storeForm.selectedCityId"
+                  >
+                    <option :value="null">Pilih Kecamatan</option>
+                    <option
+                      v-for="district in districts"
+                      :key="district.id"
+                      :value="district.id"
+                    >
+                      {{ district.name }}
+                    </option>
+                  </select>
+                  <p v-if="loadingDistricts" class="text-muted small mt-1 mb-0">
+                    Memuat kecamatan...
+                  </p>
+                  <div class="form-text">
+                    Shipping costs are calculated from this district.
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Country</label>
@@ -865,7 +915,7 @@ const { token } = useApiBase();
 const { fetchAllConfigs, updateConfig } = useConfig();
 const { getStores, getAllStores, createStore, updateStore, deleteStore } =
   useStoreApi();
-const { getProvinces, getCities } = useShippingApi();
+const { getProvinces, getCities, getDistricts } = useShippingApi();
 const {
   getPopupBanners,
   createPopupBanner,
@@ -899,6 +949,8 @@ const storeForm = ref({
   status: "ACTIVE" as "ACTIVE" | "INACTIVE",
   description: "",
   city_id: null as number | null,
+  district: "",
+  district_id: null as number | null,
   selectedProvinceId: null as number | null,
   selectedCityId: null as number | null,
 });
@@ -906,8 +958,10 @@ const storeFormErrors = ref<Record<string, string[]>>({});
 
 const provinces = ref<any[]>([]);
 const cities = ref<any[]>([]);
+const districts = ref<any[]>([]);
 const loadingProvinces = ref(false);
 const loadingCities = ref(false);
+const loadingDistricts = ref(false);
 
 const popupBanners = ref<PopupBanner[]>([]);
 const loadingPopupBanners = ref(false);
@@ -1362,12 +1416,15 @@ const resetStoreForm = () => {
     status: "ACTIVE" as "ACTIVE" | "INACTIVE",
     description: "",
     city_id: null,
+    district: "",
+    district_id: null,
     selectedProvinceId: null,
     selectedCityId: null,
   };
   storeFormErrors.value = {};
   storeToEdit.value = null;
   cities.value = [];
+  districts.value = [];
 };
 
 const loadProvinces = async () => {
@@ -1400,7 +1457,29 @@ const loadCities = async (provinceId: number) => {
   }
 };
 
+const loadDistricts = async (cityId: number) => {
+  loadingDistricts.value = true;
+  districts.value = [];
+  try {
+    const { data, error } = await getDistricts(cityId);
+    if (!error && data?.success && data.data) {
+      districts.value = data.data;
+    }
+  } catch (err) {
+    console.error("Error loading districts:", err);
+  } finally {
+    loadingDistricts.value = false;
+  }
+};
+
+const clearDistrict = () => {
+  districts.value = [];
+  storeForm.value.district = "";
+  storeForm.value.district_id = null;
+};
+
 const onProvinceChange = async () => {
+  clearDistrict();
   if (storeForm.value.selectedProvinceId) {
     const province = provinces.value.find(
       (p) => p.id === storeForm.value.selectedProvinceId,
@@ -1416,7 +1495,8 @@ const onProvinceChange = async () => {
   }
 };
 
-const onCityChange = () => {
+const onCityChange = async () => {
+  clearDistrict();
   if (storeForm.value.selectedCityId) {
     const city = cities.value.find(
       (c) => c.id === storeForm.value.selectedCityId,
@@ -1425,10 +1505,18 @@ const onCityChange = () => {
       storeForm.value.city = city.name;
       storeForm.value.city_id = city.id;
     }
+    await loadDistricts(storeForm.value.selectedCityId);
   } else {
     storeForm.value.city = "";
     storeForm.value.city_id = null;
   }
+};
+
+const onDistrictChange = () => {
+  const district = districts.value.find(
+    (d) => d.id === storeForm.value.district_id,
+  );
+  storeForm.value.district = district?.name || "";
 };
 
 const findProvinceId = async (provinceName: string): Promise<number | null> => {
@@ -1463,6 +1551,7 @@ const findCityId = async (
 
 const handleEditClick = async (store: Store) => {
   storeToEdit.value = store;
+  districts.value = [];
 
   await loadProvinces();
 
@@ -1485,6 +1574,10 @@ const handleEditClick = async (store: Store) => {
         storeForm.value.city_id = cityId;
       }
     }
+
+    if (storeForm.value.selectedCityId) {
+      await loadDistricts(storeForm.value.selectedCityId);
+    }
   }
 
   storeForm.value = {
@@ -1501,6 +1594,8 @@ const handleEditClick = async (store: Store) => {
     status: (store.status || "ACTIVE") as "ACTIVE" | "INACTIVE",
     description: store.description || "",
     city_id: (store as any).city_id || null,
+    district: (store as any).district || "",
+    district_id: (store as any).district_id || null,
   };
   await nextTick();
   const modal = new (window as any).bootstrap.Modal(

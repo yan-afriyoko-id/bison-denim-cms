@@ -15,6 +15,17 @@ export interface ProvincesResponse {
   data: Province[]
 }
 
+export interface District {
+  id: number
+  name: string
+}
+
+export interface DistrictsResponse {
+  success: boolean
+  message: string
+  data: District[]
+}
+
 export interface CitiesResponse {
   success: boolean
   message: string
@@ -61,8 +72,29 @@ export const useShippingApi = () => {
     }
   }
 
+  const getDistricts = async (cityId: number) => {
+    try {
+      const response = await $fetch<DistrictsResponse>(`${baseURL}/shipping/districts`, {
+        method: 'GET',
+        params: {
+          city_id: cityId,
+        },
+        headers: getHeaders(),
+      })
+      return { data: response, error: null }
+    } catch (error: any) {
+      return {
+        data: null,
+        error: error.data || {
+          message: error.message || 'An error occurred',
+        },
+      }
+    }
+  }
+
   return {
     getProvinces,
     getCities,
+    getDistricts,
   }
 }
